@@ -1,0 +1,1 @@
+export PYTHONPATH='/mnt/yixin'
