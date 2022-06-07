@@ -6,7 +6,7 @@ do
         for file2 in $file/*
         do
           if [[ $file2 =~ "pre.sh" ]];then
-          echo "==/"a*/""
+            echo $file2
           fi
         done
     fi
