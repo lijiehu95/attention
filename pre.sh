@@ -6,7 +6,7 @@ do
         for file2 in $file/*
         do
           if [[ $file2 =~ "pre.sh" ]];then
-            echo $file2
+            bash $file2
           fi
         done
     fi
