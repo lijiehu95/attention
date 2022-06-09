@@ -4,6 +4,7 @@ import codecs, json
 from tqdm import tqdm
 import numpy as np
 from attention.preprocess import vectorizer
+import wandb
 
 class Trainer() :
     def __init__(self, dataset, args, config) :
@@ -68,11 +69,24 @@ class Trainer() :
         best_loss = 10000000000
         for i in tqdm(range(args.n_iters)):
 
-            _, loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.train(train_data.X, train_data.y,
+            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.trian_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
-                                                                                 train_data.gold_attns,ours=True,PDGer=self.PDGer)
+                                                                                 train_data.gold_attns,PDGer=self.PDGer)
+            wandb.log({
+                "loss_tr":loss_tr,
+                "loss_tr_orig":loss_tr_orig,
+                "tvd_loss_tr":tvd_loss_tr,
+                "topk_loss":topk_loss,
+                "pgd_tvd_loss":pgd_tvd_loss
+            })
+
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
                                                                               target_attn=train_data.gold_attns)
+            wandb.log({
+                "predictions_tr": predictions_tr,
+                "attentions_tr": attentions_tr,
+                "jsd_score_tr": jsd_score_tr,
+            })
             predictions_tr = np.array(predictions_tr)
             train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
                                          jsd_score_tr)
@@ -86,6 +100,11 @@ class Trainer() :
 
             predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
                                                                               target_attn=test_data.gold_attns)
+            wandb.log({
+                "predictions_te": predictions_te,
+                "attentions_te": attentions_te,
+                "jsd_score_te": jsd_score_te,
+            })
             predictions_te = np.array(predictions_te)
             test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
                                         jsd_score_te)
@@ -99,6 +118,9 @@ class Trainer() :
                 n_fail = 0
                 save_model = True
                 print("Model Saved on Training Loss: ", loss_tr)
+                wandb.log({
+                    "best_loss": best_loss,
+                })
 
             else:
                 n_fail += 1

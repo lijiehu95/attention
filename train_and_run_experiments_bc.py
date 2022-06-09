@@ -1,6 +1,10 @@
 import argparse
 import time
 import sys
+import wandb
+
+wandb.init(project="XAI-NLP", entity="yixin")
+
 parser = argparse.ArgumentParser(description='Run experiments on a dataset')
 parser.add_argument('--dataset', type=str, required=True)
 parser.add_argument("--data_dir", type=str, required=True)
@@ -22,10 +26,13 @@ parser.add_argument('--pgd_step_size', type=float,default=0.04)
 parser.add_argument('--pgd_norm_type', type=str,default="l-infty")
 parser.add_argument('--lambda_1', type=float, default=1e-2)
 parser.add_argument('--lambda_2', type=float, default=1e-2)
+parser.add_argument('--exp_name', type=str, default="debug")
 
 args, extras = parser.parse_known_args()
 args.extras = extras
 args.command = ' '.join(['python'] + sys.argv)
+
+wandb.log(vars(args))
 
 from attention.Trainers.DatasetBC import datasets
 from attention.ExperimentsBC import train_dataset_on_encoders
