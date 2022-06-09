@@ -8,7 +8,8 @@ command:
   - ${env}
   - /home/yila22/anaconda3/envs/xai/bin/python3.6
   - ${program}
-  - ${args_no_hyphens}
+  - "--config"
+  - "your-training-config.json"
   - ${args}
 parameters:
   lambda_1:
