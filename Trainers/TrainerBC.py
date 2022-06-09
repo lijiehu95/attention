@@ -63,7 +63,7 @@ class Trainer() :
             f.write(str(test_metrics) + '\n')
             f.close()
 
-    def train_ours(self, train_data, test_data, PGDer, args):
+    def train_ours(self, train_data, test_data, args):
         br = False
         n_fail = 0
         best_loss = 10000000000
