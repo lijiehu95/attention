@@ -2,6 +2,7 @@ import os
 import pickle
 import numpy as np
 import json
+from attention.preprocess import vectorizer
 
 def sortbylength(X, y) :
     len_t = np.argsort([len(x) for x in X])
