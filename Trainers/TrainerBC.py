@@ -69,7 +69,7 @@ class Trainer() :
         best_loss = 10000000000
         for i in tqdm(range(args.n_iters)):
 
-            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.trian_ours(train_data.X, train_data.y,
+            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
                                                                                  train_data.gold_attns,PDGer=self.PDGer)
             wandb.log({
