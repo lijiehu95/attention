@@ -1,5 +1,5 @@
 args_no_hyphens: dataset=sst gold_label_dir=/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/
-program: train.py --ours
+program: train.py
 method: bayes
 metric:
   name: loss_te
