@@ -12,7 +12,7 @@ class Trainer() :
         self.model = Model(config, args, pre_embed=dataset.vec.embeddings)
         self.metrics = calc_metrics_classification
         self.display_metrics = True
-        self.PDGer = None
+        self.PGDer = None
     
     def train_standard(self, train_data, test_data, args, save_on_metric='roc_auc') :
 
@@ -63,7 +63,7 @@ class Trainer() :
             f.write(str(test_metrics) + '\n')
             f.close()
 
-    def train_ours(self, train_data, test_data, args):
+    def train_ours(self, train_data, test_data, PGDer, args):
         br = False
         n_fail = 0
         best_loss = 10000000000
@@ -71,7 +71,7 @@ class Trainer() :
 
             loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
-                                                                                 train_data.gold_attns,PDGer=self.PDGer)
+                                                                                 train_data.gold_attns,PGDer=self.PGDer)
             wandb.log({
                 "loss_tr":loss_tr,
                 "loss_tr_orig":loss_tr_orig,
