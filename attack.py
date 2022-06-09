@@ -53,7 +53,7 @@ class PGDAttacker():
                 self._clip_(adv_x, x)
 
         ''' reopen autograd of model after pgd '''
-        decoder.trian()
+        # decoder.trian()
         for pp in decoder.parameters():
             pp.requires_grad = True
 
