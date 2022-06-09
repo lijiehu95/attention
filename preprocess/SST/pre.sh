@@ -1,4 +1,3 @@
-export PYTHONPATH='/mnt/yixin'
 cd $(dirname $0)
-source activate py36
+source activate $1
 runipy SST.ipynb
