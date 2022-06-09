@@ -10,7 +10,7 @@ def intersection_of_two_tensor(t1, t2):
 
 def topk_overlap_loss(gt,pred,K=2):
     idx = torch.argsort(gt,dim=1,descending=True)
-    print(idx)
+    # print(idx)
     idx = idx[:,:K]
     pred_TopK_1 = pred.gather(1, idx)
     gt_Topk_1 = gt.gather(1,idx)
@@ -22,7 +22,7 @@ def topk_overlap_loss(gt,pred,K=2):
 
     loss = torch.abs((pred_TopK_1 - gt_Topk_1)) + torch.abs(gt_TopK_2 - pred_TopK_2)
     loss = loss.sum()/(2*K)
-    print(loss)
+    # print(loss)
     return  loss
 if __name__ == '__main__':
 
