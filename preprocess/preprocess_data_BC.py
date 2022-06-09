@@ -8,7 +8,7 @@ parser.add_argument('--min_df', type=int, required=True)
 args, extras = parser.parse_known_args()
 args.extras = extras
 
-import vectorizer
+from attention.preprocess import vectorizer
 vec = vectorizer.Vectorizer(min_df=args.min_df)
 
 import pandas as pd 
