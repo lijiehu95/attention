@@ -1,2 +1,2 @@
 root=$(dirname $0)
-export PYTHONPATH=$root
+echo export PYTHONPATH=$root
