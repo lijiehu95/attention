@@ -55,7 +55,7 @@ if args.adversarial and not args.lmbda :
 torch.manual_seed(args.seed)
 np.random.seed(args.seed)
 
-if args.adversarial :
+if args.adversarial or args.ours :
     args.frozen_attn = False
     args.pre_loaded_attn = False
 elif args.attention == 'frozen' :
@@ -77,6 +77,8 @@ if args.output_dir is not None :
 
 if args.adversarial :
     exp_name = '+'.join((args.encoder, 'adversarial'))
+elif args.ours:
+    exp_name = '+'.join((args.encoder, 'ours'))
 else :
     exp_name = '+'.join((args.encoder, args.attention))
 
