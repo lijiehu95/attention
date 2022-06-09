@@ -126,7 +126,6 @@ class Model():
         loss_total = 0
         loss_orig_total = 0
         tvd_loss_total = 0
-        kl_loss_total = 0
         topk_loss_total = 0
         pgd_tvd_loss_total = 0
 

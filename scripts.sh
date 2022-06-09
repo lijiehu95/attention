@@ -1,6 +1,7 @@
 export CUDA_VISIBLE_DEVICES=2
 source activate xai
 export PYTHONPATH=/home/yila22/prj
+exp_name="debug-and-find-lambda"
 
 for data in sst ; do
   for lambda_1 in  1e-1 1e-2 1e-3 1e-4 1e-5;do

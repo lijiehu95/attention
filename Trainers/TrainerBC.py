@@ -69,15 +69,28 @@ class Trainer() :
         best_loss = 10000000000
         for i in tqdm(range(args.n_iters)):
 
-            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss, pgd_tvd_loss = self.model.train_ours(train_data.X, train_data.y,
+            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
                                                                                  train_data.gold_attns,PGDer=self.PGDer)
             wandb.log({
                 "loss_tr":loss_tr,
                 "loss_tr_orig":loss_tr_orig,
                 "tvd_loss_tr":tvd_loss_tr,
-                "topk_loss":topk_loss,
-                "pgd_tvd_loss":pgd_tvd_loss
+                "topk_loss_tr":topk_loss_tr,
+                "pgd_tvd_loss_tr":pgd_tvd_loss_tr
+            })
+
+            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te = self.model.train_ours(test_data.X,
+                                                                                                test_data.y,
+                                                                                                test_data.true_pred,
+                                                                                                test_data.gold_attns,
+                                                                                                PGDer=self.PGDer, trian=False)
+            wandb.log({
+                "loss_te": loss_te,
+                "loss_te_orig": loss_te_orig,
+                "tvd_loss_te": tvd_loss_te,
+                "topk_loss_te": topk_loss_te,
+                "pgd_tvd_loss_te": pgd_tvd_loss_te
             })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
@@ -87,11 +100,12 @@ class Trainer() :
                 "attentions_tr": attentions_tr,
                 "jsd_score_tr": jsd_score_tr,
             })
+
             predictions_tr = np.array(predictions_tr)
             train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
                                          jsd_score_tr)
             print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
-            loss_tr, loss_tr_orig, topk_loss, tvd_loss_tr, pgd_tvd_loss)
+            loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
             print(print_str)
 
             print("TRAIN METRICS:")
