@@ -7,7 +7,7 @@ command:
   - ${env}
   - /home/yila22/anaconda3/envs/xai/bin/python3.6
   - ${program}
-  - "--ours --dataset sst --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/"
+  - --ours --dataset sst --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/
 parameters:
   lambda_1:
     min: 0.000000001
