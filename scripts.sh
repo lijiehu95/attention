@@ -1,9 +1,9 @@
 export CUDA_VISIBLE_DEVICES=2
-source activate attention
+source activate xai
 
 for data in sst ; do
-  for lambda_1 in 0 1e-1 1e-2 1e-3 1e-4 1e-5;do
-    for lambda_2 in 0 1e-1 1e-2 1e-3 1e-4 1e-5;do
+  for lambda_1 in  1e-1 1e-2 1e-3 1e-4 1e-5;do
+    for lambda_2 in  1e-1 1e-2 1e-3 1e-4 1e-5;do
 python train_and_run_experiments_bc.py --dataset $data \
   --data_dir . --output_dir test_adv_outputs/ \
   --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 \
@@ -11,8 +11,8 @@ python train_and_run_experiments_bc.py --dataset $data \
 done;done;done
 
 for data in imdb ; do
-  for lambda_1 in 0 1e-1 1e-2 1e-3 1e-4 1e-5;do
-    for lambda_2 in 0 1e-1 1e-2 1e-3 1e-4 1e-5;do
+  for lambda_1 in  1e-1 1e-2 1e-3 1e-4 1e-5;do
+    for lambda_2 in  1e-1 1e-2 1e-3 1e-4 1e-5;do
 python train_and_run_experiments_bc.py --dataset $data \
   --data_dir . --output_dir test_adv_outputs/ \
   --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 \
