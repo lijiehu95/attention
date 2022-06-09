@@ -1,4 +1,4 @@
-program: train.py
+program: train.py --dataset imdb --ours --gold_label_dir /home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Thu_Jun__9_07:14:57_2022
 method: bayes
 metric:
   name: loss_te
