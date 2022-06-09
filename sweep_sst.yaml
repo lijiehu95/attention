@@ -1,4 +1,5 @@
-program: train.py
+args_no_hyphens: dataset=sst gold_label_dir=/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/
+program: train.py --ours
 method: bayes
 metric:
   name: loss_te
@@ -7,7 +8,7 @@ command:
   - ${env}
   - /home/yila22/anaconda3/envs/xai/bin/python3.6
   - ${program}
-  - ours --dataset sst --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/
+  -
   - ${args}
 parameters:
   lambda_1:
