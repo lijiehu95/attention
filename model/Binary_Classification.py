@@ -113,6 +113,8 @@ class Model():
         data = [data_in[i] for i in sorting_idx]
         target = [target_in[i] for i in sorting_idx]
 
+        print(target_pred)
+
         target_pred = [target_pred[i] for i in sorting_idx]
         target_attn = [target_attn_in[i] for i in sorting_idx]
 
