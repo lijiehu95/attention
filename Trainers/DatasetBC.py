@@ -49,7 +49,7 @@ class Dataset() :
         Xt, yt = filterbylength(Xt, yt, min_length=min_length, max_length=max_length)
         Xt, yt = sortbylength(Xt, yt)
 
-        if args.pre_loaded_attn or args.adversarial :
+        if args.pre_loaded_attn or args.adversarial or args.ours :
             # these are lists of lists, with some residual padding
             y_attn = json.load(open(os.path.join(args.gold_label_dir, 'train_attentions_best_epoch.json'), 'r'))
             yt_attn = json.load(open(os.path.join(args.gold_label_dir, 'test_attentions_best_epoch.json'), 'r'))
