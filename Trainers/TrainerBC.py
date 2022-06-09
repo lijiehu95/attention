@@ -84,7 +84,7 @@ class Trainer() :
                                                                                                 test_data.y,
                                                                                                 test_data.true_pred,
                                                                                                 test_data.gold_attns,
-                                                                                                PGDer=self.PGDer, trian=False)
+                                                                                                PGDer=self.PGDer, train=False)
             wandb.log({
                 "loss_te": loss_te,
                 "loss_te_orig": loss_te_orig,
