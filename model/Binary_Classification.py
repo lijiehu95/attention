@@ -107,7 +107,7 @@ class Model():
               target_in,
               target_pred,
               target_attn_in,
-              PDGer,train=True):
+              PGDer,train=True):
         sorting_idx = get_sorting_index_with_noise_from_lengths(
             [len(x) for x in data_in], noise_frac=0.1)
         data = [data_in[i] for i in sorting_idx]
@@ -172,7 +172,7 @@ class Model():
                 return batch_tvd(torch.sigmoid(pred), gt)
 
             # PGD generate the new weight
-            new_att = PDGer.perturb(criterion=crit, att=batch_data.attn, data=batch_data \
+            new_att = PGDer.perturb(criterion=crit, att=batch_data.attn, data=batch_data \
                                     , decoder=self.decoder, batch_target_pred=batch_target_pred,
                                     target_model=target_model)
 
