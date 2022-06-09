@@ -13,7 +13,15 @@ parser.add_argument('--gold_label_dir', type=str, required=False)
 parser.add_argument('--hidden_size', type=int, default=128)
 parser.add_argument('--lmbda', type=float, required=False)
 parser.add_argument('--adversarial', action='store_const', required=False, const=True)
+parser.add_argument('--ours', action='store_true')
 
+# parser.add_argument('--pgd_random_start', action='store_true')
+parser.add_argument('--pgd_radius', type=float,default=0.2)
+parser.add_argument('--pgd_step', type=float,default=10)
+parser.add_argument('--pgd_step_size', type=float,default=0.04)
+parser.add_argument('--pgd_norm_type', type=str,default="l-infty")
+parser.add_argument('--lambda_1', type=float, default=1e-2)
+parser.add_argument('--lambda_2', type=float, default=1e-2)
 
 args, extras = parser.parse_known_args()
 args.extras = extras

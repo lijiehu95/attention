@@ -68,6 +68,10 @@ class Model() :
         basepath = configuration['training'].get('basepath', 'outputs')
         self.time_str = time.ctime().replace(' ', '_')
         self.dirname = os.path.join(basepath, dirname, self.time_str)
+
+
+        self.lambda_1 = args.lambda_1
+        self.lambda_2 = args.lambda_2
         
     @classmethod
     def init_from_config(cls, dirname, args, **kwargs) :
@@ -77,10 +81,11 @@ class Model() :
         obj.load_values(dirname)
         return obj
 
-    def train(self, data_in, target_in, target_pred=None, target_attn_in=None, train=True) :
+    def train(self, data_in, target_in, target_pred=None, target_attn_in=None, train=True,ours=False, PDGer=None):
         sorting_idx = get_sorting_index_with_noise_from_lengths([len(x) for x in data_in], noise_frac=0.1)
         data = [data_in[i] for i in sorting_idx]
         target = [target_in[i] for i in sorting_idx]
+
         if target_pred :
             target_pred = [target_pred[i] for i in sorting_idx]
             target_attn = [target_attn_in[i] for i in sorting_idx]
@@ -93,6 +98,8 @@ class Model() :
         loss_orig_total = 0
         tvd_loss_total = 0
         kl_loss_total = 0
+        topk_loss_total = 0
+        pgd_tvd_loss_total = 0
 
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
@@ -122,13 +129,45 @@ class Model() :
 
             # calculate adversarial loss (Section 4) if adversarial model
             if target_pred :
-                kl_loss = self.criterion(batch_data.target_attn.log(), batch_data.attn)
-                tvd_loss = batch_tvd(torch.sigmoid(batch_data.predict), batch_target_pred)
-                loss_orig = tvd_loss - self.lmbda * kl_loss
+                if ours:
+                    from attention.utlis import topk_overlap_loss
+                    topk_loss = topk_overlap_loss(batch_data.target_attn.log(),batch_data.attn )
+                    tvd_loss = batch_tvd(torch.sigmoid(batch_data.predict), batch_target_pred)
+
+                    ### pgd loss
+                    def target_model(w, data, decoder):
+                        decoder(revise_att=w,data=data)
+                        return data.predict
+
+                    def crit(gt,pred):
+                        return batch_tvd(torch.sigmoid(pred), gt)
+
+                    # PGD generate the new weight
+                    new_att = PDGer.perturb(criterion=crit, att=batch_data.attn, data=batch_data \
+                                          , decoder=self.decoder,batch_target_pred=batch_target_pred, target_model=target_model)
+
+                    # output the prediction tvd of new weight and old weight
+                    self.decoder(batch_data,revise_att=new_att)
+                    new_out = batch_data.predict
+                    att_pgd_pred_tvd  = batch_tvd(torch.sigmoid(new_out), batch_target_pred)
+
+
+                    loss_orig = tvd_loss + self.lambda_1 * att_pgd_pred_tvd + self.lambda_2 * topk_loss
+
+
+
+                else:
+                    kl_loss = self.criterion(batch_data.target_attn.log(), batch_data.attn)
+                    tvd_loss = batch_tvd(torch.sigmoid(batch_data.predict), batch_target_pred)
+                    loss_orig = tvd_loss - self.lmbda * kl_loss
+
             # else calculate standard BCE loss
             else :
                 loss_orig = self.criterion(batch_data.predict, batch_target)
-            
+
+
+
+
             weight = batch_target * self.pos_weight + (1 - batch_target)
             loss = (loss_orig * weight).mean(1).sum()
 
@@ -147,12 +186,24 @@ class Model() :
                     self.attn_optim.step()
 
             loss_total += float(loss.data.cpu().item())
-            if target_attn_in : 
-                loss_orig_total += float(loss_orig.data.cpu().item())
-                tvd_loss_total += float(tvd_loss.data.cpu().item())
-                kl_loss_total += float(kl_loss.data.cpu().item())
-                
-        return loss_total*bsize/N, loss_total, loss_orig_total, tvd_loss_total, kl_loss_total
+
+            if target_attn_in :
+                if ours:
+                    loss_orig_total += float(loss_orig.data.cpu().item())
+                    tvd_loss_total += float(tvd_loss.data.cpu().item())
+                    # kl_loss_total += float(kl_loss.data.cpu().item())
+                    topk_loss_total += float(topk_loss.data.cpu().item())
+                    pgd_tvd_loss_total += float(att_pgd_pred_tvd.data.cpu().item())
+                else:
+
+                    loss_orig_total += float(loss_orig.data.cpu().item())
+                    tvd_loss_total += float(tvd_loss.data.cpu().item())
+                    kl_loss_total += float(kl_loss.data.cpu().item())
+        if ours:
+            return loss_total*bsize/N, loss_total, loss_orig_total, tvd_loss_total, topk_loss_total,pgd_tvd_loss_total
+        else:
+            return loss_total*bsize/N, loss_total, loss_orig_total, tvd_loss_total, kl_loss_total
+
 
     def evaluate(self, data, target_attn=None) :
         self.encoder.train()

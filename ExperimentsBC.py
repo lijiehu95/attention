@@ -9,7 +9,15 @@ def train_dataset(dataset, args, config='lstm') :
         print("DIRECTORY:", dirname)
         if args.adversarial :
             trainer.train_adversarial(dataset.train_data, dataset.test_data, args)
-        else :
+        elif args.ours:
+            from attention.attack import  PGDAttacker
+            PDGer = PGDAttacker(
+                radius=args.pgd_radius, steps=args.pgd_step, step_size=args.pgd_step_size, random_start= \
+                args.pgd_random_start, norm_type=args.pgd_norm_type, ascending=True
+            )
+            trainer.PGDer = PDGer
+            trainer.train_ours(dataset.train_data, dataset.test_data, args)
+        else:
             trainer.train_standard(dataset.train_data, dataset.test_data, args, save_on_metric=dataset.save_on_metric)
         print('####################################')
         print("TEST RESULTS FROM BEST MODEL")
