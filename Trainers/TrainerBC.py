@@ -3,6 +3,7 @@ import attention.model.Binary_Classification as BC
 import codecs, json
 from tqdm import tqdm
 import numpy as np
+from attention.preprocess import vectorizer
 
 class Trainer() :
     def __init__(self, dataset, args, config) :
