@@ -11,7 +11,7 @@ parser.add_argument('--add_answers_to_vocab', action='store_true', default=False
 args, extras = parser.parse_known_args()
 args.extras = extras
 
-from attention.preprocess import vectorizer
+import vectorizer
 
 vec = vectorizer.Vectorizer(min_df=args.min_df)
 
