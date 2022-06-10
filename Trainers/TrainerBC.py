@@ -110,11 +110,11 @@ class Trainer() :
             print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
             loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
             print(print_str)
-
-            print("TRAIN METRICS:")
-            if self.display_metrics:
-                print_metrics(train_metrics, adv=True)
-
+            #
+            # print("TRAIN METRICS:")
+            # if self.display_metrics:
+            #     print_metrics(train_metrics, adv=True)
+            #
             predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
                                                                               target_attn=test_data.gold_attns)
             wandb.log({
@@ -127,15 +127,15 @@ class Trainer() :
             test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
                                         jsd_score_te)
 
-            print("TEST METRICS:")
-            if self.display_metrics:
-                print_metrics(test_metrics, adv=True)
+            # print("TEST METRICS:")
+            # if self.display_metrics:
+            #     print_metrics(test_metrics, adv=True)
 
             if loss_tr < best_loss:
                 best_loss = loss_tr
                 n_fail = 0
                 save_model = True
-                print("Model Saved on Training Loss: ", loss_tr)
+                # print("Model Saved on Training Loss: ", loss_tr)
                 wandb.log({
                     "best_loss": best_loss,
                 })
@@ -143,16 +143,16 @@ class Trainer() :
             else:
                 n_fail += 1
                 save_model = False
-                print("Model not saved on Training Loss: ", loss_tr)
+                # print("Model not saved on Training Loss: ", loss_tr)
                 if n_fail >= 10:
                     br = True
-                    print("Loss hasn't decreased for 10 epochs...EARLY STOPPING TRIGGERED")
+                    # print("Loss hasn't decreased for 10 epochs...EARLY STOPPING TRIGGERED")
 
             dirname = self.model.save_values(save_model=save_model)
             if save_model:
                 attentions_tr = [el.tolist() for el in attentions_tr]
                 attentions_te = [el.tolist() for el in attentions_te]
-                print("SAVING PREDICTIONS AND ATTENTIONS")
+                # print("SAVING PREDICTIONS AND ATTENTIONS")
                 json.dump(predictions_tr.tolist(),
                           codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
                           separators=(',', ':'), sort_keys=True, indent=4)
@@ -166,7 +166,7 @@ class Trainer() :
                           codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
                           separators=(',', ':'), sort_keys=True, indent=4)
 
-            print("DIRECTORY:", dirname)
+            # print("DIRECTORY:", dirname)
 
             f = open(dirname + '/epoch.txt', 'a')
             f.write(str(test_metrics) + '\n')

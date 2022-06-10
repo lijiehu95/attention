@@ -2,7 +2,7 @@ from torch import nn
 from allennlp.common import Registrable
 
 def masked_softmax(attn_odds, masks) :
-    attn_odds.masked_fill_(masks, -float('inf'))
+    attn_odds.masked_fill_(masks.bool(), -float('inf'))
     attn = nn.Softmax(dim=-1)(attn_odds)
     return attn
 

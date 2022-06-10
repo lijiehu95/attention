@@ -58,7 +58,7 @@ class BatchHolder() :
         inv_l = 1. / (self.lengths.cpu().data.numpy() - 2)
         attn += inv_l[:, None]
         attn = torch.Tensor(attn).to(device)
-        attn.masked_fill_(self.masks, 0) 
+        attn.masked_fill_(self.masks.bool(), 0)
         return attn
 
 def kld(a1, a2) :
