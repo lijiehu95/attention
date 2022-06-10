@@ -69,7 +69,7 @@ class Trainer() :
         best_loss = 10000000000
         for i in tqdm(range(args.n_iters)):
 
-            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr = self.model.train_ours(train_data.X, train_data.y,
+            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
                                                                                  train_data.gold_attns,PGDer=self.PGDer)
             wandb.log({
@@ -77,10 +77,11 @@ class Trainer() :
                 "loss_tr_orig":loss_tr_orig,
                 "tvd_loss_tr":tvd_loss_tr,
                 "topk_loss_tr":topk_loss_tr,
-                "pgd_tvd_loss_tr":pgd_tvd_loss_tr
+                "pgd_tvd_loss_tr":pgd_tvd_loss_tr,
+                "true_topk_loss_tr":true_topk_loss_tr
             })
 
-            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te = self.model.train_ours(test_data.X,
+            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te = self.model.train_ours(test_data.X,
                                                                                                 test_data.y,
                                                                                                 test_data.true_pred,
                                                                                                 test_data.gold_attns,
@@ -90,11 +91,13 @@ class Trainer() :
                 "loss_te_orig": loss_te_orig,
                 "tvd_loss_te": tvd_loss_te,
                 "topk_loss_te": topk_loss_te,
-                "pgd_tvd_loss_te": pgd_tvd_loss_te
+                "pgd_tvd_loss_te": pgd_tvd_loss_te,
+                "true_topk_loss_te":true_topk_loss_te
             })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
                                                                               target_attn=train_data.gold_attns)
+
             wandb.log({
                 "predictions_tr": predictions_tr,
                 "attentions_tr": attentions_tr,

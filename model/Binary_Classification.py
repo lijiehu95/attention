@@ -121,6 +121,8 @@ class Model():
         self.encoder.train()
         self.decoder.train()
 
+        from attention.utlis import AverageMeter
+
         bsize = self.bsize
         N = len(data)
         loss_total = 0
@@ -128,6 +130,7 @@ class Model():
         tvd_loss_total = 0
         topk_loss_total = 0
         pgd_tvd_loss_total = 0
+        true_topk_loss_counter = AverageMeter()
 
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
@@ -156,9 +159,15 @@ class Model():
 
             # calculate adversarial loss (Section 4) if adversarial model
 
-            from attention.utlis import topk_overlap_loss
+            from attention.utlis import topk_overlap_loss,topK_overlap_true_loss
             topk_loss = topk_overlap_loss(batch_data.target_attn.log(),
                                           batch_data.attn)
+            topk_true_loss = topK_overlap_true_loss(batch_data.target_attn.log(),
+                                          batch_data.attn)
+            true_topk_loss_counter.update(
+                topk_true_loss,len(batch_doc)
+            )
+
             tvd_loss = batch_tvd(
                 torch.sigmoid(batch_data.predict), batch_target_pred)
 
@@ -202,13 +211,13 @@ class Model():
                     self.attn_optim.step()
 
             loss_total += float(loss.data.cpu().item())
-
             loss_orig_total += float(loss_orig.data.cpu().item())
             tvd_loss_total += float(tvd_loss.data.cpu().item())
             topk_loss_total += float(topk_loss.data.cpu().item())
             pgd_tvd_loss_total += float(
                 att_pgd_pred_tvd.data.cpu().item())
-        return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total
+
+        return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss_counter.average()
 
     def train(self,
               data_in,

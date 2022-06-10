@@ -8,6 +8,38 @@ def intersection_of_two_tensor(t1, t2):
     intersection = uniques[counts > 1]
     return intersection
 
+def topK_overlap_true_loss(a,b,K=2):
+    t1 = a.detach().cpu().numpy()
+    t2 = b.detach().cpu().numpy()
+    N = t1.shape[0]
+    loss = []
+    for i in range(N):
+        inset = np.intersect1d(t1[i,:K],t2[i,:K])
+        overlap = len(inset)/K
+        print(overlap)
+        loss.append(overlap)
+    return np.mean(loss)
+
+
+class AverageMeter():
+    def __init__(self):
+        self.cnt = 0
+        self.sum = 0
+        self.mean = 0
+
+    def update(self, val, cnt):
+        self.cnt += cnt
+        self.sum += val * cnt
+        self.mean = self.sum / self.cnt
+
+    def average(self):
+        return self.mean
+
+    def total(self):
+        return self.sum
+
+
+
 def topk_overlap_loss(gt,pred,K=2):
     idx = torch.argsort(gt,dim=1,descending=True)
     # print(idx)
@@ -47,14 +79,14 @@ if __name__ == '__main__':
     print(t1.shape)
     t2 = torch.tensor(
         np.array([[1, 2, 3, 4],
-                  [2, 1, 6, 7]]),requires_grad=True, dtype=torch.double
+                  [2, 4, 6, 7]]),requires_grad=True, dtype=torch.double
     )
     print(t2.shape)
 
 
 
-    test = gradcheck(lambda t1,t2: topk_overlap_loss(t1,t2), (t1,t2))
-    print("Are the gradients correct: ", test)
+    # test = gradcheck(lambda t1,t2: topk_overlap_loss(t1,t2), (t1,t2))
+    # print("Are the gradients correct: ", test)
 
     # N = 2
     # for i in range(N):
@@ -63,14 +95,6 @@ if __name__ == '__main__':
     # inputs = torch.randn((10, 5), requires_grad=True, dtype=torch.double)
     # linear = nn.Linear(5, 3)
     # linear = linear.double()
-    # def overlap_sum(t1,t2):
-    #     # x = t1,t2
-    #     N = t1.shape[0]
-    #     loss = 0
-    #     for i in range(N):
-    #         inset = intersection_of_two_tensor(t1[i],t2[i])
-    #         # print(inset.size())
-    #         inset[inset != 0] = 1
-    #         loss += inset.sum()
-    #         print(loss)
-    #     return loss
+
+
+    print(topK_overlap(t1,t2))
