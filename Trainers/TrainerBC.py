@@ -122,6 +122,7 @@ class Trainer() :
                 "attentions_te": attentions_te,
                 "jsd_score_te": jsd_score_te,
             })
+
             predictions_te = np.array(predictions_te)
             test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
                                         jsd_score_te)

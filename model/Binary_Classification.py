@@ -94,6 +94,10 @@ class Model():
         self.lambda_1 = args.lambda_1
         self.lambda_2 = args.lambda_2
 
+
+        self.K = args.K
+        self.topk_prox_metric = args.topk_prox_metric
+
     @classmethod
     def init_from_config(cls, dirname, args, **kwargs):
         config = json.load(open(dirname + '/config.json', 'r'))
@@ -161,9 +165,9 @@ class Model():
 
             from attention.utlis import topk_overlap_loss,topK_overlap_true_loss
             topk_loss = topk_overlap_loss(batch_data.target_attn.log(),
-                                          batch_data.attn)
+                                          batch_data.attn,K=self.K, metric=self.topk_prox_metric)
             topk_true_loss = topK_overlap_true_loss(batch_data.target_attn.log(),
-                                          batch_data.attn)
+                                          batch_data.attn,K=self.K)
             true_topk_loss_counter.update(
                 topk_true_loss,len(batch_doc)
             )

@@ -40,7 +40,7 @@ class AverageMeter():
 
 
 
-def topk_overlap_loss(gt,pred,K=2):
+def topk_overlap_loss(gt,pred,K=2,metric='l1'):
     idx = torch.argsort(gt,dim=1,descending=True)
     # print(idx)
     idx = idx[:,:K]
@@ -52,10 +52,19 @@ def topk_overlap_loss(gt,pred,K=2):
     gt_TopK_2 = gt.gather(1, idx_pred)
     pred_TopK_2 = pred.gather(1, idx_pred)
 
-    loss = torch.abs((pred_TopK_1 - gt_Topk_1)) + torch.abs(gt_TopK_2 - pred_TopK_2)
-    loss = loss.sum()/(2*K)
-    # print(loss)
+    if metric == 'l1':
+        loss = torch.abs((pred_TopK_1 - gt_Topk_1)) + torch.abs(gt_TopK_2 - pred_TopK_2)
+        loss = loss.sum()/(2*K)
+    elif metric == "l2":
+        loss = torch.norm(pred_TopK_1 - gt_Topk_1, p=2) + torch.norm(gt_TopK_2 - pred_TopK_2, p=2)
+        loss = loss.sum()/(2*K)
+    elif metric == "kl":
+        loss = torch.nn.functional.kl_div(gt,pred)
+    elif metric == "jsd":
+        loss = torch.nn.functional.kl_div(gt,pred) + torch.nn.functional.kl_div(pred,gt)
+        loss /= 2
     return  loss
+
 if __name__ == '__main__':
 
     # print(
@@ -97,4 +106,4 @@ if __name__ == '__main__':
     # linear = linear.double()
 
 
-    print(topK_overlap(t1,t2))
+    # print(topK_overlap(t1,t2))
