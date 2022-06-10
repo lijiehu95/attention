@@ -109,7 +109,7 @@ class Trainer() :
                                          jsd_score_tr)
             print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
             loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
-            print(print_str)
+            # print(print_str)
             #
             # print("TRAIN METRICS:")
             # if self.display_metrics:
