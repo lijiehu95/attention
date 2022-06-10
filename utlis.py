@@ -16,7 +16,7 @@ def topK_overlap_true_loss(a,b,K=2):
     for i in range(N):
         inset = np.intersect1d(t1[i,:K],t2[i,:K])
         overlap = len(inset)/K
-        print(overlap)
+        # print(overlap)
         loss.append(overlap)
     return np.mean(loss)
 
