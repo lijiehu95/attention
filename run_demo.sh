@@ -4,8 +4,8 @@ export PYTHONPATH=/home/yila22/prj
 exp_name="debug-check-topK-true-loss"
 
 for data in sst ; do
-  for lambda_1 in  1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
-    for lambda_2 in  1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
+  for lambda_1 in  1 1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
+    for lambda_2 in  1 1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
       for topk_prox_metric in l1 l2 kl jsd;do
         for K in 2 3 4 5;do
         python train.py --dataset $data \
@@ -15,8 +15,8 @@ for data in sst ; do
 done;done;done;done;done
 
 for data in imdb ; do
-  for lambda_1 in  1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
-    for lambda_2 in  1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
+  for lambda_1 in  1 1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
+    for lambda_2 in  1 1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
       for topk_prox_metric in l1 l2 kl jsd;do
         for K in 2 3 4 5;do
           python train.py --dataset $data \
