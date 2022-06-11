@@ -10,10 +10,10 @@ gpunum=5
 
 
 for data in sst; do
-  for lambda_1 in 1 1e-4 0;do
+  for lambda_1 in 0;do
     for lambda_2 in  1 1e-2 1e-3 1e-5 1e-7;do
       for topk_prox_metric in l1 l2 kl jsd;do
-        for K in 2 3 4 5;do
+        for K in 3;do
           i=`expr $i % $gpunum`
           export CUDA_VISIBLE_DEVICES=${gpu[$i]}
           echo "use gpu id is ${gpu[$i]}"
