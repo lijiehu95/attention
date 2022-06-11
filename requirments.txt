@@ -120,3 +120,4 @@ zope.event==4.5.0
 zope.interface==5.4.0
 runipy
 wandb
+pytorch_lightning
