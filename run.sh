@@ -13,7 +13,7 @@ for data in sst; do
           i=`expr $i % $gpunum`
           export CUDA_VISIBLE_DEVICES=${gpu[$i]}
           echo "use gpu id is ${gpu[$i]}"
-          i=`expr $i + 1`
+
           com="python train.py --exp_name $exp_name --dataset $data \
             --data_dir . --output_dir test_adv_outputs/ \
             --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 --topk_prox_metric $topk_prox_metric --K $K\
@@ -25,6 +25,7 @@ for data in sst; do
           else
             nohup $com > ./logs/$data-${RANDOM}.txt 2>&1 &
           fi
+          i=`expr $i + 1`
 done;done;done;done;done
 
 for data in imdb; do
@@ -35,7 +36,6 @@ for data in imdb; do
           i=`expr $i % $gpunum`
           export CUDA_VISIBLE_DEVICES=${gpu[$i]}
           echo "use gpu id is ${gpu[$i]}"
-          i=`expr $i + 1`
           com="python train.py --exp_name $exp_name --dataset $data \
             --data_dir . --output_dir test_adv_outputs/ \
             --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 --topk_prox_metric $topk_prox_metric --K $K\
@@ -47,6 +47,7 @@ for data in imdb; do
           else
             nohup $com > ./logs/$data-${RANDOM}.txt 2>&1 &
           fi
+          i=`expr $i + 1`
 done;done;done;done;done
 
 
