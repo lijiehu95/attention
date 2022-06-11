@@ -88,7 +88,9 @@ start = time.time()
 train_dataset_on_encoders(dataset, args, exp_name)
 print("TOTAL ELAPSED TIME: %f HOURS OR %f MINUTES" % (((time.time() - start)/60/60), ((time.time() - start)/60)))
 # _python_exit()
-sys.exit()
-
+# sys.exit()
+import os
+import signal
+os.kill(os.getpid(), signal.SIGKILL)
 
 
