@@ -1,14 +1,10 @@
 export CUDA_VISIBLE_DEVICES=4
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-exp_name="debug-check-topK-true-loss-v1"
-
-
+exp_name="debug-topk"
 i=0 # gpu pointer
 gpu=(0 4 5 6 7)
 gpunum=5
-
-
 for data in sst; do
   for lambda_1 in 0;do
     for lambda_2 in  1 1e-3 1e-5 ;do
