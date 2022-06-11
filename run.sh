@@ -21,7 +21,7 @@ for data in sst; do
           nohup python train.py --exp_name $exp_name --dataset $data \
             --data_dir . --output_dir test_adv_outputs/ \
             --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 --topk_prox_metric $topk_prox_metric --K $K\
-            --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/ --n_iters 80 > null 2>&1 &
+            --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/ --n_iters 80 > ./logs/${RANDOM}.txt 2>&1 &
 done;done;done;done;done
 
 #for data in imdb; do
