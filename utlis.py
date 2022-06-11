@@ -9,6 +9,8 @@ def intersection_of_two_tensor(t1, t2):
     return intersection
 
 def topK_overlap_true_loss(a,b,K=2):
+    t1 = torch.argsort(a, descending=True)
+    t2 = torch.argsort(b, descending=True)
     t1 = a.detach().cpu().numpy()
     t2 = b.detach().cpu().numpy()
     N = t1.shape[0]
@@ -82,7 +84,7 @@ if __name__ == '__main__':
     # intersection_of_two_tensor(t1[i], t2[i])
 
     t1 = torch.tensor(
-        np.array([[1.2, 2, 3, 4],
+        np.array([[100, 2, 3, 4],
                   [2, 1, 3, 7]],),requires_grad=True, dtype=torch.double
     )
     print(t1.shape)
@@ -106,4 +108,4 @@ if __name__ == '__main__':
     # linear = linear.double()
 
 
-    print(topK_overlap_true_loss(torch.argsort(t1,descending=True),torch.argsort(t2,descending=True)))
+    print(topK_overlap_true_loss(torch.argsort(t1,descending=True),torch.argsort(t2,descending=True),K=2))
