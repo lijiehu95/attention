@@ -1,7 +1,7 @@
 #export CUDA_VISIBLE_DEVICES=4
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-exp_name="debug-topk-v2"
+exp_name="debug-topk-v3"
 i=0 # gpu pointer
 gpu=(0 2 3 4 5 6 7 9)
 gpunum=8
