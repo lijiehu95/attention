@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=4
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 exp_name="debug-check-topK-true-loss"
