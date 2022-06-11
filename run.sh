@@ -17,7 +17,7 @@ for data in sst; do
           com="python train.py --exp_name $exp_name --dataset $data \
             --data_dir . --output_dir test_adv_outputs/ \
             --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 --topk_prox_metric $topk_prox_metric --K $K\
-            --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/ --n_iters 3"
+            --gold_label_dir /home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/ --n_iters 80"
 #          $com
           nohup $com > ./logs/$data-${RANDOM}.txt 2>&1 &
 done;done;done;done;done
@@ -34,7 +34,7 @@ for data in imdb; do
           com="python train.py --exp_name $exp_name --dataset $data \
             --data_dir . --output_dir test_adv_outputs/ \
             --encoder lstm --ours --lambda_1 $lambda_1 --lambda_2 $lambda_2 --topk_prox_metric $topk_prox_metric --K $K\
-            --gold_label_dir /home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Thu_Jun__9_07:14:57_2022  --n_iters 3"
+            --gold_label_dir /home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Thu_Jun__9_07:14:57_2022  --n_iters 80"
 #          $com
           nohup $com > ./logs/$data-${RANDOM}.txt 2>&1 &
 done;done;done;done;done
