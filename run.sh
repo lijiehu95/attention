@@ -4,7 +4,7 @@ export PYTHONPATH=/home/yila22/prj
 exp_name="debug-topk-v1"
 i=0 # gpu pointer
 gpu=(4 5 6 7 9)
-gpunum=6
+gpunum=5
 for data in sst; do
   for lambda_1 in 0;do
     for lambda_2 in  1 1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7;do
