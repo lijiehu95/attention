@@ -61,9 +61,9 @@ def topk_overlap_loss(gt,pred,K=2,metric='l1'):
         loss = torch.norm(pred_TopK_1 - gt_Topk_1, p=2) + torch.norm(gt_TopK_2 - pred_TopK_2, p=2)
         loss = loss.sum()/(2*K)
     elif metric == "kl":
-        loss = torch.nn.functional.kl_div(gt,pred)
+        loss = torch.nn.functional.kl_div(gt,pred,reduction="batchmean")
     elif metric == "jsd":
-        loss = torch.nn.functional.kl_div(gt,pred) + torch.nn.functional.kl_div(pred,gt)
+        loss = torch.nn.functional.kl_div(gt,pred) + torch.nn.functional.kl_div(pred,gt,reduction="batchmean")
         loss /= 2
     return  loss
 
