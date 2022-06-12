@@ -54,18 +54,37 @@ def topk_overlap_loss(gt,pred,K=2,metric='l1'):
     gt_TopK_2 = gt.gather(1, idx_pred)
     pred_TopK_2 = pred.gather(1, idx_pred)
 
+    gt_Topk_1_normed = torch.nn.functional.softmax(gt_Topk_1)
+    pred_TopK_1_normed = torch.nn.functional.softmax(pred_TopK_1)
+    gt_TopK_2_normed = torch.nn.functional.softmax(gt_TopK_2)
+    pred_TopK_2_normed = torch.nn.functional.softmax(pred_TopK_2)
+
+    def kl(a,b):
+        return torch.nn.functional.kl_div(a.log(), b, reduction="batchmean")
+
+    def jsd(a,b):
+        loss = kl(a,b) + kl(b,a)
+        loss /= 2
+        return loss
+
+
     if metric == 'l1':
         loss = torch.abs((pred_TopK_1 - gt_Topk_1)) + torch.abs(gt_TopK_2 - pred_TopK_2)
         loss = loss.sum()/(2*K)
     elif metric == "l2":
         loss = torch.norm(pred_TopK_1 - gt_Topk_1, p=2) + torch.norm(gt_TopK_2 - pred_TopK_2, p=2)
         loss = loss.sum()/(2*K)
-    elif metric == "kl":
-        loss = torch.nn.functional.kl_div(gt,pred,reduction="batchmean")
-    elif metric == "jsd":
-        loss = torch.nn.functional.kl_div(gt,pred) + torch.nn.functional.kl_div(pred,gt,reduction="batchmean")
+    elif metric == "kl-full":
+        loss = kl(gt,pred)
+    elif metric == "jsd-full":
+        loss = jsd(gt,pred)
+    elif metric == "kl-topk":
+        loss = kl(gt_Topk_1_normed,pred_TopK_1_normed) + kl(gt_TopK_2_normed,pred_TopK_2_normed)
+        loss /=2
+    elif metric == "jsd-topk":
+        loss = jsd(gt_Topk_1_normed, pred_TopK_1_normed) + jsd(gt_TopK_2_normed, pred_TopK_2_normed)
         loss /= 2
-    return  loss
+    return loss
 
 if __name__ == '__main__':
 

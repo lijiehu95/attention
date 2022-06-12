@@ -166,7 +166,7 @@ class Trainer() :
                           codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
                           separators=(',', ':'), sort_keys=True, indent=4)
 
-            # print("DIRECTORY:", dirname)
+            print("DIRECTORY:", dirname)
 
             f = open(dirname + '/epoch.txt', 'a')
             f.write(str(test_metrics) + '\n')

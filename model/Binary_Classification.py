@@ -164,9 +164,9 @@ class Model():
             # calculate adversarial loss (Section 4) if adversarial model
 
             from attention.utlis import topk_overlap_loss,topK_overlap_true_loss
-            topk_loss = topk_overlap_loss(batch_data.target_attn.log(),
+            topk_loss = topk_overlap_loss(batch_data.target_attn,
                                           batch_data.attn,K=self.K, metric=self.topk_prox_metric)
-            topk_true_loss = topK_overlap_true_loss(batch_data.target_attn.log(),
+            topk_true_loss = topK_overlap_true_loss(batch_data.target_attn,
                                           batch_data.attn,K=self.K)
             true_topk_loss_counter.update(
                 topk_true_loss,len(batch_doc)

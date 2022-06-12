@@ -27,7 +27,7 @@ parser.add_argument('--lambda_1', type=float, default=1e-2)
 parser.add_argument('--lambda_2', type=float, default=1e-2)
 parser.add_argument('--exp_name', type=str, default="debug")
 parser.add_argument('--K', type=int, default=4)
-parser.add_argument('--topk_prox_metric', type=str, choices=['l1', 'l2',"kl", 'jsd'], default='l1')
+parser.add_argument('--topk_prox_metric', type=str, choices=['l1', 'l2',"kl-full", 'jsd-full',"kl-topk", 'jsd-topk'], default='l1')
 
 args, extras = parser.parse_known_args()
 args.extras = extras
