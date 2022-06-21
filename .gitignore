@@ -4,3 +4,6 @@ test_outputs
 data
 *.p
 *.csv
+wandb
+logs
+test_adv_outputs
