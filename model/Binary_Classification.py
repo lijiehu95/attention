@@ -235,7 +235,7 @@ class Model():
                 self.decoder(batch_data)
 
                 # old att pred
-                old_pred = self.decoder.predict
+                old_pred = batch_data.predict
                 old_att = self.decoder.get_att()
                 embedd_sacle = torch.mean(batch_data.embedding)
 
