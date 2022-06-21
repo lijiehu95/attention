@@ -154,7 +154,7 @@ class Model():
             grad = batch_data.embedding.grad
             grad = grad.mean(dim=-1)
             attn = batch_data.attn
-            for i in range(bsize):
+            for i in range(grad.shape[0]):
                 from torchmetrics import SpearmanCorrCoef
                 spearman = SpearmanCorrCoef()
                 related_score += spearman(grad[i], attn[i]).item()
