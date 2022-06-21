@@ -181,8 +181,8 @@ class Model():
             #     self.encoder(batch_data)
             #     self.decoder(batch_data)
 
-            batch_target = target[n:n + bsize]
-            batch_target = torch.Tensor(batch_target).to(device)
+            # batch_target = target[n:n + bsize]
+            # batch_target = torch.Tensor(batch_target).to(device)
 
             # this is the unpreturbed embedding
             batch_data.keep_grads = True
