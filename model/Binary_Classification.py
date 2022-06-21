@@ -142,6 +142,9 @@ class Model():
             # batch_target_pred = target_pred[n:n + bsize]
             # batch_target_pred = torch.Tensor(batch_target_pred).to(device)
 
+            if len(batch_target.shape) == 1:  #(B, )
+                batch_target = batch_target.unsqueeze(-1)  #(B, 1)
+
             batch_data.keep_grads = True
             self.encoder(batch_data)
             self.decoder(batch_data)
@@ -230,10 +233,15 @@ class Model():
                 # old prediction
                 self.encoder(batch_data)
                 self.decoder(batch_data)
-                old_pred = self.decoder.predict
 
-                # old att
+                # old att pred
+                old_pred = self.decoder.predict
                 old_att = self.decoder.get_att()
+                embedd_sacle = torch.mean(batch_data.embedding)
+
+                wandb.log({
+                    "embedd_sacle":embedd_sacle
+                })
 
                 # PGD generate the new hidden
                 new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \

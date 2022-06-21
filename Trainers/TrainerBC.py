@@ -102,6 +102,8 @@ class Trainer() :
                 "topk_loss_te": topk_loss_te,
                 "pgd_tvd_loss_te": pgd_tvd_loss_te,
                 "true_topk_loss_te":true_topk_loss_te,
+
+
                 "loss_te_px": loss_te_px,
                 "loss_te_orig_px": loss_te_orig_px,
                 "tvd_loss_te_px": tvd_loss_te_px,
