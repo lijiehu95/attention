@@ -158,7 +158,7 @@ class Model():
                 from torchmetrics import SpearmanCorrCoef
                 spearman = SpearmanCorrCoef()
                 related_score += spearman(grad[i], attn[i]).item()
-                related_score_trained_att += spearman(grad[i], batch_target_attn[i]).item()
+                related_score_trained_att += spearman(grad[i],torch.tensor(batch_target_attn[i])).item()
                 num+=bsize
 
         related_score /= num
