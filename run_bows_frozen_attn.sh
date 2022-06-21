@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='4'
-exp_name="debug-freeze-att"
+exp_name="debug-freeze-att-average"
 
 
 for dataset in sst imdb hate emotion;do
