@@ -122,9 +122,9 @@ class Model():
         self.decoder.train()
 
 
-
-        if len(batch_target.shape) == 1:  # (B, )
-            batch_target = batch_target.unsqueeze(-1)  # (B, 1)
+        #
+        # if len(batch_target.shape) == 1:  # (B, )
+        #     batch_target = batch_target.unsqueeze(-1)  # (B, 1)
 
 
         # target_pred = [target_pred[i] for i in sorting_idx]
