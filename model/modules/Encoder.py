@@ -33,7 +33,7 @@ class EncoderRNN(Encoder) :
     def forward(self, data,revise_embedding=None) :
         seq = data.seq
         lengths = data.lengths
-        if revise_embedding:
+        if revise_embedding is not None:
             embedding = revise_embedding
         else:
             embedding = self.embedding(seq)  # (B, L, E)
