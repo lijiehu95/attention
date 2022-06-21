@@ -223,7 +223,7 @@ class Model():
             if preturb_x:
                 # get the hidden
                 def target_model(embedd, data, decoder,encoder):
-                    encoder(revise_embedding=embedd)
+                    encoder(data,revise_embedding=embedd)
                     decoder(data=data)
                     return data.predict
 
