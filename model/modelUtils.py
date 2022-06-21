@@ -78,3 +78,11 @@ def jsd(p, q) :
     jsd = 0.5 * (kld(p, m) + kld(q, m)) #for each instance in the batch
     
     return jsd.unsqueeze(-1) #jsd.squeeze(1).sum()
+
+if __name__ == '__main__':
+    class x:
+        def __init__(self):
+            pass
+    x_ = x()
+    x_.keep = True
+    print(isTrue(x_,'keep'))

@@ -86,13 +86,28 @@ class Trainer() :
                                                                                                 test_data.true_pred,
                                                                                                 test_data.gold_attns,
                                                                                                 PGDer=self.PGDer, train=False)
+
+            loss_te_px, loss_te_orig_px, tvd_loss_te_px, topk_loss_te_px, pgd_tvd_loss_te_px, true_topk_loss_te_px = self.model.train_ours(
+                test_data.X,
+                test_data.y,
+                test_data.true_pred,
+                test_data.gold_attns,
+                PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+
+
             wandb.log({
                 "loss_te": loss_te,
                 "loss_te_orig": loss_te_orig,
                 "tvd_loss_te": tvd_loss_te,
                 "topk_loss_te": topk_loss_te,
                 "pgd_tvd_loss_te": pgd_tvd_loss_te,
-                "true_topk_loss_te":true_topk_loss_te
+                "true_topk_loss_te":true_topk_loss_te,
+                "loss_te_px": loss_te_px,
+                "loss_te_orig_px": loss_te_orig_px,
+                "tvd_loss_te_px": tvd_loss_te_px,
+                "topk_loss_te_px": topk_loss_te_px,
+                "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
+                "true_topk_loss_te_px":true_topk_loss_te_px,
             })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
@@ -179,6 +194,7 @@ class Trainer() :
             if br:
                 break
 
+        self.model.related_score(test_data.X,test_data.y,test_data.true_pred,test_data.gold_attns,)
 
     def train_adversarial(self, train_data, test_data, args) :
 
@@ -252,7 +268,7 @@ class Evaluator() :
         self.display_metrics = True
 
     def evaluate(self, test_data, save_results=False) :
-        if self.model.adversarial :
+        if self.model.adversarial or self.model.ours:
             predictions, attentions, jsd_score = self.model.evaluate(test_data.X, target_attn=test_data.gold_attns)
             predictions = np.array(predictions)
             test_metrics = self.metrics(np.array(test_data.y), predictions, np.array(test_data.true_pred), jsd_score)

@@ -5,6 +5,7 @@ from copy import deepcopy
 
 import torch
 import torch.nn as nn
+import wandb
 from allennlp.common import Params
 from sklearn.utils import shuffle
 from tqdm import tqdm
@@ -32,6 +33,7 @@ class Model():
 
         self.frozen_attn = args.frozen_attn
         self.adversarial = args.adversarial
+        self.ours = args.ours
         self.pre_loaded_attn = args.pre_loaded_attn
 
         configuration['model']['decoder'][
@@ -106,12 +108,74 @@ class Model():
         obj.load_values(dirname)
         return obj
 
+    def related_score(self,
+              data_in,
+              target_in,
+              target_pred,
+              target_attn_in):
+        sorting_idx = get_sorting_index_with_noise_from_lengths(
+            [len(x) for x in data_in], noise_frac=0.1)
+        data = [data_in[i] for i in sorting_idx]
+        # target = [target_in[i] for i in sorting_idx]
+
+        self.encoder.eval()
+        self.decoder.eval()
+
+
+        # target_pred = [target_pred[i] for i in sorting_idx]
+        target_attn = [target_attn_in[i] for i in sorting_idx]
+
+        N = len(data)
+        bsize = self.bsize
+        batches = list(range(0, N, bsize))
+        batches = shuffle(batches)
+
+        related_score=0
+        related_score_trained_att=0
+        num=0
+        for n in tqdm(batches):
+            batch_doc = data[n:n + bsize]
+
+            batch_target_attn = target_attn[n:n + bsize]
+            batch_data = BatchHolder(batch_doc, batch_target_attn)
+
+            # batch_target_pred = target_pred[n:n + bsize]
+            # batch_target_pred = torch.Tensor(batch_target_pred).to(device)
+
+            batch_data.keep_grads = True
+            self.encoder(batch_data)
+            self.decoder(batch_data)
+
+            batch_data.predict.sum().backward()
+
+            grad = batch_data.embedding.grad
+            grad = grad.mean(dim=-1)
+            attn = batch_data.attn
+            for i in range(bsize):
+                from torchmetrics import SpearmanCorrCoef
+                spearman = SpearmanCorrCoef()
+                related_score += spearman(grad[i], attn[i]).item()
+                related_score_trained_att += spearman(grad[i], batch_target_attn[i]).item()
+                num+=bsize
+
+        related_score /= num
+        related_score_trained_att /=num
+
+        wandb.log({
+            "related_score":related_score,
+            "related_score_trained_att":related_score_trained_att,
+        })
+
+
+
+
+
     def train_ours(self,
               data_in,
               target_in,
               target_pred,
               target_attn_in,
-              PGDer,train=True):
+              PGDer,train=True,preturb_x=False,X_PGDer=None):
         sorting_idx = get_sorting_index_with_noise_from_lengths(
             [len(x) for x in data_in], noise_frac=0.1)
         data = [data_in[i] for i in sorting_idx]
@@ -126,9 +190,6 @@ class Model():
         self.decoder.train()
 
         from attention.utlis import AverageMeter
-
-        bsize = self.bsize
-        N = len(data)
         loss_total = 0
         loss_orig_total = 0
         tvd_loss_total = 0
@@ -136,6 +197,8 @@ class Model():
         pgd_tvd_loss_total = 0
         true_topk_loss_counter = AverageMeter()
 
+        N = len(data)
+        bsize = self.bsize
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
 
@@ -152,8 +215,54 @@ class Model():
                 batch_target_pred = batch_target_pred.unsqueeze(
                     -1)  # (B, 1)
 
-            self.encoder(batch_data)
-            self.decoder(batch_data)
+
+
+            if preturb_x:
+                # get the hidden
+                def target_model(embedd, data, decoder,encoder):
+                    encoder(revise_embedding=embedd)
+                    decoder(data=data)
+                    return data.predict
+
+                def crit(gt, pred):
+                    return batch_tvd(torch.sigmoid(pred), gt)
+
+                # old prediction
+                self.encoder(batch_data)
+                self.decoder(batch_data)
+                old_pred = self.decoder.predict
+
+                # old att
+                old_att = self.decoder.get_att()
+
+                # PGD generate the new hidden
+                new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
+                                        , decoder=self.decoder,encoder=self.encoder, batch_target_pred=batch_target_pred,
+                                        target_model=target_model)
+
+                # pgd perturb the hidden
+                self.encoder(revise_embedding=new_embedd)
+                self.decoder(data=batch_data)
+
+                # diff of att
+                new_att = batch_data.attn
+
+                # jsd between att
+                px_jsd_att_diff = js_divergence(
+                    old_att, new_att).squeeze(
+                        1).cpu().data.numpy()
+
+                new_pred = self.decoder.predict
+
+                px_tvd_pred_diff = batch_tvd(
+                    torch.sigmoid(new_pred),torch.sigmoid(old_pred))
+
+                wandb.log({
+                    "px_jsd_att_diff": px_jsd_att_diff,"px_tvd_pred_diff":px_tvd_pred_diff
+                })
+            else:
+                self.encoder(batch_data)
+                self.decoder(batch_data)
 
             batch_target = target[n:n + bsize]
             batch_target = torch.Tensor(batch_target).to(device)
@@ -184,12 +293,13 @@ class Model():
                 return batch_tvd(torch.sigmoid(pred), gt)
 
             # PGD generate the new weight
-            new_att = PGDer.perturb(criterion=crit, att=batch_data.attn, data=batch_data \
+            new_att = PGDer.perturb(criterion=crit, x=batch_data.attn, data=batch_data \
                                     , decoder=self.decoder, batch_target_pred=batch_target_pred,
                                     target_model=target_model)
 
             # output the prediction tvd of new weight and old weight
             self.decoder(batch_data, revise_att=new_att)
+
             new_out = batch_data.predict
             att_pgd_pred_tvd = batch_tvd(
                 torch.sigmoid(new_out), batch_target_pred)

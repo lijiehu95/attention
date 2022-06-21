@@ -30,19 +30,23 @@ class EncoderRNN(Encoder) :
 
         self.output_size = self.hidden_size * 2
 
-    def forward(self, data) :
+    def forward(self, data,revise_embedding=None) :
         seq = data.seq
         lengths = data.lengths
-        embedding = self.embedding(seq) #(B, L, E)
+        if revise_embedding:
+            embedding = revise_embedding
+        else:
+            embedding = self.embedding(seq)  # (B, L, E)
         packseq = nn.utils.rnn.pack_padded_sequence(embedding, lengths.cpu(), batch_first=True, enforce_sorted=False)
         output, (h, c) = self.rnn(packseq)
         output, lengths = nn.utils.rnn.pad_packed_sequence(output, batch_first=True, padding_value=0)
 
         data.hidden = output
         data.last_hidden = torch.cat([h[0], h[1]], dim=-1)
+        data.embedding = embedding
 
         if isTrue(data, 'keep_grads') :
-            data.embedding = embedding
+            # data.embedding = embedding
             data.embedding.retain_grad()
             data.hidden.retain_grad()
             
@@ -72,18 +76,23 @@ class EncoderAverage(Encoder) :
 
         self.activation = activation
 
-    def forward(self, data) :
+    def forward(self, data,revise_embedding=None) :
         seq = data.seq
         lengths = data.lengths
-        embedding = self.embedding(seq) #(B, L, E)
+        # embedding = self.embedding(seq) #(B, L, E)
+        if revise_embedding:
+            embedding = revise_embedding
+        else:
+            embedding = self.embedding(seq)  # (B, L, E)
 
         output = self.activation(self.projection(embedding))
         h = output.mean(1)
 
         data.hidden = output
         data.last_hidden = h
+        data.embedding = embedding
 
         if isTrue(data, 'keep_grads') :
-            data.embedding = embedding
+            # data.embedding = embedding
             data.embedding.retain_grad()
             data.hidden.retain_grad()

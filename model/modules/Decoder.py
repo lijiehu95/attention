@@ -28,15 +28,28 @@ class AttnDecoder(nn.Module, FromParams) :
         predict = self.linear_1(predict)
         return predict
 
-    def forward(self, data:BatchHolder, revise_att=None) :
-        if self.use_attention :
+    def get_att(self,data:BatchHolder):
+        if self.use_attention:
             output = data.hidden
             mask = data.masks
-
             attn = self.attention(data.seq, output, mask)
+            return attn
+        else:
+            assert False
+
+    def forward(self, data:BatchHolder, revise_att=None, revise_hidden=None) :
+        if self.use_attention :
+
+            if revise_hidden:
+                output = revise_hidden
+            else:
+                output = data.hidden
+            mask = data.masks
 
             if revise_att is not None:
                 attn = revise_att
+            else:
+                attn = self.attention(data.seq, output, mask)
 
             context = (attn.unsqueeze(-1) * output).sum(1)
             data.attn = attn

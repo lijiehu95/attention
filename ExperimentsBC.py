@@ -10,12 +10,18 @@ def train_dataset(dataset, args, config='lstm') :
         if args.adversarial :
             trainer.train_adversarial(dataset.train_data, dataset.test_data, args)
         elif args.ours:
-            from attention.attack import  PGDAttacker
+            from attention.attack import PGDAttacker
             PGDer = PGDAttacker(
                 radius=args.pgd_radius, steps=args.pgd_step, step_size=args.pgd_step_size, random_start= \
                 True, norm_type=args.pgd_norm_type, ascending=True
             )
             trainer.PGDer = PGDer
+            X_PGDer = PGDAttacker(
+                radius=args.x_pgd_radius, steps=args.x_pgd_step, step_size=args.x_pgd_step_size, random_start= \
+                    True, norm_type=args.x_pgd_norm_type, ascending=True
+            )
+            trainer.PGDer = PGDer
+            trainer.X_PGDer = X_PGDer
             trainer.train_ours(dataset.train_data, dataset.test_data, args)
         else:
             trainer.train_standard(dataset.train_data, dataset.test_data, args, save_on_metric=dataset.save_on_metric)

@@ -10,8 +10,7 @@ class PGDAttacker():
         self.norm_type = norm_type # which norm of your noise
         self.ascending = ascending # perform gradient ascending, i.e, to maximum the loss
 
-    def perturb(self, criterion, att, data, decoder,batch_target_pred,target_model):
-        x = att
+    def perturb(self, criterion, x, data, decoder,batch_target_pred,target_model,encoder=None):
         if self.steps==0 or self.radius==0:
             return x.clone()
 
@@ -32,7 +31,7 @@ class PGDAttacker():
 
         for step in range(self.steps):
             adv_x.requires_grad_()
-            _y = target_model(adv_x, data, decoder)
+            _y = target_model(adv_x, data, decoder,encoder)
             loss = criterion(batch_target_pred, _y)
             grad = torch.autograd.grad(loss, [adv_x])[0]
 
