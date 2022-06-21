@@ -80,6 +80,10 @@ else :
 
 dataset = datasets[args.dataset](args)
 
+# auto set
+args.pgd_step_size = args.pgd_radius / args.pdg_step * 2
+args.x_pgd_step_size = args.x_pgd_radius / args.x_pdg_step * 2
+
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
 
