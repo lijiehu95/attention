@@ -260,7 +260,7 @@ class Model():
                     old_att, new_att).squeeze(
                         1).cpu().data.numpy()
 
-                new_pred = self.decoder.predict
+                new_pred = batch_data.predict
 
                 px_tvd_pred_diff = batch_tvd(
                     torch.sigmoid(new_pred),torch.sigmoid(old_pred))
