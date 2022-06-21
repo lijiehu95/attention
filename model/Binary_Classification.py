@@ -237,10 +237,14 @@ class Model():
                 # old att pred
                 old_pred = batch_data.predict
                 old_att = self.decoder.get_att(batch_data)
-                embedd_sacle = torch.mean(batch_data.embedding)
+                embedd_sacle_mean = torch.mean(batch_data.embedding)
+                embedd_sacle_max = torch.max(batch_data.embedding)
+                embedd_sacle_min = torch.min(batch_data.embedding)
 
                 wandb.log({
-                    "embedd_sacle":embedd_sacle
+                    "embedd_sacle":embedd_sacle_mean,
+                    "embedd_sacle_max":embedd_sacle_max,
+                    "embedd_sacle_min":embedd_sacle_min,
                 })
 
                 # PGD generate the new hidden
