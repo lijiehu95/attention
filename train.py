@@ -39,6 +39,12 @@ args, extras = parser.parse_known_args()
 args.extras = extras
 args.command = ' '.join(['python'] + sys.argv)
 
+
+# auto set
+args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
+args.x_pgd_step_size = args.x_pgd_radius / args.x_pdg_step * 2
+
+
 wandb.init(project="XAI-NLP", entity="yixin",config=args)
 wandb.log(vars(args))
 
@@ -79,10 +85,6 @@ else :
     raise LookupError("Attention not found ...")
 
 dataset = datasets[args.dataset](args)
-
-# auto set
-args.pgd_step_size = args.pgd_radius / args.pdg_step * 2
-args.x_pgd_step_size = args.x_pgd_radius / args.x_pdg_step * 2
 
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
