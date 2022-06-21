@@ -61,6 +61,8 @@ class Vectorizer:
         else:
             self.cvec = CountVectorizer(tokenizer=self.tokenizer, lowercase=False)
 
+        # print(texts)
+
         bow = self.cvec.fit_transform(texts)
 
         self.word2idx = self.cvec.vocabulary_
@@ -91,6 +93,7 @@ class Vectorizer:
 
     def convert_to_sequence(self, texts):
         texts_tokenized = map(self.tokenizer, texts)
+        # here the attention value for position zero and -1 should be zero!
         texts_tokenized = map(lambda s: [SOS] + [UNK if word not in self.word2idx else word for word in s] + [EOS], texts_tokenized)
         texts_tokenized = list(texts_tokenized)
         sequences = map(lambda s: [int(self.word2idx[word]) for word in s], texts_tokenized)
@@ -116,8 +119,10 @@ class Vectorizer:
         print("Found " + str(in_pre) + " words in model out of " + str(len(self.idx2word)))
         return self.embeddings
 
-    def extract_embeddings_from_torchtext(self, model):
-        vectors = pretrained_aliases[model](cache='../.vector_cache')
+    def extract_embeddings_from_torchtext(self, model, cache=None):
+        if cache is None:
+            cache = '../.vector_cache'
+        vectors = pretrained_aliases[model](cache=cache)
         self.word_dim = vectors.dim
         self.embeddings = np.zeros((len(self.idx2word), self.word_dim))
         in_pre = 0
@@ -162,7 +167,6 @@ class Vectorizer:
 
 
 from nltk.corpus import stopwords
-
 from sklearn.preprocessing import normalize
 from scipy.sparse import csr_matrix
 from collections import Counter
