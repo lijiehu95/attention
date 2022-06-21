@@ -25,9 +25,12 @@ print("Vocabulary size : ", vec.vocab_size)
 
 vec.seq_text = {}
 vec.label = {}
+vec.raw_text = {}
+
 splits = df.exp_split.unique()
 for k in splits :
     split_texts = list(df[df.exp_split == k]['text'])
+    vec.raw_text[k] = split_texts
     vec.seq_text[k] = vec.get_seq_for_docs(split_texts)
     vec.label[k] = list(df[df.exp_split == k]['label'])
 
