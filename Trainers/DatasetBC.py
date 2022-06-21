@@ -135,12 +135,12 @@ def AGNews_dataset(args=None) :
     return dataset
 
 def emotion_dataset(args=None) :
-    dataset = Dataset(name='emotion', path='preprocess/ag_news/vec_emotion.p', args=args)
+    dataset = Dataset(name='emotion', path='preprocess/emotion/vec.p', args=args)
     set_balanced_pos_weight(dataset)
     return dataset
 
 def hate_dataset(args=None) :
-    dataset = Dataset(name='hate', path='preprocess/ag_news/vec_hate.p', args=args)
+    dataset = Dataset(name='hate', path='preprocess/hate/vec.p', args=args)
     set_balanced_pos_weight(dataset)
     return dataset
 
