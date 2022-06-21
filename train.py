@@ -19,14 +19,14 @@ parser.add_argument('--adversarial', action='store_const', required=False, const
 parser.add_argument('--ours', action='store_true')
 
 # parser.add_argument('--pgd_random_start', action='store_true')
-parser.add_argument('--pgd_radius', type=float,default=0.2)
+parser.add_argument('--pgd_radius', type=float,default=0.1)
 parser.add_argument('--pgd_step', type=float,default=10)
-parser.add_argument('--pgd_step_size', type=float,default=0.04)
+parser.add_argument('--pgd_step_size', type=float,default=0.02)
 parser.add_argument('--pgd_norm_type', type=str,default="l-infty")
 
-parser.add_argument('--x_pgd_radius', type=float,default=0.2)
+parser.add_argument('--x_pgd_radius', type=float,default=0.05)
 parser.add_argument('--x_pgd_step', type=float,default=10)
-parser.add_argument('--x_pgd_step_size', type=float,default=0.04)
+parser.add_argument('--x_pgd_step_size', type=float,default=0.01)
 parser.add_argument('--x_pgd_norm_type', type=str,default="l-infty")
 
 parser.add_argument('--lambda_1', type=float, default=1e-2)
