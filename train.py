@@ -42,7 +42,7 @@ args.command = ' '.join(['python'] + sys.argv)
 
 # auto set
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
-args.x_pgd_step_size = args.x_pgd_radius / args.x_pdg_step * 2
+args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
 
 wandb.init(project="XAI-NLP", entity="yixin",config=args)
