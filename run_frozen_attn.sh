@@ -3,7 +3,7 @@
 
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-export CUDA_VISIBLE_DEVICES='4'
+export CUDA_VISIBLE_DEVICES='8'
 exp_name="debug-freeze-att-lstm"
 
 
