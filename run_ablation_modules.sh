@@ -6,20 +6,6 @@ export CUDA_VISIBLE_DEVICES='5'
 
 
 
-
-#pgd_radius="0.2"
-#pgd_step="10"
-#pgd_step_size="0.04"
-#lambda_1="1e-2"
-#lambda_2="1e-2"
-#K="4"
-#topk_prox_metric="l1"
-
-#x_pgd_radius="0.2"
-#x_pgd_step="10"
-#x_pgd_step_size="0.04"
-#for dataset in sst imdb hate emotion;do
-
 dataset=(sst imdb emotion hate)
 golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/" \
   "/home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Tue_Jun_21_09:49:04_2022" \
@@ -28,7 +14,7 @@ golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13
 
 n_iters=40
 K=7
-exp_name="ours-ablation-lambda_2"
+exp_name="ours-ablation-lambda_2-v1"
 for pgd_radius in 0.1 ;do
 for x_pgd_radius in 0.01; do
 for datasetid in 0 1 2 3; do
@@ -42,7 +28,7 @@ done;done;done;done;done;
 
 n_iters=40
 K=7
-exp_name="ours-ablation-lambda_1"
+exp_name="ours-ablation-lambda_1-v1"
 for pgd_radius in 0.1 ;do
 for x_pgd_radius in 0.01; do
 for datasetid in 0 1 2 3; do
