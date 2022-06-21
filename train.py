@@ -83,7 +83,7 @@ dataset = datasets[args.dataset](args)
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
 
-if args.adversarial or args.ours :
+if args.adversarial :
     exp_name = '+'.join((args.encoder, 'adversarial'))
 elif args.ours:
     exp_name = '+'.join((args.encoder, 'ours'))
