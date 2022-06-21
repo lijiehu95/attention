@@ -116,7 +116,7 @@ class Model():
         sorting_idx = get_sorting_index_with_noise_from_lengths(
             [len(x) for x in data_in], noise_frac=0.1)
         data = [data_in[i] for i in sorting_idx]
-        # target = [target_in[i] for i in sorting_idx]
+        target = [target_in[i] for i in sorting_idx]
 
         self.encoder.train()
         self.decoder.train()
@@ -127,7 +127,7 @@ class Model():
         #     batch_target = batch_target.unsqueeze(-1)  # (B, 1)
 
 
-        # target_pred = [target_pred[i] for i in sorting_idx]
+        target_pred = [target_pred[i] for i in sorting_idx]
         target_attn = [target_attn_in[i] for i in sorting_idx]
 
         N = len(data)
