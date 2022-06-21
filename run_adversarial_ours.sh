@@ -2,8 +2,8 @@
 
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-export CUDA_VISIBLE_DEVICES='7'
-exp_name="debug-ours"
+export CUDA_VISIBLE_DEVICES='4'
+exp_name="ours-final-v1"
 
 
 
