@@ -6,7 +6,8 @@ export CUDA_VISIBLE_DEVICES='5'
 exp_name="debug-freeze-att-average"
 
 
-for dataset in sst imdb hate emotion;do
+#for dataset in sst imdb hate emotion;do
+for dataset in hate emotion;do
 python train.py --dataset $dataset --data_dir . --output_dir test_outputs/ --attention frozen --encoder average  \
   --exp_name $exp_name
 done;
