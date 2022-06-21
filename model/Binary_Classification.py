@@ -118,8 +118,8 @@ class Model():
         data = [data_in[i] for i in sorting_idx]
         # target = [target_in[i] for i in sorting_idx]
 
-        self.encoder.eval()
-        self.decoder.eval()
+        self.encoder.train()
+        self.decoder.train()
 
 
         # target_pred = [target_pred[i] for i in sorting_idx]
