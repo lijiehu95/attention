@@ -20,10 +20,16 @@ exp_name="debug-ours"
 #x_pgd_step_size="0.04"
 #for dataset in sst imdb hate emotion;do
 
-golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/" )
+dataset=(sst imdb emotion hate)
+golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/" \
+  "/home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Tue_Jun_21_09:49:04_2022" \
+  "/home/yila22/prj/attention/test_outputs/emotion/lstm+tanh/Tue_Jun_21_10:40:50_2022" \
+  "/home/yila22/prj/attention/test_outputs/hate/lstm+tanh/Tue_Jun_21_10:31:10_2022")
 
-for dataset in sst;do
-python train.py --dataset ${dataset} --data_dir . --output_dir test_adv_outputs/ \
-  --encoder lstm --ours --gold_label_dir ${golddir[0]} --n_iters 2 \
-    --exp_name $exp_name
-done;
+for datasetid in 0 1 2 3; do
+for lambda_1 in 0 0.1 0.01 0.001; do
+  for lambda_2 in 0 0.1 0.01 0.001; do
+    python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_adv_outputs/ \
+      --encoder lstm --ours --gold_label_dir ${golddir[$datasetid]} --n_iters 2 \
+        --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2
+done;done;done;
