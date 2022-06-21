@@ -24,6 +24,6 @@ golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13
 
 for dataset in sst;do
 python train.py --dataset ${dataset} --data_dir . --output_dir test_adv_outputs/ \
-  --encoder lstm --ours --gold_label_dir ${golddir[0]} --n_iters 80 \
+  --encoder lstm --ours --gold_label_dir ${golddir[0]} --n_iters 2 \
     --exp_name $exp_name
 done;
