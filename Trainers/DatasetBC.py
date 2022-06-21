@@ -134,6 +134,16 @@ def AGNews_dataset(args=None) :
     set_balanced_pos_weight(dataset)
     return dataset
 
+def emotion_dataset(args=None) :
+    dataset = Dataset(name='emotion', path='preprocess/ag_news/vec_emotion.p', args=args)
+    set_balanced_pos_weight(dataset)
+    return dataset
+
+def hate_dataset(args=None) :
+    dataset = Dataset(name='hate', path='preprocess/ag_news/vec_hate.p', args=args)
+    set_balanced_pos_weight(dataset)
+    return dataset
+
 datasets = {
     "sst" : SST_dataset,
     "imdb" : IMDB_dataset,
@@ -141,5 +151,7 @@ datasets = {
     "tweet" : ADR_dataset ,
     "Anemia" : Anemia_dataset,
     "Diabetes" : Diabetes_dataset,
-    "AgNews" : AGNews_dataset
+    "AgNews" : AGNews_dataset,
+    "emotion":emotion_dataset,
+    "hate": hate_dataset,
 }

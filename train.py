@@ -5,10 +5,10 @@ import wandb
 
 
 parser = argparse.ArgumentParser(description='Run experiments on a dataset')
-parser.add_argument('--dataset', type=str, required=True)
+parser.add_argument('--dataset', type=str, choices=['sst','emotion', 'hate', 'imdb'])
 parser.add_argument("--data_dir", type=str, default=".")
 parser.add_argument("--output_dir", type=str,default="test_adv_outputs/")
-parser.add_argument('--encoder', type=str, choices=['bilstm', 'linear', 'lstm'], default="bilstm")
+parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm'], default="lstm")
 parser.add_argument('--attention', type=str, choices=['tanh', 'frozen', 'pre-loaded'], required=False)
 parser.add_argument('--n_iters', type=int, required=False, default=80)
 parser.add_argument('--seed', type=int, default=10)
