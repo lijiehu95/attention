@@ -3,8 +3,8 @@
 
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-export CUDA_VISIBLE_DEVICES='8'
-exp_name="debug-freeze-att-lstm"
+export CUDA_VISIBLE_DEVICES='4'
+exp_name="freeze-att-lstm-v1"
 
 
 for dataset in sst imdb hate emotion;do
