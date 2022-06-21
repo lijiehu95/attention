@@ -14,7 +14,7 @@ golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13
 
 n_iters=40
 K=7
-exp_name="ours-ablation-lambda_2-v1"
+exp_name="ours-ablation-lambda-v1"
 for pgd_radius in 0.1 ;do
 for x_pgd_radius in 0.01; do
 for datasetid in 0 1 2 3; do
@@ -26,9 +26,7 @@ for lambda_1 in 0; do
         --K $K
 done;done;done;done;done;
 
-n_iters=40
-K=7
-exp_name="ours-ablation-lambda_1-v1"
+
 for pgd_radius in 0.1 ;do
 for x_pgd_radius in 0.01; do
 for datasetid in 0 1 2 3; do
