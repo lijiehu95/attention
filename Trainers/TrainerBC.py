@@ -261,6 +261,10 @@ class Evaluator() :
             predictions = np.array(predictions)
             test_metrics = self.metrics(test_data.y, predictions)
 
+        wandb.log({
+            "test_metrics": test_metrics
+        })
+
         if self.display_metrics :
             print_metrics(test_metrics, adv=self.model.adversarial)
 
