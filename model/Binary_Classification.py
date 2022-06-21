@@ -249,7 +249,7 @@ class Model():
                                         target_model=target_model)
 
                 # pgd perturb the hidden
-                self.encoder(revise_embedding=new_embedd)
+                self.encoder(batch_data,revise_embedding=new_embedd)
                 self.decoder(data=batch_data)
 
                 # diff of att
