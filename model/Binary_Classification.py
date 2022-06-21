@@ -142,8 +142,8 @@ class Model():
             # batch_target_pred = target_pred[n:n + bsize]
             # batch_target_pred = torch.Tensor(batch_target_pred).to(device)
 
-            if len(batch_target.shape) == 1:  #(B, )
-                batch_target = batch_target.unsqueeze(-1)  #(B, 1)
+            # if len(batch_target.shape) == 1:  #(B, )
+            #     batch_target = batch_target.unsqueeze(-1)  #(B, 1)
 
             batch_data.keep_grads = True
             self.encoder(batch_data)
@@ -262,7 +262,7 @@ class Model():
                 # jsd between att
                 px_jsd_att_diff = js_divergence(
                     old_att, new_att).squeeze(
-                        1).cpu().data.numpy()
+                        1).cpu().data.numpy().mean()
 
                 new_pred = batch_data.predict
 
