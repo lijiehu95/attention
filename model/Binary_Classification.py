@@ -314,9 +314,11 @@ class Model():
                 wandb.log({
                     "px_jsd_att_diff": px_jsd_att_diff,"px_tvd_pred_diff":px_tvd_pred_diff
                 })
-            else:
-                self.encoder(batch_data)
-                self.decoder(batch_data)
+            # else:
+
+            # to the true att and embedding
+            self.encoder(batch_data)
+            self.decoder(batch_data)
 
             batch_target = target[n:n + bsize]
             batch_target = torch.Tensor(batch_target).to(device)
