@@ -28,7 +28,7 @@ golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13
 
 n_iters=40
 K=7
-for pgd_radius in 0.01 0.05 0.1 0.2;do
+for pgd_radius in 0.01 0.05 0.1 0.3;do
 for x_pgd_radius in 0.001 0.01 0.1 0.2; do
 for datasetid in 0 1 2 3; do
 for lambda_1 in 0 1; do
