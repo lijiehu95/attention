@@ -112,7 +112,7 @@ class Model():
               data_in,
               target_in,
               target_pred,
-              target_attn_in):
+              target_attn_in,train=False,preturb_x=True,X_PGDer=None):
         sorting_idx = get_sorting_index_with_noise_from_lengths(
             [len(x) for x in data_in], noise_frac=0.1)
         data = [data_in[i] for i in sorting_idx]
@@ -120,6 +120,11 @@ class Model():
 
         self.encoder.train()
         self.decoder.train()
+
+
+
+        if len(batch_target.shape) == 1:  # (B, )
+            batch_target = batch_target.unsqueeze(-1)  # (B, 1)
 
 
         # target_pred = [target_pred[i] for i in sorting_idx]
@@ -139,25 +144,58 @@ class Model():
             batch_target_attn = target_attn[n:n + bsize]
             batch_data = BatchHolder(batch_doc, batch_target_attn)
 
-            # batch_target_pred = target_pred[n:n + bsize]
-            # batch_target_pred = torch.Tensor(batch_target_pred).to(device)
+            batch_target_pred = target_pred[n:n + bsize]
+            batch_target_pred = torch.Tensor(batch_target_pred).to(device)
 
-            # if len(batch_target.shape) == 1:  #(B, )
-            #     batch_target = batch_target.unsqueeze(-1)  #(B, 1)
+            if preturb_x:
+                # get the hidden
+                def target_model(embedd, data, decoder, encoder):
+                    encoder(data, revise_embedding=embedd)
+                    decoder(data=data)
+                    return data.predict
 
+                def crit(gt, pred):
+                    return batch_tvd(torch.sigmoid(pred), gt)
+
+                # old prediction
+                self.encoder(batch_data)
+                self.decoder(batch_data)
+                #
+                # # old att pred
+                # old_pred = batch_data.predict
+                # old_att = self.decoder.get_att(batch_data)
+                # old_embedding = batch_data.embedding
+
+                # PGD generate the new hidden
+                new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
+                                             , decoder=self.decoder, encoder=self.encoder,
+                                             batch_target_pred=batch_target_pred,
+                                             target_model=target_model)
+                # pgd perturb the hidden
+                self.encoder(batch_data, revise_embedding=new_embedd)
+                self.decoder(data=batch_data)
+                new_att = batch_data.attn
+            else:
+                assert False
+            # else:
+            #     self.encoder(batch_data)
+            #     self.decoder(batch_data)
+
+            batch_target = target[n:n + bsize]
+            batch_target = torch.Tensor(batch_target).to(device)
+
+            # this is the unpreturbed embedding
             batch_data.keep_grads = True
             self.encoder(batch_data)
             self.decoder(batch_data)
-
             batch_data.predict.sum().backward()
 
             grad = batch_data.embedding.grad
             grad = grad.mean(dim=-1)
-            attn = batch_data.attn
             for i in range(grad.shape[0]):
                 from torchmetrics import SpearmanCorrCoef
                 spearman = SpearmanCorrCoef()
-                related_score += spearman(grad[i], attn[i]).item()
+                related_score += spearman(grad[i], new_att[i]).item()
                 target = batch_data.target_attn[i]
                 # print(target.shape)
                 pred = grad[i]
