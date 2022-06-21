@@ -293,7 +293,7 @@ class Model():
                 torch.sigmoid(batch_data.predict), batch_target_pred)
 
             ### pgd loss
-            def target_model(w, data, decoder):
+            def target_model(w, data, decoder,encoder):
                 decoder(revise_att=w, data=data)
                 return data.predict
 

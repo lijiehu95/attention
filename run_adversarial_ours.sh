@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='7'
-exp_name="debug-adversarial"
+exp_name="debug-ours"
 
 
 
