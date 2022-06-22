@@ -5,19 +5,27 @@ export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='8'
 
 
+#imdb sst hate offensive rotten_tomatoes irony
+#dataset=(sst imdb hate offensive rotten_tomatoes)
+#golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
+#  "/home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Wed_Jun_22_11:01:34_2022/" \
+#  "/home/yila22/prj/attention/test_outputs/hate/lstm+tanh/Tue_Jun_21_15:33:19_2022/" \
+#  "/home/yila22/prj/attention/test_outputs/offensive/lstm+tanh/Wed_Jun_22_11:01:36_2022/" \
+#  "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
+#  )
 
-dataset=(sst imdb emotion hate)
-golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Mon_Jun__6_13:13:30_2022/" \
-  "/home/yila22/prj/attention/test_outputs/imdb/lstm+tanh/Tue_Jun_21_09:49:04_2022" \
-  "/home/yila22/prj/attention/test_outputs/emotion/lstm+tanh/Tue_Jun_21_10:40:50_2022" \
-  "/home/yila22/prj/attention/test_outputs/hate/lstm+tanh/Tue_Jun_21_10:31:10_2022")
+dataset=( hate offensive rotten_tomatoes)
+golddir=( "/home/yila22/prj/attention/test_outputs/hate/lstm+tanh/Tue_Jun_21_15:33:19_2022/" \
+  "/home/yila22/prj/attention/test_outputs/offensive/lstm+tanh/Wed_Jun_22_11:01:36_2022/" \
+  "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
+  )
 
 n_iters=40
 K=7
-exp_name="ours-ablation-lambda-v1"
+exp_name="ours-ablation-lambda-v2"
 for pgd_radius in 0.1 ;do
 for x_pgd_radius in 0.01; do
-for datasetid in 0 1 2 3; do
+for datasetid in 0 1 2; do
 for lambda_1 in 0; do
   for lambda_2 in 1 1e-1 1e-2 1e-3; do
     python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_adv_outputs/ \
