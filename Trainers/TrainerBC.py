@@ -104,12 +104,12 @@ class Trainer() :
                 "true_topk_loss_te":true_topk_loss_te,
 
 
-                "loss_te_px": loss_te_px,
-                "loss_te_orig_px": loss_te_orig_px,
-                "tvd_loss_te_px": tvd_loss_te_px,
-                "topk_loss_te_px": topk_loss_te_px,
-                "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
-                "true_topk_loss_te_px":true_topk_loss_te_px,
+                # "loss_te_px": loss_te_px,
+                # "loss_te_orig_px": loss_te_orig_px,
+                # "tvd_loss_te_px": tvd_loss_te_px,
+                # "topk_loss_te_px": topk_loss_te_px,
+                # "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
+                # "true_topk_loss_te_px":true_topk_loss_te_px,
             })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
