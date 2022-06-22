@@ -144,6 +144,18 @@ def hate_dataset(args=None) :
     set_balanced_pos_weight(dataset)
     return dataset
 
+
+def offensive_dataset(args=None) :
+    dataset = Dataset(name='offensive', path='preprocess/offensive/vec.p', args=args)
+    set_balanced_pos_weight(dataset)
+    return dataset
+
+
+def irony_dataset(args=None) :
+    dataset = Dataset(name='irony', path='preprocess/irony/vec.p', args=args)
+    set_balanced_pos_weight(dataset)
+    return dataset
+
 datasets = {
     "sst" : SST_dataset,
     "imdb" : IMDB_dataset,
@@ -154,4 +166,6 @@ datasets = {
     "AgNews" : AGNews_dataset,
     "emotion":emotion_dataset,
     "hate": hate_dataset,
+    "offensive":offensive_dataset,
+    "irony":irony_dataset
 }

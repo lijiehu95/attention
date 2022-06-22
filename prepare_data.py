@@ -1,6 +1,5 @@
 from datasets import load_dataset,DatasetDict
 for dataname in ['offensive', 'irony']:
-    dataname = "offensive"
     load_data = ('tweet_eval',dataname)
     dataset = load_dataset(*load_data)
     df_trian = dataset['train'].to_pandas()
@@ -65,7 +64,7 @@ for dataname in ['offensive', 'irony']:
         vec.label[k] = list(df[df.exp_split == k]['label'])
 
     if args.word_vectors_type in ['fasttext.simple.300d'] :
-        vec.extract_embeddings_from_torchtext(args.word_vectors_type,cache="./attention/preprocess/.vector_cache")
+        vec.extract_embeddings_from_torchtext(args.word_vectors_type,cache="./preprocess/.vector_cache")
     else :
         vec.embeddings = None
 
