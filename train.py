@@ -5,7 +5,7 @@ import wandb
 
 
 parser = argparse.ArgumentParser(description='Run experiments on a dataset')
-parser.add_argument('--dataset', type=str, choices=['sst','emotion', 'hate', 'imdb'])
+parser.add_argument('--dataset', type=str)
 parser.add_argument("--data_dir", type=str, default=".")
 parser.add_argument("--output_dir", type=str,default="test_adv_outputs/")
 parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm'], default="lstm")
