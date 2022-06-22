@@ -85,14 +85,14 @@ class Trainer() :
                                                                                                 test_data.y,
                                                                                                 test_data.true_pred,
                                                                                                 test_data.gold_attns,
-                                                                                                PGDer=self.PGDer, train=False)
+                                                                                                PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
-            loss_te_px, loss_te_orig_px, tvd_loss_te_px, topk_loss_te_px, pgd_tvd_loss_te_px, true_topk_loss_te_px = self.model.train_ours(
-                test_data.X,
-                test_data.y,
-                test_data.true_pred,
-                test_data.gold_attns,
-                PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+            # loss_te_px, loss_te_orig_px, tvd_loss_te_px, topk_loss_te_px, pgd_tvd_loss_te_px, true_topk_loss_te_px = self.model.train_ours(
+            #     test_data.X,
+            #     test_data.y,
+            #     test_data.true_pred,
+            #     test_data.gold_attns,
+            #     PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
 
             wandb.log({

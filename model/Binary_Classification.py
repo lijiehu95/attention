@@ -152,10 +152,10 @@ class Model():
                 def target_model(embedd, data, decoder, encoder):
                     encoder(data, revise_embedding=embedd)
                     decoder(data=data)
-                    return data.predict
+                    return torch.sigmoid(data.predict)
 
                 def crit(gt, pred):
-                    return batch_tvd(torch.sigmoid(pred), gt)
+                    return batch_tvd(gt,pred)
 
                 # old prediction
                 self.encoder(batch_data)
@@ -267,18 +267,18 @@ class Model():
                 def target_model(embedd, data, decoder,encoder):
                     encoder(data,revise_embedding=embedd)
                     decoder(data=data)
-                    return data.predict
+                    return torch.sigmoid(data.predict)
 
                 def crit(gt, pred):
-                    return batch_tvd(torch.sigmoid(pred), gt)
+                    return batch_tvd(gt,pred)
 
                 # old prediction
                 self.encoder(batch_data)
                 self.decoder(batch_data)
 
                 # old att pred
-                old_pred = batch_data.predict
-                old_att = self.decoder.get_att(batch_data)
+                old_pred = torch.sigmoid(batch_data.predict)
+                old_att = batch_data.attn
                 # embedd_sacle_mean = torch.mean(batch_data.embedding)
                 # embedd_sacle_max = torch.max(batch_data.embedding)
                 # embedd_sacle_min = torch.min(batch_data.embedding)
@@ -299,17 +299,16 @@ class Model():
                 self.decoder(data=batch_data)
 
                 # diff of att
-                new_att = batch_data.attn
+                new_att = torch.sigmoid(batch_data.attn)
 
                 # jsd between att
                 px_jsd_att_diff = js_divergence(
                     old_att, new_att).squeeze(
                         1).cpu().data.numpy().mean()
 
-                new_pred = batch_data.predict
+                new_pred = torch.sigmoid(batch_data.predict)
 
-                px_tvd_pred_diff = batch_tvd(
-                    torch.sigmoid(new_pred),torch.sigmoid(old_pred))
+                px_tvd_pred_diff = batch_tvd(new_pred,old_pred)
 
                 wandb.log({
                     "px_jsd_att_diff": px_jsd_att_diff,

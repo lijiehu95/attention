@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='5'
-exp_name="ours-debug-v1"
+exp_name="ours-debug-v2"
 
 dataset=(sst imdb hate offensive rotten_tomatoes)
 golddir=("/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -19,8 +19,8 @@ i=0 # gpu pointer
 
 n_iters=40
 K=7
-for pgd_radius in 0.1 0.2;do
-for x_pgd_radius in 0.1 0.2; do
+for pgd_radius in 0.005 0.01 0.02 0.03;do
+for x_pgd_radius in 0.005 0.01 0.02 0.03; do
 for datasetid in 0; do
 for lambda_1 in 0 1; do
   for lambda_2 in 0 1; do
