@@ -19,8 +19,8 @@ i=0 # gpu pointer
 
 n_iters=40
 K=7
-for pgd_radius in 0.005 0.01 0.02 0.03;do
-for x_pgd_radius in 0.005 0.01 0.02 0.03; do
+for pgd_radius in 0.001 0.005 0.01 0.02;do
+for x_pgd_radius in 0.0001 0.0005 0.001 0.0015; do
 for datasetid in 0; do
 for lambda_1 in 0 1; do
   for lambda_2 in 0 1; do
