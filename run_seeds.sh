@@ -8,6 +8,7 @@ n_iters=40
 for dataset in hate offensive rotten_tomatoes;do
 #for dataset in hate emotion;do
 for seed in 50 257 500231 2; do
-python train.py --dataset $dataset --data_dir . --output_dir test_outputs/dataset-${dataset}-seed-${seed}/ --attention tanh --encoder lstm --seed $seed \
-  --exp_name $exp_name --n_iters $n_iters
+ com="python train.py --dataset $dataset --data_dir . --output_dir test_outputs/dataset-${dataset}-seed-${seed}/ --attention tanh --encoder lstm --seed $seed \
+  --exp_name $exp_name --n_iters $n_iters"
+  nohup $com > $exp_name-$dataset-$seed.log 2>&1 &
 done;done
