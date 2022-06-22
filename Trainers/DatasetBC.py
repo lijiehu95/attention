@@ -156,6 +156,12 @@ def irony_dataset(args=None) :
     set_balanced_pos_weight(dataset)
     return dataset
 
+
+def rotten_tomatoes_dataset(args=None):
+    dataset = Dataset(name='rotten_tomatoes', path='preprocess/rotten_tomatoes/vec.p', args=args)
+    set_balanced_pos_weight(dataset)
+    return dataset
+
 datasets = {
     "sst" : SST_dataset,
     "imdb" : IMDB_dataset,
@@ -167,5 +173,6 @@ datasets = {
     "emotion":emotion_dataset,
     "hate": hate_dataset,
     "offensive":offensive_dataset,
-    "irony":irony_dataset
+    "irony":irony_dataset,
+    "rotten_tomatoes":rotten_tomatoes_dataset
 }

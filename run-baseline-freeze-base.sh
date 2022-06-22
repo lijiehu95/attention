@@ -3,7 +3,7 @@ export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='9'
 exp_name="baseline-v2"
 
-datasets=("offensive" "irony")
+datasets=("offensive" "irony" "rotten_tomatoes")
 
 for dataset in $datasets; do
   com="python train.py --dataset $dataset --data_dir . --output_dir test_outputs/ --attention tanh --encoder lstm --exp_name $exp_name"

@@ -1,7 +1,12 @@
 from datasets import load_dataset,DatasetDict
-for dataname in ['offensive', 'irony']:
-    load_data = ('tweet_eval',dataname)
-    dataset = load_dataset(*load_data)
+for dataname in ['offensive', 'irony',"rotten_tomatoes"]:
+
+    if dataname == "rotten_tomatoes":
+        dataset = load_dataset(dataname)
+    else:
+        load_data = ('tweet_eval', dataname)
+        dataset = load_dataset(*load_data)
+
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]
     df_trian['exp_split'] = "train"
