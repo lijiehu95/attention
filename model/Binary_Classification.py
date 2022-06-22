@@ -312,7 +312,8 @@ class Model():
                     torch.sigmoid(new_pred),torch.sigmoid(old_pred))
 
                 wandb.log({
-                    "px_jsd_att_diff": px_jsd_att_diff,"px_tvd_pred_diff":px_tvd_pred_diff
+                    "px_jsd_att_diff": px_jsd_att_diff,
+                    "px_tvd_pred_diff":px_tvd_pred_diff
                 })
             # else:
 
