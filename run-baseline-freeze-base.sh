@@ -1,7 +1,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='9'
-exp_name="baseline-final"
+exp_name="baseline-final-v3"
 
 n_iters=80
 #datasets=("offensive" "irony" "rotten_tomatoes")
@@ -12,7 +12,7 @@ for dataset in  imdb sst hate offensive rotten_tomatoes irony ; do
   nohup $com > $exp_name-$dataset.log 2>&1 &
 done;
 export CUDA_VISIBLE_DEVICES='4'
-exp_name="freeze-att-lstm-final"
+exp_name="freeze-att-lstm-final-v3"
 for dataset in  imdb sst hate offensive rotten_tomatoes irony;do
   com="python train.py --dataset $dataset --data_dir . --output_dir test_outputs/ --attention frozen --encoder lstm  \
     --exp_name $exp_name --n_iters $n_iters"
