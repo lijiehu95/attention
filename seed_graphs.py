@@ -63,8 +63,12 @@ def main():
     # else:
     for sd in glob(f'test_outputs/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
         print(sd)
-        yhat_seeds.append(json.load(open(os.path.join(sd, 'test_attentions_best_epoch.json'))))
-        yhat_preds_seeds.append(json.load(open(os.path.join(sd, 'test_predictions_best_epoch.json'))))
+        att = json.load(open(os.path.join(sd, 'test_attentions_best_epoch.json')))
+        pred = json.load(open(os.path.join(sd, 'test_predictions_best_epoch.json')))
+        if len(att) !=0 and len(pred)!=0:
+            yhat_seeds.append(att)
+            yhat_preds_seeds.append(pred)
+    assert len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0
 
     yhat_orig = numpify(yhat_orig)
     yhat_seeds = [numpify(sd) for sd in yhat_seeds]
