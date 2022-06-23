@@ -17,7 +17,7 @@ gpu=(1 2 7 8)
 gpunum=4
 i=0 # gpu pointer
 
-n_iters=10
+n_iters=5
 K=7
 for pgd_radius in 0.001 0.01 0.1;do
 for x_pgd_radius in 0.0005 0.001 0.01 0.1; do
