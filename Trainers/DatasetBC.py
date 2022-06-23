@@ -49,34 +49,35 @@ class Dataset() :
         Xt, yt = filterbylength(Xt, yt, min_length=min_length, max_length=max_length)
         Xt, yt = sortbylength(Xt, yt)
 
-        if args is not None and args.pre_loaded_attn or args.adversarial or args.ours :
-            # these are lists of lists, with some residual padding
-            y_attn = json.load(open(os.path.join(args.gold_label_dir, 'train_attentions_best_epoch.json'), 'r'))
-            yt_attn = json.load(open(os.path.join(args.gold_label_dir, 'test_attentions_best_epoch.json'), 'r'))
+        if args is not None:
+            if args.pre_loaded_attn or args.adversarial or args.ours:
+                # these are lists of lists, with some residual padding
+                y_attn = json.load(open(os.path.join(args.gold_label_dir, 'train_attentions_best_epoch.json'), 'r'))
+                yt_attn = json.load(open(os.path.join(args.gold_label_dir, 'test_attentions_best_epoch.json'), 'r'))
 
-            true_pred = json.load(open(os.path.join(args.gold_label_dir, 'train_predictions_best_epoch.json'), 'r'))
-            true_pred_t = json.load(open(os.path.join(args.gold_label_dir, 'test_predictions_best_epoch.json'), 'r'))
-            true_pred = [e[0] for e in true_pred]
-            true_pred_t = [e[0] for e in true_pred_t] #these are lists of num. insts-length
+                true_pred = json.load(open(os.path.join(args.gold_label_dir, 'train_predictions_best_epoch.json'), 'r'))
+                true_pred_t = json.load(open(os.path.join(args.gold_label_dir, 'test_predictions_best_epoch.json'), 'r'))
+                true_pred = [e[0] for e in true_pred]
+                true_pred_t = [e[0] for e in true_pred_t] #these are lists of num. insts-length
 
-            #trim padding from static attentions
-            new_attns = []
-            for e, a in zip(X, y_attn):
-                tmp = [0] + [el for el in a if el != 0] + [0]
-                assert len(tmp) == len(e)
-                new_attns.append(tmp)
-            y_attn = new_attns
+                #trim padding from static attentions
+                new_attns = []
+                for e, a in zip(X, y_attn):
+                    tmp = [0] + [el for el in a if el != 0] + [0]
+                    assert len(tmp) == len(e)
+                    new_attns.append(tmp)
+                y_attn = new_attns
 
-            #do the same for test
-            new_attns = []
-            for e, a in zip(Xt, yt_attn):
-                tmp = [0] + [el for el in a if el != 0] + [0]
-                assert len(tmp) == len(e)
-                new_attns.append(tmp)
-            yt_attn = new_attns
+                #do the same for test
+                new_attns = []
+                for e, a in zip(Xt, yt_attn):
+                    tmp = [0] + [el for el in a if el != 0] + [0]
+                    assert len(tmp) == len(e)
+                    new_attns.append(tmp)
+                yt_attn = new_attns
 
-            self.train_data = DataHolder(X, y, y_attn, true_pred)
-            self.test_data = DataHolder(Xt, yt, yt_attn, true_pred_t)
+                self.train_data = DataHolder(X, y, y_attn, true_pred)
+                self.test_data = DataHolder(Xt, yt, yt_attn, true_pred_t)
 
         else :
             self.train_data = DataHolder(X, y)
