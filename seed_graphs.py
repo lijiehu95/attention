@@ -6,7 +6,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from glob import glob
-
+import numpy as np
 from attention.common_code.common import jsd, get_latest_model
 from attention.common_code.plotting import annotate, \
             plot_violin_by_class, plot_scatter_by_class, \
