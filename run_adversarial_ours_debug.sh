@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='5'
-exp_name="ours-debug-v5"
+exp_name="ours-debug-v6"
 
 dataset=(sst imdb hate offensive rotten_tomatoes)
 golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -17,13 +17,13 @@ gpu=(1 2 7 8)
 gpunum=4
 i=0 # gpu pointer
 
-n_iters=40
+n_iters=10
 K=7
-for pgd_radius in 0.01 ;do
-for x_pgd_radius in 0.01 0.005; do
+for pgd_radius in 0.001 0.01 0.1;do
+for x_pgd_radius in 0.0005 0.001 0.01 0.1; do
 for datasetid in 0; do
-for lambda_1 in 1e-3 1e-2 1e-1; do
-  for lambda_2 in 1e-3 1e-2 1e-1; do
+for lambda_1 in 1e-3 1e-2 1e-1 1 10; do
+  for lambda_2 in 1e-3 1e-2 1e-1 1 10; do
     # in the for loop
    i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
@@ -34,8 +34,8 @@ for lambda_1 in 1e-3 1e-2 1e-1; do
       --encoder lstm --ours --gold_label_dir ${golddir[$datasetid]} --n_iters $n_iters \
         --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
         --K $K"
-    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-    # $com
+    # nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+    $com
 
     i=`expr $i + 1`
 done;done;done;done;done;
