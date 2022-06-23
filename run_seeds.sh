@@ -1,4 +1,3 @@
-
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='2'
