@@ -50,6 +50,8 @@ def main():
     
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
+    print("len(yhat_orig[0])",len(yhat_orig[0]))
+    print("len(yhat_preds_orig[0])",len(yhat_preds_orig[0]))
 
     # load seed models
     yhat_seeds = []
