@@ -61,7 +61,7 @@ def main():
     #         yhat_seeds.append(json.load(open(f'{base_dir}/test_attentions_jw_adversary_{i:02d}.json')))
     #         yhat_preds_seeds.append(json.load(open(f'{base_dir}/test_predictions_jw_adversary_{i:02d}.json')))
     # else:
-    for sd in glob(f'test_outputs/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
+    for sd in glob(f'test_outputs/seresult/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
         print(sd)
         att = json.load(open(os.path.join(sd, 'test_attentions_best_epoch.json')))
         pred = json.load(open(os.path.join(sd, 'test_predictions_best_epoch.json')))
