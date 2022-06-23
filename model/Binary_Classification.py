@@ -122,11 +122,6 @@ class Model():
         self.decoder.train()
 
 
-        #
-        # if len(batch_target.shape) == 1:  # (B, )
-        #     batch_target = batch_target.unsqueeze(-1)  # (B, 1)
-
-
         target_pred = [target_pred[i] for i in sorting_idx]
         target_attn = [target_attn_in[i] for i in sorting_idx]
 
@@ -135,9 +130,11 @@ class Model():
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
 
-        related_score=0
-        related_score_trained_att=0
+        spearman_score=0
+        spearman_score_trained_att=0
         num=0
+        kendalltau_score=0
+        kendalltau_score_trained_att=0
         for n in tqdm(batches):
             batch_doc = data[n:n + bsize]
 
@@ -160,11 +157,6 @@ class Model():
                 # old prediction
                 self.encoder(batch_data)
                 self.decoder(batch_data)
-                #
-                # # old att pred
-                # old_pred = batch_data.predict
-                # old_att = self.decoder.get_att(batch_data)
-                # old_embedding = batch_data.embedding
 
                 # PGD generate the new hidden
                 new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
@@ -177,12 +169,6 @@ class Model():
                 new_att = batch_data.attn
             else:
                 assert False
-            # else:
-            #     self.encoder(batch_data)
-            #     self.decoder(batch_data)
-
-            # batch_target = target[n:n + bsize]
-            # batch_target = torch.Tensor(batch_target).to(device)
 
             # this is the unpreturbed embedding
             batch_data.keep_grads = True
@@ -194,21 +180,28 @@ class Model():
             grad = grad.mean(dim=-1)
             for i in range(grad.shape[0]):
                 from torchmetrics import SpearmanCorrCoef
+                from scipy.stats import kendalltau
                 spearman = SpearmanCorrCoef()
-                related_score += spearman(grad[i], new_att[i]).item()
                 target = batch_data.target_attn[i]
                 # print(target.shape)
                 pred = grad[i]
                 # print(pred.shape)
-                related_score_trained_att += spearman(pred,target).item()
                 num+=bsize
+                spearman_score += spearman(pred, new_att[i]).item()
+                spearman_score_trained_att += spearman(pred,target).item()
+                kendalltau_score += kendalltau(pred.detach().cpu().numpy(), new_att[i].detach().cpu().numpy())
+                kendalltau_score_trained_att += kendalltau(pred.detach().cpu().numpy(), target.detach().cpu().numpy())
 
-        related_score /= num
-        related_score_trained_att /=num
+        kendalltau_score /= num
+        kendalltau_score_trained_att /=num
+        spearman_score /= num
+        spearman_score_trained_att /= num
 
         wandb.log({
-            "related_score":related_score,
-            "related_score_trained_att":related_score_trained_att,
+            "spearman_score":spearman_score,
+            "spearman_score_trained_att":spearman_score_trained_att,
+            "kendalltau_score":kendalltau_score,
+            "kendalltau_score_trained_att":kendalltau_score_trained_att,
         })
 
 

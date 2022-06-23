@@ -75,6 +75,22 @@ class Trainer() :
             test_data.true_pred,
             test_data.gold_attns,X_PGDer=self.X_PGDer)
 
+        predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
+                                                                          target_attn=test_data.gold_attns)
+        wandb.log({
+            "original_predictions_te": predictions_te,
+            "original_attentions_te": attentions_te,
+            "original_jsd_score_te": jsd_score_te,
+        })
+
+        predictions_te = np.array(predictions_te)
+        test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
+                                    jsd_score_te)
+
+        wandb.log({
+            "original_test_metrics":test_metrics
+        })
+
         for i in tqdm(range(args.n_iters)):
 
             loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr = self.model.train_ours(train_data.X, train_data.y,
@@ -288,7 +304,7 @@ class Evaluator() :
             test_metrics = self.metrics(test_data.y, predictions)
 
         wandb.log({
-            "test_metrics": test_metrics
+            "final_test_metrics": test_metrics
         })
 
         if self.display_metrics :

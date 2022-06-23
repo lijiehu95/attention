@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='7'
-exp_name="ours-final-debug-624"
+exp_name="main-exp-"
 
 dataset=(sst imdb hate offensive rotten_tomatoes)
 golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
