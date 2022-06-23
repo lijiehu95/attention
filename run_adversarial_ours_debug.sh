@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='5'
-exp_name="ours-debug-v4"
+exp_name="ours-debug-v5"
 
 dataset=(sst imdb hate offensive rotten_tomatoes)
 golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -22,7 +22,7 @@ K=7
 for pgd_radius in 0.001;do
 for x_pgd_radius in 0.0005; do
 for datasetid in 0; do
-for lambda_1 in 1; do
+for lambda_1 in 1e-3 1e-2 5e-2 1e-1 2e-1 5e-1 7e-1; do
   for lambda_2 in 1e-3 1e-2 5e-2 1e-1 2e-1 5e-1 7e-1; do
     # in the for loop
    i=`expr $i % $gpunum`
@@ -35,6 +35,7 @@ for lambda_1 in 1; do
         --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
         --K $K"
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+    # $com
 
     i=`expr $i + 1`
 done;done;done;done;done;
