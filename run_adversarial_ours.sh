@@ -20,8 +20,9 @@ for x_pgd_radius in 0.001 0.01; do
 for datasetid in 0 1 2 3 4 ; do
 for lambda_1 in 0 1e-1 1; do
   for lambda_2 in 0 1e-1 1; do
-    python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_adv_outputs/ \
+    com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_adv_outputs/ \
       --encoder lstm --ours --gold_label_dir ${golddir[$datasetid]} --n_iters $n_iters \
         --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
-        --K $K
+        --K $K"
+    $com
 done;done;done;done;done;
