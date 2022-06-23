@@ -34,9 +34,9 @@ for lambda_1 in 0 0.01 0.1 1; do
     # $com
     i=`expr $i + 1`
     j=`expr $j + 1`
-    j=`expr $j % 56`
+    j=`expr $j % $gpunum`
     if [ "$j" == "0" ];then
-      sleep 18m
+      sleep 20m
     fi
   done;
 done;
