@@ -189,8 +189,8 @@ class Model():
                 num+=bsize
                 spearman_score += spearman(pred, new_att[i]).item()
                 spearman_score_trained_att += spearman(pred,target).item()
-                kendalltau_score += kendalltau(pred.detach().cpu().numpy(), new_att[i].detach().cpu().numpy())
-                kendalltau_score_trained_att += kendalltau(pred.detach().cpu().numpy(), target.detach().cpu().numpy())
+                kendalltau_score += kendalltau(pred.detach().cpu().numpy(), new_att[i].detach().cpu().numpy())[0]
+                kendalltau_score_trained_att += kendalltau(pred.detach().cpu().numpy(), target.detach().cpu().numpy())[0]
 
         kendalltau_score /= num
         kendalltau_score_trained_att /=num

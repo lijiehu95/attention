@@ -3,7 +3,7 @@
 source activate xai
 export PYTHONPATH=/home/yila22/prj
 export CUDA_VISIBLE_DEVICES='7'
-exp_name="main-exp-"
+exp_name="main-exp-debug"
 
 dataset=(sst imdb hate offensive rotten_tomatoes)
 golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -13,7 +13,7 @@ golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:0
   "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
 )
 
-n_iters=40
+n_iters=1
 K=7
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.001; do
