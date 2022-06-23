@@ -17,7 +17,7 @@ n_iters=40
 K=7
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.001; do
-for datasetid in 0 1 2 3 4 ; do
+for datasetid in 0 ; do
 for lambda_1 in 1; do
   for lambda_2 in 1; do
     com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_adv_outputs/ \
