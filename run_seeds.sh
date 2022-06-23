@@ -5,7 +5,7 @@ exp_name="seed-v1"
 
 n_iters=40
 for model in simple-rnn; do
-for dataset in sst imdb hate rotten_tomatoes;do
+for dataset in imdb hate rotten_tomatoes;do
 for seed in 50 257 500231 2; do
  com="python train.py --dataset $dataset --data_dir . --output_dir seed_output/ --attention tanh --encoder $model --seed $seed \
   --exp_name $exp_name --n_iters $n_iters"
