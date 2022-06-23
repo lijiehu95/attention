@@ -1,0 +1,9 @@
+wandb: Currently logged in as: yixin. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.12.19 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.12.18
+wandb: Run data is saved locally in /home/yila22/prj/attention/wandb/run-20220623_141411-25ccgeus
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run faithful-snowball-2106
+wandb: ⭐️ View project at https://wandb.ai/yixin/XAI-NLP
+wandb: 🚀 View run at https://wandb.ai/yixin/XAI-NLP/runs/25ccgeus
