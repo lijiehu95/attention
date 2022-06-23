@@ -16,7 +16,7 @@ gpu=(3 4 5 6 7 8 9)
 gpunum=7
 i=0 # gpu pointer
 j=0
-n_iters=5
+n_iters=40
 K=7
 for pgd_radius in 0.001 0.01 0.1;do
 for x_pgd_radius in 0.001 0.01 0.1; do
@@ -36,7 +36,7 @@ for lambda_1 in 0 0.01 0.1 1; do
     j=`expr $j + 1`
     j=`expr $j % 56`
     if [ "$j" == "0" ];then
-      sleep 20m
+      sleep 18m
     fi
   done;
 done;
