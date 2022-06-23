@@ -78,7 +78,6 @@ class Dataset() :
 
                 self.train_data = DataHolder(X, y, y_attn, true_pred)
                 self.test_data = DataHolder(Xt, yt, yt_attn, true_pred_t)
-
         else :
             self.train_data = DataHolder(X, y)
             self.test_data = DataHolder(Xt, yt)
