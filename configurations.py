@@ -9,6 +9,8 @@ def generate_config(dataset, args, exp_name) :
         enc_type = 'rnn'
     elif args.encoder == 'average' :
         enc_type = args.encoder
+    elif args.encoder == 'simple-rnn' :
+        enc_type = args.encoder
     else :
         raise Exception("unknown encoder type")
 

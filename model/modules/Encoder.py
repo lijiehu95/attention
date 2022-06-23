@@ -9,6 +9,51 @@ class Encoder(nn.Module, Registrable) :
     def forward(self, **kwargs) :
         raise NotImplementedError("Implement forward Model")
 
+
+
+@Encoder.register('simple-rnn')
+class EncoderRNN(Encoder):
+    def __init__(self, vocab_size, embed_size, hidden_size, pre_embed=None):
+        super().__init__()
+        self.vocab_size = vocab_size
+        self.embed_size = embed_size
+
+        if pre_embed is not None:
+            print("Setting Embedding")
+            weight = torch.Tensor(pre_embed)
+            weight[0, :].zero_()
+
+            self.embedding = nn.Embedding(vocab_size, embed_size, _weight=weight, padding_idx=0)
+        else:
+            self.embedding = nn.Embedding(vocab_size, embed_size, padding_idx=0)
+
+        self.hidden_size = hidden_size
+        # self.rnn = nn.LSTM(input_size=embed_size, hidden_size=hidden_size, batch_first=True, bidirectional=True)
+        self.rnn = torch.nn.RNN(input_size=embed_size, hidden_size=hidden_size, num_layers=1, bias=True,
+                           bidirectional=False)
+        self.output_size = self.hidden_size
+
+    def forward(self, data, revise_embedding=None):
+        seq = data.seq
+        lengths = data.lengths
+        if revise_embedding is not None:
+            embedding = revise_embedding
+        else:
+            embedding = self.embedding(seq)  # (B, L, E)
+        packseq = nn.utils.rnn.pack_padded_sequence(embedding, lengths.cpu(), batch_first=True, enforce_sorted=False)
+        output, h = self.rnn(packseq)
+        output, lengths = nn.utils.rnn.pad_packed_sequence(output, batch_first=True, padding_value=0)
+
+        data.hidden = output
+        data.last_hidden = h
+        data.embedding = embedding
+
+        if isTrue(data, 'keep_grads'):
+            # data.embedding = embedding
+            data.embedding.retain_grad()
+            data.hidden.retain_grad()
+
+
 @Encoder.register('rnn')
 class EncoderRNN(Encoder) :
     def __init__(self, vocab_size, embed_size, hidden_size, pre_embed=None) :
