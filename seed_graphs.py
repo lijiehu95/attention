@@ -38,7 +38,8 @@ def main():
     data_name = args.dataset
     model_type = args.model_type
     m, t = model_type.split('+')
-    dataset = datasets[data_name]({'encoder':f'{m}', 'attention':f'{t}','data_dir':args.data_dir})
+    dataset = datasets[data_name]()
+    # dataset = datasets[data_name]({'encoder':f'{m}', 'attention':f'{t}','data_dir':args.data_dir})
     test_data = dataset.test_data
     
     # load 'original' model
