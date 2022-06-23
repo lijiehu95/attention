@@ -11,8 +11,8 @@ golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:0
   "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
 )
 
-gpu=(3 4 5 6 7 8 9)
-gpunum=7
+gpu=(2 3 4 5 6 7 8 9)
+gpunum=8
 i=0 # gpu pointer
 j=0
 n_iters=40
