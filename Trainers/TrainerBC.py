@@ -88,21 +88,21 @@ class Trainer() :
             "original_px_tvd_pred_diff": original_px_tvd_pred_diff
         })
 
-        predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
-                                                                          target_attn=test_data.gold_attns)
-        wandb.log({
-            "original_predictions_te": predictions_te,
-            "original_attentions_te": attentions_te,
-            "original_jsd_score_te": jsd_score_te,
-        })
+        # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
+        #                                                                   target_attn=test_data.gold_attns)
+        # wandb.log({
+        #     "original_predictions_te": predictions_te,
+        #     "original_attentions_te": attentions_te,
+        #     "original_jsd_score_te": jsd_score_te,
+        # })
 
-        predictions_te = np.array(predictions_te)
-        test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
-                                    jsd_score_te)
-
-        wandb.log({
-            "original_test_metrics":test_metrics
-        })
+        # predictions_te = np.array(predictions_te)
+        # test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
+        #                             jsd_score_te)
+        #
+        # wandb.log({
+        #     "original_test_metrics":test_metrics
+        # })
 
         for i in tqdm(range(args.n_iters)):
 

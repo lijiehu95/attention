@@ -1,3 +1,5 @@
+import wandb
+
 from attention.configurations import generate_config
 from attention.Trainers.TrainerBC import Trainer, Evaluator
             
@@ -28,7 +30,10 @@ def train_dataset(dataset, args, config='lstm') :
         print('####################################')
         print("TEST RESULTS FROM BEST MODEL")
         evaluator = Evaluator(dataset, trainer.model.dirname, args)
-        _ = evaluator.evaluate(dataset.test_data, save_results=True)
+        final_metric,_ = evaluator.evaluate(dataset.test_data, save_results=True)
+        wandb.log({
+            "final_metric":final_metric
+        })
         return trainer, evaluator
 
 def train_dataset_on_encoders(dataset, args, exp_name) :
