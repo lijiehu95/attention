@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 import seaborn as sns
 from matplotlib import tight_layout
+import numpy as np
 
 mpl.style.use('seaborn-poster')
 sns.set_palette(sns.color_palette(['#7570b3', '#d95f02', '#1b9e77']))
