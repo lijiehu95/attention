@@ -1397,8 +1397,8 @@ class Evaluator() :
             predictions = np.array(predictions)
             test_metrics = self.metrics(test_data.y, predictions)
 
-        if self.display_metrics :
-            print_metrics(test_metrics, adv=self.model.adversarial)
+        # if self.display_metrics :
+        #     print_metrics(test_metrics, adv=self.model.adversarial)
 
         if save_results :
             f = open(self.model.dirname + '/evaluate.json', 'w')
