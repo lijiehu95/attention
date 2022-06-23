@@ -38,4 +38,9 @@ for lambda_1 in  0 1e-1 1 10; do
     # $com
 
     i=`expr $i + 1`
-done;done;done;done;done;
+done;
+sleep 5m
+done;
+done;
+done;
+done;
