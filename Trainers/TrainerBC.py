@@ -320,8 +320,8 @@ class Evaluator() :
         #     "final_test_metrics": test_metrics
         # })
 
-        if self.display_metrics :
-            print_metrics(test_metrics, adv=self.model.adversarial or self.model.ours)
+        # if self.display_metrics :
+        #     print_metrics(test_metrics, adv=self.model.adversarial or self.model.ours)
 
         if save_results :
             f = open(self.model.dirname + '/evaluate.json', 'w')
