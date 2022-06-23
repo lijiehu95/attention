@@ -19,11 +19,11 @@ i=0 # gpu pointer
 
 n_iters=40
 K=7
-for pgd_radius in 0.001;do
-for x_pgd_radius in 0.0005; do
+for pgd_radius in 0.01 ;do
+for x_pgd_radius in 0.01 0.005; do
 for datasetid in 0; do
-for lambda_1 in 1e-3 1e-2 5e-2 1e-1 2e-1 5e-1 7e-1; do
-  for lambda_2 in 1e-3 1e-2 5e-2 1e-1 2e-1 5e-1 7e-1; do
+for lambda_1 in 1e-3 1e-2 1e-1; do
+  for lambda_2 in 1e-3 1e-2 1e-1; do
     # in the for loop
    i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
