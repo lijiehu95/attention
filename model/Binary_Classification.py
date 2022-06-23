@@ -212,7 +212,85 @@ class Model():
         })
 
 
+    def preterub_x_testing(self,
+              data_in,
+              target_in,
+              target_pred,
+              target_attn_in,X_PGDer=None):
+        sorting_idx = get_sorting_index_with_noise_from_lengths(
+            [len(x) for x in data_in], noise_frac=0.1)
+        data = [data_in[i] for i in sorting_idx]
+        target = [target_in[i] for i in sorting_idx]
 
+        target_pred = [target_pred[i] for i in sorting_idx]
+        target_attn = [target_attn_in[i] for i in sorting_idx]
+
+        self.encoder.train()
+        self.decoder.train()
+
+        from attention.utlis import AverageMeter
+
+        N = len(data)
+        bsize = self.bsize
+        batches = list(range(0, N, bsize))
+        batches = shuffle(batches)
+
+        for n in tqdm(batches):
+            batch_doc = data[n:n + bsize]
+
+            batch_target_attn = target_attn[n:n + bsize]
+            batch_data = BatchHolder(batch_doc, batch_target_attn)
+
+            batch_target_pred = target_pred[n:n + bsize]
+            batch_target_pred = torch.Tensor(batch_target_pred).to(device)
+
+            if len(batch_target_pred.shape) == 1:  # (B, )
+                batch_target_pred = batch_target_pred.unsqueeze(
+                    -1)  # (B, 1)
+
+            # get the hidden
+            def target_model(embedd, data, decoder, encoder):
+                encoder(data, revise_embedding=embedd)
+                decoder(data=data)
+                return torch.sigmoid(data.predict)
+
+            def crit(gt, pred):
+                return batch_tvd(gt, pred)
+
+            # old prediction
+            self.encoder(batch_data)
+            self.decoder(batch_data)
+
+            # old att pred
+            old_pred = torch.sigmoid(batch_data.predict)
+            old_att = batch_data.attn
+
+            # PGD generate the new hidden
+            new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
+                                         , decoder=self.decoder, encoder=self.encoder,
+                                         batch_target_pred=batch_target_pred,
+                                         target_model=target_model)
+
+            # pgd perturb the hidden
+            self.encoder(batch_data, revise_embedding=new_embedd)
+            self.decoder(data=batch_data)
+
+            # diff of att
+            new_att = torch.sigmoid(batch_data.attn)
+
+            # jsd between att
+            px_jsd_att_diff_original = js_divergence(
+                old_att, new_att).squeeze(
+                1).cpu().data.numpy().mean()
+
+            new_pred = torch.sigmoid(batch_data.predict)
+
+            px_tvd_pred_diff_original = batch_tvd(new_pred, old_pred)
+
+            wandb.log({
+                "px_jsd_att_diff_original": px_jsd_att_diff_original,
+                "px_tvd_pred_diff_original": px_tvd_pred_diff_original
+            })
 
 
     def train_ours(self,

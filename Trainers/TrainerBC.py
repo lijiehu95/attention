@@ -67,6 +67,14 @@ class Trainer() :
         br = False
         n_fail = 0
         best_loss = 10000000000
+
+        # log original performance of defense x preturb
+        self.model.preterub_x_testing(
+            test_data.X,
+            test_data.y,
+            test_data.true_pred,
+            test_data.gold_attns,X_PGDer=self.X_PGDer)
+
         for i in tqdm(range(args.n_iters)):
 
             loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr = self.model.train_ours(train_data.X, train_data.y,
