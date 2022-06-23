@@ -69,6 +69,8 @@ def main():
 
     yhat_orig = numpify(yhat_orig)
     yhat_seeds = [numpify(sd) for sd in yhat_seeds]
+    print("len(yhat_orig[0])",len(yhat_orig[0]))
+    print("len(yhat_seeds[0])",len(yhat_seeds[0]))
 
     # compute attention diffs, prediction diffs
     num_rands = len(yhat_seeds)
