@@ -60,8 +60,9 @@ def main():
     #     for i in range(2):
     #         yhat_seeds.append(json.load(open(f'{base_dir}/test_attentions_jw_adversary_{i:02d}.json')))
     #         yhat_preds_seeds.append(json.load(open(f'{base_dir}/test_predictions_jw_adversary_{i:02d}.json')))
+    for sd in glob(f'test_outputs/{data_name.lower()}/{model_type}/*'):
     # else:
-    for sd in glob(f'test_outputs/seresult/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
+    # for sd in glob(f'test_outputs/seresult/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
         print(sd)
         try:
             att = json.load(open(os.path.join(sd, 'test_attentions_best_epoch.json')))
