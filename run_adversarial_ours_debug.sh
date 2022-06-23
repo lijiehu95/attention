@@ -22,8 +22,8 @@ K=7
 for pgd_radius in 0.001 0.01 0.1;do
 for x_pgd_radius in 0.0005 0.001 0.01 0.1; do
 for datasetid in 0; do
-for lambda_1 in 1e-3 1e-2 1e-1 1 10; do
-  for lambda_2 in 1e-3 1e-2 1e-1 1 10; do
+for lambda_1 in 1e-4 1e-3 1e-2 1e-1 1 10; do
+  for lambda_2 in 1e-4 1e-3 1e-2 1e-1 1 10; do
     # in the for loop
    i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
