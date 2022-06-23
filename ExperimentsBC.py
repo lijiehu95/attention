@@ -22,7 +22,7 @@ def train_dataset(dataset, args, config='lstm') :
             )
             trainer.PGDer = PGDer
             trainer.X_PGDer = X_PGDer
-            trainer.train_ours(dataset.train_data, dataset.test_data, args)
+            trainer.train_ours(dataset.train_data, dataset.test_data, args,dataset)
         else:
             trainer.train_standard(dataset.train_data, dataset.test_data, args, save_on_metric=dataset.save_on_metric)
         print('####################################')

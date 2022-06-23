@@ -280,10 +280,7 @@ class Model():
 
             px_tvd_pred_diff_original = batch_tvd(new_pred, old_pred)
 
-            wandb.log({
-                "px_jsd_att_diff_original": px_jsd_att_diff_original,
-                "px_tvd_pred_diff_original": px_tvd_pred_diff_original
-            })
+            return px_jsd_att_diff_original,px_tvd_pred_diff_original
 
 
     def train_ours(self,

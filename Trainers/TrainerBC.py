@@ -63,17 +63,30 @@ class Trainer() :
             f.write(str(test_metrics) + '\n')
             f.close()
 
-    def train_ours(self, train_data, test_data, args):
+    def train_ours(self, train_data, test_data, args,dataset=None):
         br = False
         n_fail = 0
         best_loss = 10000000000
 
+        # for eval the original model
+        evaluator = Evaluator(dataset, args.gold_label_dir, args)
+        original_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=True)
+
+        wandb.log({
+            "original_metric": original_metric,
+        })
+
         # log original performance of defense x preturb
-        self.model.preterub_x_testing(
+        original_px_att_diff, original_px_tvd_pred_diff = evaluator.model.preterub_x_testing(
             test_data.X,
             test_data.y,
             test_data.true_pred,
             test_data.gold_attns,X_PGDer=self.X_PGDer)
+
+        wandb.log({
+            "original_px_att_diff": original_px_att_diff,
+            "original_px_tvd_pred_diff": original_px_tvd_pred_diff
+        })
 
         predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
                                                                           target_attn=test_data.gold_attns)
@@ -303,12 +316,12 @@ class Evaluator() :
             predictions = np.array(predictions)
             test_metrics = self.metrics(test_data.y, predictions)
 
-        wandb.log({
-            "final_test_metrics": test_metrics
-        })
+        # wandb.log({
+        #     "final_test_metrics": test_metrics
+        # })
 
         if self.display_metrics :
-            print_metrics(test_metrics, adv=self.model.adversarial)
+            print_metrics(test_metrics, adv=self.model.adversarial or self.model.ours)
 
         if save_results :
             f = open(self.model.dirname + '/evaluate.json', 'w')
@@ -317,4 +330,4 @@ class Evaluator() :
 
         test_data.yt_hat = predictions
         test_data.attn_hat = attentions
-        return predictions, attentions
+        return test_metrics,predictions, attentions
