@@ -34,8 +34,8 @@ for lambda_1 in  0 1e-1 1 10; do
       --encoder lstm --ours --gold_label_dir ${golddir[$datasetid]} --n_iters $n_iters \
         --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
         --K $K"
-    # nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-    $com
+    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+    # $com
 
     i=`expr $i + 1`
 done;done;done;done;done;
