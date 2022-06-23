@@ -1,7 +1,7 @@
 import matplotlib as mpl
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
-
+import pandas as pd
 import seaborn as sns
 from matplotlib import tight_layout
 import numpy as np
