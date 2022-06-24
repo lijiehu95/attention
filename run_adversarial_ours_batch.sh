@@ -33,7 +33,7 @@ for lambda_1 in 1; do
       --K $K"
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
 #     $com
-#    i=`expr $i + 1`
+    i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
 #    if [ "$j" == "0" ];then
