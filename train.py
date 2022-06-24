@@ -1,4 +1,5 @@
 import argparse
+import os.path
 import time
 import sys
 # import wandb
@@ -47,15 +48,27 @@ args.command = ' '.join(['python'] + sys.argv)
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
-import wandb
-wandb.init(project="XAI-NLP", entity="yixin",config=args)
-wandb.log(vars(args))
-
 from attention.Trainers.DatasetBC import datasets
 from attention.ExperimentsBC import train_dataset_on_encoders
 
 import torch
 import numpy as np
+
+if args.adversarial :
+    exp_name = '+'.join((args.encoder, 'adversarial'))
+elif args.ours:
+    exp_name = '+'.join((args.encoder, 'ours'))
+else :
+    exp_name = '+'.join((args.encoder, args.attention))
+
+from attention.common_code.common import get_latest_model
+args.gold_label_dir = get_latest_model(f'{os.path.join(args.output_dir,args.dataset,exp_name)}')
+
+
+import wandb
+wandb.init(project="XAI-NLP", entity="yixin",config=args)
+wandb.log(vars(args))
+
 
 # check that have provided a data directory to load attentions/predictions from
 if (args.attention == 'pre-loaded' or args.adversarial) and not args.gold_label_dir :
@@ -92,12 +105,6 @@ dataset = datasets[args.dataset](args)
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
 
-if args.adversarial :
-    exp_name = '+'.join((args.encoder, 'adversarial'))
-elif args.ours:
-    exp_name = '+'.join((args.encoder, 'ours'))
-else :
-    exp_name = '+'.join((args.encoder, args.attention))
 
 # start = time.time()
 # train_dataset_on_encoders(dataset, args, exp_name)
