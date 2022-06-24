@@ -20,7 +20,7 @@ n_iters=40
 K=7
 for pgd_radius in 0.001;do
 for x_pgd_radius in 0.005; do
-for datasetid in 0 1 2 3; do
+for datasetid in 1; do
 for lambda_1 in 1; do
   for lambda_2 in 1e-1; do
    i=`expr $i % $gpunum`
@@ -30,8 +30,8 @@ for lambda_1 in 1; do
     --encoder lstm --ours --gold_label_dir ${golddir[$datasetid]} --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K"
-    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-    # $com
+#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+     $com
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
@@ -59,7 +59,7 @@ n_iters=40
 K=7
 for pgd_radius in 0.001;do
 for x_pgd_radius in 0.005; do
-for datasetid in 0 1 2 3; do
+for datasetid in 1; do
 for lambda_1 in 1; do
   for lambda_2 in 1e-1; do
    i=`expr $i % $gpunum`
@@ -69,8 +69,8 @@ for lambda_1 in 1; do
     --encoder simple-rnn --ours --gold_label_dir ${golddir[$datasetid]} --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K"
-    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-    # $com
+#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+     $com
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
