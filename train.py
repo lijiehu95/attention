@@ -62,7 +62,8 @@ else :
     exp_name = '+'.join((args.encoder, args.attention))
 
 from attention.common_code.common import get_latest_model
-args.gold_label_dir = get_latest_model(f'{os.path.join(args.output_dir,args.dataset,exp_name)}')
+a = "test_outputs"
+args.gold_label_dir = get_latest_model(f'{os.path.join(a,args.dataset,exp_name)}')
 
 
 import wandb
