@@ -161,45 +161,45 @@ class Trainer() :
                 # "true_topk_loss_te_px":true_topk_loss_te_px,
             })
 
-            # predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
-            #                                                                   target_attn=train_data.gold_attns)
-            # #
+            predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
+                                                                              target_attn=train_data.gold_attns)
+            #
             # wandb.log({
             #     "predictions_tr": predictions_tr,
             #     "attentions_tr": attentions_tr,
             #     "jsd_score_tr": jsd_score_tr,
             # })
 
-            # predictions_tr = np.array(predictions_tr)
-            # train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
-            #                              jsd_score_tr)
-            # print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
-            # loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
-            #
-            # print(
-            #     {"train_metrics":train_metrics}
-            # )
+            predictions_tr = np.array(predictions_tr)
+            train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
+                                         jsd_score_tr)
+            print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
+            loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
+
+            print(
+                {"train_metrics":train_metrics}
+            )
             # print(print_str)
             #
             # print("TRAIN METRICS:")
             # if self.display_metrics:
             #     print_metrics(train_metrics, adv=True)
             #
-            # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
-            #                                                                   target_attn=test_data.gold_attns)
+            predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
+                                                                              target_attn=test_data.gold_attns)
             # wandb.log({
             #     "predictions_te": predictions_te,
             #     "attentions_te": attentions_te,
             #     "jsd_score_te": jsd_score_te,
             # })
 
-            # predictions_te = np.array(predictions_te)
-            # test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
-            #                             jsd_score_te)
+            predictions_te = np.array(predictions_te)
+            test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
+                                        jsd_score_te)
 
-            # wandb.log({
-            #     "test_metrics_training_time":test_metrics
-            # })
+            wandb.log({
+                "test_metrics_training_time":test_metrics
+            })
             # print("TEST METRICS:")
             # if self.display_metrics:
             #     print_metrics(test_metrics, adv=True)
