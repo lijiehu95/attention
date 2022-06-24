@@ -62,7 +62,7 @@ else :
     exp_name = '+'.join((args.encoder, args.attention))
 
 from attention.common_code.common import get_latest_model
-a = "test_outputs"
+a = "./test_outputs"
 args.gold_label_dir = get_latest_model(f'{os.path.join(a,args.dataset,exp_name)}')
 
 
