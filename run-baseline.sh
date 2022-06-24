@@ -1,6 +1,6 @@
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-export CUDA_VISIBLE_DEVICES='9'
+export CUDA_VISIBLE_DEVICES='0'
 exp_name="baseline"
 for model in simple-rnn lstm; do
 for dataset in sst imdb hate rotten_tomatoes; do
