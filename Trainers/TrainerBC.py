@@ -110,7 +110,7 @@ class Trainer() :
 
             loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr,px_tvd_pred_diff_tr,px_jsd_att_diff_tr = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
-                                                                                 train_data.gold_attns,PGDer=self.PGDer)
+                                                                                 train_data.gold_attns,PGDer=self.PGDer,preturb_x=True)
 
             wandb.log({
                 "px_jsd_att_diff_tr": px_jsd_att_diff_tr,
