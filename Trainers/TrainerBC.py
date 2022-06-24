@@ -233,7 +233,7 @@ class Trainer() :
             if br:
                 break
 
-        self.model.related_score(test_data.X,test_data.y,test_data.true_pred,test_data.gold_attns,train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+        # self.model.related_score(test_data.X,test_data.y,test_data.true_pred,test_data.gold_attns,train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
     def train_adversarial(self, train_data, test_data, args) :
 
