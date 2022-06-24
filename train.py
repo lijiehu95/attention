@@ -68,7 +68,7 @@ args.gold_label_dir = get_latest_model(f'{os.path.join(base,args.dataset,att)}')
 
 
 import wandb
-wandb.init(project="XAI-NLP-NEW", entity="yixin",config=args)
+wandb.init(project="XAI-NLP", entity="yixin",config=args)
 wandb.log(vars(args))
 
 
