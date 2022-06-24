@@ -200,12 +200,12 @@ class Model():
         spearman_score /= num
         spearman_score_trained_att /= num
 
-        wandb.log({
-            "spearman_score":spearman_score,
-            "spearman_score_trained_att":spearman_score_trained_att,
-            "kendalltau_score":kendalltau_score,
-            "kendalltau_score_trained_att":kendalltau_score_trained_att,
-        })
+        # wandb.log({
+        #     "spearman_score":spearman_score,
+        #     "spearman_score_trained_att":spearman_score_trained_att,
+        #     "kendalltau_score":kendalltau_score,
+        #     "kendalltau_score_trained_att":kendalltau_score_trained_att,
+        # })
 
 
     def preterub_x_testing(self,
