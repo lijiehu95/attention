@@ -2,7 +2,7 @@ import argparse
 import time
 import sys
 # import wandb
-from visualdl import LogWriter
+# from visualdl import LogWriter
 
 
 parser = argparse.ArgumentParser(description='Run experiments on a dataset')
@@ -138,7 +138,7 @@ print('####################################')
 evaluator = Evaluator(dataset, trainer.model.dirname, args)
 final_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
 
-
+wandb.finish()
 
 # wandb.log({
 #     "final_metric":final_metric
