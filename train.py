@@ -137,12 +137,12 @@ print('####################################')
 # print("TEST RESULTS FROM BEST MODEL")
 evaluator = Evaluator(dataset, trainer.model.dirname, args)
 final_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
-
-wandb.finish()
-
 wandb.log({
     "final_metric":final_metric
 })
+wandb.finish()
+
+
 # return trainer, evaluator
 # print("here")
 # print("here")
