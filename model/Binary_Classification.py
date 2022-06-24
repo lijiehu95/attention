@@ -381,10 +381,10 @@ class Model():
 
                 px_tvd_pred_diff = batch_tvd(new_pred,old_pred)
 
-                wandb.log({
-                    "px_jsd_att_diff": px_jsd_att_diff,
-                    "px_tvd_pred_diff":px_tvd_pred_diff
-                })
+                # wandb.log({
+                #     "px_jsd_att_diff": px_jsd_att_diff,
+                #     "px_tvd_pred_diff":px_tvd_pred_diff
+                # })
             # else:
 
             # to the true att and embedding
