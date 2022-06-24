@@ -1,7 +1,8 @@
 
 
 source activate xai
-export PYTHONPATH=/home/yila22/prj
+#export PYTHONPATH=/home/yila22/prj
+export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 exp_name="ours-final-624-v1"
 
 dataset=(sst imdb hate rotten_tomatoes)
