@@ -232,6 +232,9 @@ class Model():
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
 
+        px_jsd_att_diff_original = []
+        px_tvd_pred_diff_original = []
+
         for n in tqdm(batches):
             batch_doc = data[n:n + bsize]
 
@@ -276,15 +279,16 @@ class Model():
             new_att = torch.sigmoid(batch_data.attn)
 
             # jsd between att
-            px_jsd_att_diff_original = js_divergence(
+            px_jsd_att_diff_original.append(js_divergence(
                 old_att, new_att).squeeze(
-                1).cpu().data.numpy().mean()
+                1).cpu().data.numpy().mean())
 
             new_pred = torch.sigmoid(batch_data.predict)
 
-            px_tvd_pred_diff_original = batch_tvd(new_pred, old_pred)
+            px_tvd_pred_diff_original.append(batch_tvd(new_pred, old_pred).item())
 
-            return px_jsd_att_diff_original,px_tvd_pred_diff_original
+        import numpy as np
+        return np.mean(px_jsd_att_diff_original), np.mean(px_tvd_pred_diff_original)
 
 
     def train_ours(self,

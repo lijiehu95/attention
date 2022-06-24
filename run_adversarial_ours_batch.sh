@@ -3,7 +3,7 @@
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="ours-final-624-v4"
+exp_name="ours-final-624-v5"
 
 dataset=(sst imdb hate rotten_tomatoes)
 #golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \

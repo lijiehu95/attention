@@ -86,8 +86,8 @@ class Trainer() :
             test_data.gold_attns,X_PGDer=self.X_PGDer)
 
         wandb.log({
-            "original_px_att_diff": original_px_att_diff,
-            "original_px_tvd_pred_diff": original_px_tvd_pred_diff
+            "original_px_att_diff_te": original_px_att_diff,
+            "original_px_tvd_pred_diff_te": original_px_tvd_pred_diff
         })
 
         # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
