@@ -12,8 +12,8 @@ dataset=(sst imdb hate rotten_tomatoes)
 #  "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
 #)
 
-gpu=(0 1 2 3 4 5 6 7 8 9)
-gpunum=10
+gpu=(2 3 4 5 6 7 8 9)
+gpunum=8
 i=0 # gpu pointer
 j=0
 n_iters=40
