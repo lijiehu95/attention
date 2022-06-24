@@ -2,7 +2,7 @@
 
 source activate xai
 export PYTHONPATH=/home/yila22/prj
-exp_name="ours-debug-v7"
+exp_name="ours-debug-final"
 
 dataset=(sst imdb hate rotten_tomatoes)
 golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -11,17 +11,17 @@ golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:0
   "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/lstm+tanh/Wed_Jun_22_11:00:16_2022/" \
 )
 
-gpu=(2 3 4 5 6 7 8 9)
-gpunum=8
+gpu=(0 1 2 3 4 5 6 7 8 9)
+gpunum=10
 i=0 # gpu pointer
 j=0
 n_iters=40
 K=7
-for pgd_radius in 0.001 0.01 0.1;do
-for x_pgd_radius in 0.001 0.01; do
+for pgd_radius in 0.001;do
+for x_pgd_radius in 0.005; do
 for datasetid in 0 1 2 3; do
-for lambda_1 in 0 0.01 0.1 1; do
-  for lambda_2 in 0 0.01 0.1 1; do
+for lambda_1 in 1; do
+  for lambda_2 in 1e-1; do
    i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
    echo "use gpu id is ${gpu[$i]}"
@@ -34,9 +34,9 @@ for lambda_1 in 0 0.01 0.1 1; do
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
-    if [ "$j" == "0" ];then
-      sleep 20m
-    fi
+#    if [ "$j" == "0" ];then
+#      sleep 20m
+#    fi
   done;
 done;
 done;
@@ -50,17 +50,17 @@ golddir=( "/home/yila22/prj/attention/test_outputs/sst/simple-rnn+tanh/Thu_Jun_2
   "/home/yila22/prj/attention/test_outputs/hate/simple-rnn+tanh/Thu_Jun_23_16:01:56_2022" \
   "/home/yila22/prj/attention/test_outputs/rotten_tomatoes/simple-rnn+tanh/Thu_Jun_23_16:01:59_2022/" \
 )
-gpu=(3 4 5 6 7 8 9)
-gpunum=7
-i=0 # gpu pointer
+#gpu=(0 1 2 3 4 5 6 7 8 9)
+#gpunum=10
+#i=0 # gpu pointer
 j=0
 n_iters=40
 K=7
-for pgd_radius in 0.001 0.01 0.1;do
-for x_pgd_radius in 0.001 0.01 ; do
+for pgd_radius in 0.001;do
+for x_pgd_radius in 0.005; do
 for datasetid in 0 1 2 3; do
-for lambda_1 in 0 0.01 0.1 1; do
-  for lambda_2 in 0 0.01 0.1 1; do
+for lambda_1 in 1; do
+  for lambda_2 in 1e-1; do
    i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
    echo "use gpu id is ${gpu[$i]}"
@@ -73,9 +73,9 @@ for lambda_1 in 0 0.01 0.1 1; do
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
-    if [ "$j" == "0" ];then
-      sleep 20m
-    fi
+#    if [ "$j" == "0" ];then
+#      sleep 20m
+#    fi
   done;
 done;
 done;
