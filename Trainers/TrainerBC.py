@@ -241,13 +241,13 @@ class Trainer() :
 
             print("DIRECTORY:", dirname)
 
-            # f = open(dirname + '/epoch.txt', 'a')
-            # f.write(str(test_metrics) + '\n')
-            # f.close()
-            #
-            # f = open(dirname + '/losses.txt', 'a')
-            # f.write("EPOCH %d: " % i + print_str + '\n')
-            # f.close()
+            f = open(dirname + '/epoch.txt', 'a')
+            f.write(str(test_metrics) + '\n')
+            f.close()
+
+            f = open(dirname + '/losses.txt', 'a')
+            f.write("EPOCH %d: " % i + print_str + '\n')
+            f.close()
 
             if br:
                 break
