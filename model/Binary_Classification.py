@@ -181,10 +181,11 @@ class Model():
 
             grad = batch_data.embedding.grad
             grad = grad.mean(dim=-1)
+            from torchmetrics import SpearmanCorrCoef
+            from scipy.stats import kendalltau
+            spearman = SpearmanCorrCoef()
             for i in range(grad.shape[0]):
-                from torchmetrics import SpearmanCorrCoef
-                from scipy.stats import kendalltau
-                spearman = SpearmanCorrCoef()
+                spearman.reset()
                 target = batch_data.target_attn[i]
                 # print(target.shape)
                 pred = grad[i]
