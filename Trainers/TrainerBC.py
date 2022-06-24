@@ -70,7 +70,7 @@ class Trainer() :
 
         # for eval the original model
         evaluator = Evaluator(dataset, args.gold_label_dir, args)
-        original_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=True)
+        original_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
 
         wandb.log({
             "original_metric": original_metric,
