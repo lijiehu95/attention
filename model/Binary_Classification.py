@@ -135,6 +135,9 @@ class Model():
         num=0
         kendalltau_score=0
         kendalltau_score_trained_att=0
+
+        print("related score comp")
+
         for n in tqdm(batches):
             batch_doc = data[n:n + bsize]
 
