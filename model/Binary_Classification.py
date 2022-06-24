@@ -461,6 +461,7 @@ class Model():
 
 
         import numpy as np
+        assert len(px_jsd_att_diff) !=0 and len(px_tvd_pred_diff)!=0
         px_tvd_pred_diff = np.mean(px_tvd_pred_diff)
         px_jsd_att_diff = np.mean(px_jsd_att_diff)
 
