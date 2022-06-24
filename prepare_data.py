@@ -7,6 +7,9 @@ for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
     else:
         dataset = load_dataset(dataname)
 
+    if dataname == 'SetFit/sst5':
+        dataname = "sst5"
+
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]
     df_trian['exp_split'] = "train"
