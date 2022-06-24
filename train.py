@@ -104,8 +104,8 @@ print("TOTAL ELAPSED TIME: %f HOURS OR %f MINUTES" % (((time.time() - start)/60/
 wandb.log({
     "finish":'True'
 })
-import os
-import signal
-os.kill(os.getpid(), signal.SIGKILL)
+# import os
+# import signal
+# os.kill(os.getpid(), signal.SIGKILL)
 
 
