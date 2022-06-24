@@ -1,11 +1,11 @@
 from datasets import load_dataset,DatasetDict
-for dataname in ['offensive', 'irony',"rotten_tomatoes"]:
+for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
 
-    if dataname == "rotten_tomatoes":
-        dataset = load_dataset(dataname)
-    else:
+    if dataname == "hate":
         load_data = ('tweet_eval', dataname)
         dataset = load_dataset(*load_data)
+    else:
+        dataset = load_dataset(dataname)
 
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]
