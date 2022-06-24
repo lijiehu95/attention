@@ -319,6 +319,9 @@ class Model():
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
 
+        px_tvd_pred_diff = []
+        px_jsd_att_diff = []
+
         for n in tqdm(batches):
             batch_doc = data[n:n + bsize]
 
@@ -374,18 +377,15 @@ class Model():
                 new_att = torch.sigmoid(batch_data.attn)
 
                 # jsd between att
-                px_jsd_att_diff = js_divergence(
+                px_jsd_att_diff.append(js_divergence(
                     old_att, new_att).squeeze(
-                        1).cpu().data.numpy().mean()
+                        1).cpu().data.numpy().mean())
 
                 new_pred = torch.sigmoid(batch_data.predict)
 
-                px_tvd_pred_diff = batch_tvd(new_pred,old_pred)
+                px_tvd_pred_diff.append(batch_tvd(new_pred,old_pred))
 
-                wandb.log({
-                    "px_jsd_att_diff": px_jsd_att_diff,
-                    "px_tvd_pred_diff":px_tvd_pred_diff
-                })
+
             # else:
 
             # to the true att and embedding
@@ -459,7 +459,12 @@ class Model():
             pgd_tvd_loss_total += float(
                 att_pgd_pred_tvd.data.cpu().item())
 
-        return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss_counter.average()
+
+        import numpy as np
+        px_tvd_pred_diff = np.mean(px_tvd_pred_diff)
+        px_jsd_att_diff = np.mean(px_jsd_att_diff)
+
+        return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss_counter.average(),px_tvd_pred_diff,px_jsd_att_diff
 
     def train(self,
               data_in,

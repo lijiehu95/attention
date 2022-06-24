@@ -108,9 +108,15 @@ class Trainer() :
         print("training our model")
         for i in tqdm(range(args.n_iters)):
 
-            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr = self.model.train_ours(train_data.X, train_data.y,
+            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr,px_tvd_pred_diff_tr,px_jsd_att_diff_tr = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
                                                                                  train_data.gold_attns,PGDer=self.PGDer)
+
+            wandb.log({
+                "px_jsd_att_diff_tr": px_jsd_att_diff_tr,
+                "px_tvd_pred_diff_tr": px_tvd_pred_diff_tr
+            })
+
             wandb.log({
                 "loss_tr":loss_tr,
                 "loss_tr_orig":loss_tr_orig,
@@ -120,7 +126,7 @@ class Trainer() :
                 "true_topk_loss_tr":true_topk_loss_tr
             })
 
-            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te = self.model.train_ours(test_data.X,
+            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te,px_tvd_pred_diff_te,px_jsd_att_diff_te = self.model.train_ours(test_data.X,
                                                                                                 test_data.y,
                                                                                                 test_data.true_pred,
                                                                                                 test_data.gold_attns,
@@ -133,6 +139,10 @@ class Trainer() :
             #     test_data.gold_attns,
             #     PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
+            wandb.log({
+                "px_jsd_att_diff_te": px_jsd_att_diff_te,
+                "px_tvd_pred_diff_te": px_tvd_pred_diff_te
+            })
 
             wandb.log({
                 "loss_te": loss_te,
