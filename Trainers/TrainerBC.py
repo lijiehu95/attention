@@ -72,9 +72,9 @@ class Trainer() :
         evaluator = Evaluator(dataset, args.gold_label_dir, args)
         original_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
 
-        # wandb.log({
-        #     "original_metric": original_metric,
-        # })
+        wandb.log({
+            "original_metric": original_metric,
+        })
 
         # log original performance of defense x preturb
         original_px_att_diff, original_px_tvd_pred_diff = evaluator.model.preterub_x_testing(
@@ -83,10 +83,10 @@ class Trainer() :
             test_data.true_pred,
             test_data.gold_attns,X_PGDer=self.X_PGDer)
 
-        # wandb.log({
-        #     "original_px_att_diff": original_px_att_diff,
-        #     "original_px_tvd_pred_diff": original_px_tvd_pred_diff
-        # })
+        wandb.log({
+            "original_px_att_diff": original_px_att_diff,
+            "original_px_tvd_pred_diff": original_px_tvd_pred_diff
+        })
 
         # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
         #                                                                   target_attn=test_data.gold_attns)
@@ -109,14 +109,14 @@ class Trainer() :
             loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr = self.model.train_ours(train_data.X, train_data.y,
                                                                                  train_data.true_pred,
                                                                                  train_data.gold_attns,PGDer=self.PGDer)
-            # wandb.log({
-            #     "loss_tr":loss_tr,
-            #     "loss_tr_orig":loss_tr_orig,
-            #     "tvd_loss_tr":tvd_loss_tr,
-            #     "topk_loss_tr":topk_loss_tr,
-            #     "pgd_tvd_loss_tr":pgd_tvd_loss_tr,
-            #     "true_topk_loss_tr":true_topk_loss_tr
-            # })
+            wandb.log({
+                "loss_tr":loss_tr,
+                "loss_tr_orig":loss_tr_orig,
+                "tvd_loss_tr":tvd_loss_tr,
+                "topk_loss_tr":topk_loss_tr,
+                "pgd_tvd_loss_tr":pgd_tvd_loss_tr,
+                "true_topk_loss_tr":true_topk_loss_tr
+            })
 
             loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te = self.model.train_ours(test_data.X,
                                                                                                 test_data.y,
@@ -131,38 +131,42 @@ class Trainer() :
             #     test_data.gold_attns,
             #     PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
-            #
-            # wandb.log({
-            #     "loss_te": loss_te,
-            #     "loss_te_orig": loss_te_orig,
-            #     "tvd_loss_te": tvd_loss_te,
-            #     "topk_loss_te": topk_loss_te,
-            #     "pgd_tvd_loss_te": pgd_tvd_loss_te,
-            #     "true_topk_loss_te":true_topk_loss_te,
-            #
-            #
-            #     # "loss_te_px": loss_te_px,
-            #     # "loss_te_orig_px": loss_te_orig_px,
-            #     # "tvd_loss_te_px": tvd_loss_te_px,
-            #     # "topk_loss_te_px": topk_loss_te_px,
-            #     # "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
-            #     # "true_topk_loss_te_px":true_topk_loss_te_px,
-            # })
+
+            wandb.log({
+                "loss_te": loss_te,
+                "loss_te_orig": loss_te_orig,
+                "tvd_loss_te": tvd_loss_te,
+                "topk_loss_te": topk_loss_te,
+                "pgd_tvd_loss_te": pgd_tvd_loss_te,
+                "true_topk_loss_te":true_topk_loss_te,
+
+
+                # "loss_te_px": loss_te_px,
+                # "loss_te_orig_px": loss_te_orig_px,
+                # "tvd_loss_te_px": tvd_loss_te_px,
+                # "topk_loss_te_px": topk_loss_te_px,
+                # "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
+                # "true_topk_loss_te_px":true_topk_loss_te_px,
+            })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
                                                                               target_attn=train_data.gold_attns)
-            #
-            # wandb.log({
-            #     "predictions_tr": predictions_tr,
-            #     "attentions_tr": attentions_tr,
-            #     "jsd_score_tr": jsd_score_tr,
-            # })
+
+            wandb.log({
+                "predictions_tr": predictions_tr,
+                "attentions_tr": attentions_tr,
+                "jsd_score_tr": jsd_score_tr,
+            })
 
             predictions_tr = np.array(predictions_tr)
             train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
                                          jsd_score_tr)
             print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
             loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
+
+            print(
+                {"train_metrics":train_metrics}
+            )
             # print(print_str)
             #
             # print("TRAIN METRICS:")
@@ -171,16 +175,19 @@ class Trainer() :
             #
             predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
                                                                               target_attn=test_data.gold_attns)
-            # wandb.log({
-            #     "predictions_te": predictions_te,
-            #     "attentions_te": attentions_te,
-            #     "jsd_score_te": jsd_score_te,
-            # })
+            wandb.log({
+                "predictions_te": predictions_te,
+                "attentions_te": attentions_te,
+                "jsd_score_te": jsd_score_te,
+            })
 
             predictions_te = np.array(predictions_te)
             test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
                                         jsd_score_te)
 
+            wandb.log({
+                "test_metrics_training_time":test_metrics
+            })
             # print("TEST METRICS:")
             # if self.display_metrics:
             #     print_metrics(test_metrics, adv=True)
@@ -203,32 +210,32 @@ class Trainer() :
                     # print("Loss hasn't decreased for 10 epochs...EARLY STOPPING TRIGGERED")
 
             dirname = self.model.save_values(save_model=save_model)
-            # if save_model:
-            #     attentions_tr = [el.tolist() for el in attentions_tr]
-            #     attentions_te = [el.tolist() for el in attentions_te]
-                # print("SAVING PREDICTIONS AND ATTENTIONS")
-                # json.dump(predictions_tr.tolist(),
-                #           codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
-                #           separators=(',', ':'), sort_keys=True, indent=4)
-                # json.dump(predictions_te.tolist(),
-                #           codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'),
-                #           separators=(',', ':'), sort_keys=True, indent=4)
-                # json.dump(attentions_tr,
-                #           codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'),
-                #           separators=(',', ':'), sort_keys=True, indent=4)
-                # json.dump(attentions_te,
-                #           codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
-                #           separators=(',', ':'), sort_keys=True, indent=4)
+            if save_model:
+                attentions_tr = [el.tolist() for el in attentions_tr]
+                attentions_te = [el.tolist() for el in attentions_te]
+                print("SAVING PREDICTIONS AND ATTENTIONS")
+                json.dump(predictions_tr.tolist(),
+                          codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(predictions_te.tolist(),
+                          codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_tr,
+                          codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_te,
+                          codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
 
             print("DIRECTORY:", dirname)
 
-            # f = open(dirname + '/epoch.txt', 'a')
-            # f.write(str(test_metrics) + '\n')
-            # f.close()
-            #
-            # f = open(dirname + '/losses.txt', 'a')
-            # f.write("EPOCH %d: " % i + print_str + '\n')
-            # f.close()
+            f = open(dirname + '/epoch.txt', 'a')
+            f.write(str(test_metrics) + '\n')
+            f.close()
+
+            f = open(dirname + '/losses.txt', 'a')
+            f.write("EPOCH %d: " % i + print_str + '\n')
+            f.close()
 
             if br:
                 break
@@ -319,7 +326,7 @@ class Evaluator() :
         # wandb.log({
         #     "final_test_metrics": test_metrics
         # })
-
+        #
         # if self.display_metrics :
         #     print_metrics(test_metrics, adv=self.model.adversarial or self.model.ours)
 

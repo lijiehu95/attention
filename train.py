@@ -140,9 +140,9 @@ final_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
 
 wandb.finish()
 
-# wandb.log({
-#     "final_metric":final_metric
-# })
+wandb.log({
+    "final_metric":final_metric
+})
 # return trainer, evaluator
 # print("here")
 # print("here")

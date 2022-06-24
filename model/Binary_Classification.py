@@ -201,12 +201,12 @@ class Model():
         spearman_score /= num
         spearman_score_trained_att /= num
 
-        # wandb.log({
-        #     "spearman_score":spearman_score,
-        #     "spearman_score_trained_att":spearman_score_trained_att,
-        #     "kendalltau_score":kendalltau_score,
-        #     "kendalltau_score_trained_att":kendalltau_score_trained_att,
-        # })
+        wandb.log({
+            "spearman_score":spearman_score,
+            "spearman_score_trained_att":spearman_score_trained_att,
+            "kendalltau_score":kendalltau_score,
+            "kendalltau_score_trained_att":kendalltau_score_trained_att,
+        })
 
 
     def preterub_x_testing(self,
@@ -382,10 +382,10 @@ class Model():
 
                 px_tvd_pred_diff = batch_tvd(new_pred,old_pred)
 
-                # wandb.log({
-                #     "px_jsd_att_diff": px_jsd_att_diff,
-                #     "px_tvd_pred_diff":px_tvd_pred_diff
-                # })
+                wandb.log({
+                    "px_jsd_att_diff": px_jsd_att_diff,
+                    "px_tvd_pred_diff":px_tvd_pred_diff
+                })
             # else:
 
             # to the true att and embedding
