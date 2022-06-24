@@ -63,7 +63,7 @@ else :
 
 from attention.common_code.common import get_latest_model
 base = "./test_outputs"
-att = 'tanh'
+att = '+'.join((args.encoder, 'tanh'))
 args.gold_label_dir = get_latest_model(f'{os.path.join(base,args.dataset,att)}')
 
 
