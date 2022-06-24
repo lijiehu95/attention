@@ -383,7 +383,7 @@ class Model():
 
                 new_pred = torch.sigmoid(batch_data.predict)
 
-                px_tvd_pred_diff.append(batch_tvd(new_pred,old_pred))
+                px_tvd_pred_diff.append(batch_tvd(new_pred,old_pred).item())
 
 
             # else:
