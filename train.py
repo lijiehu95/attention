@@ -63,7 +63,8 @@ else :
 
 from attention.common_code.common import get_latest_model
 a = "./test_outputs"
-args.gold_label_dir = get_latest_model(f'{os.path.join(a,args.dataset,exp_name)}')
+att = 'tanh'
+args.gold_label_dir = get_latest_model(f'{os.path.join(a,args.dataset,att)}')
 
 
 import wandb
