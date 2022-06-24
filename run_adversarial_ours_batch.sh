@@ -21,7 +21,7 @@ K=7
 for model in lstm simple-rnn; do
 for pgd_radius in 0.001;do
 for x_pgd_radius in 0.005; do
-for datasetid in 1; do
+for datasetid in 0 1 2 3; do
 for lambda_1 in 1; do
   for lambda_2 in 1e-1; do
    i=`expr $i % $gpunum`
