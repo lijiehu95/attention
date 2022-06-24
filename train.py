@@ -96,8 +96,8 @@ elif args.ours:
 else :
     exp_name = '+'.join((args.encoder, args.attention))
 
-start = time.time()
-train_dataset_on_encoders(dataset, args, exp_name)
+# start = time.time()
+# train_dataset_on_encoders(dataset, args, exp_name)
 # print("TOTAL ELAPSED TIME: %f HOURS OR %f MINUTES" % (((time.time() - start)/60/60), ((time.time() - start)/60)))
 # _python_exit()
 # sys.exit()
@@ -107,5 +107,37 @@ train_dataset_on_encoders(dataset, args, exp_name)
 # import os
 # import signal
 # os.kill(os.getpid(), signal.SIGKILL)
-
+from attention.configurations import generate_config
+from attention.Trainers.TrainerBC import Trainer, Evaluator
+config = generate_config(dataset, args, exp_name)
+trainer = Trainer(dataset, args, config=config)
+#go ahead and save model
+dirname = trainer.model.save_values(save_model=False)
+print("DIRECTORY:", dirname)
+if args.adversarial :
+    trainer.train_adversarial(dataset.train_data, dataset.test_data, args)
+elif args.ours:
+    from attention.attack import PGDAttacker
+    PGDer = PGDAttacker(
+        radius=args.pgd_radius, steps=args.pgd_step, step_size=args.pgd_step_size, random_start= \
+        True, norm_type=args.pgd_norm_type, ascending=True
+    )
+    trainer.PGDer = PGDer
+    X_PGDer = PGDAttacker(
+        radius=args.x_pgd_radius, steps=args.x_pgd_step, step_size=args.x_pgd_step_size, random_start= \
+            True, norm_type=args.x_pgd_norm_type, ascending=True
+    )
+    trainer.PGDer = PGDer
+    trainer.X_PGDer = X_PGDer
+    trainer.train_ours(dataset.train_data, dataset.test_data, args,dataset)
+else:
+    trainer.train_standard(dataset.train_data, dataset.test_data, args, save_on_metric=dataset.save_on_metric)
+print('####################################')
+print("TEST RESULTS FROM BEST MODEL")
+evaluator = Evaluator(dataset, trainer.model.dirname, args)
+final_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=True)
+wandb.log({
+    "final_metric":final_metric
+})
+# return trainer, evaluator
 
