@@ -1,10 +1,10 @@
 
 
 source activate xai
-export PYTHONPATH=/home/yila22/prj
+export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 export CUDA_VISIBLE_DEVICES='7'
 #export WANDB_START_METHOD="thread"
-export WANDB_MODE=dryrun
+#export WANDB_MODE=dryrun
 
 exp_name="code-debug"
 
