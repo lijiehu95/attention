@@ -203,32 +203,32 @@ class Trainer() :
                     # print("Loss hasn't decreased for 10 epochs...EARLY STOPPING TRIGGERED")
 
             dirname = self.model.save_values(save_model=save_model)
-            if save_model:
-                attentions_tr = [el.tolist() for el in attentions_tr]
-                attentions_te = [el.tolist() for el in attentions_te]
+            # if save_model:
+            #     attentions_tr = [el.tolist() for el in attentions_tr]
+            #     attentions_te = [el.tolist() for el in attentions_te]
                 # print("SAVING PREDICTIONS AND ATTENTIONS")
-                json.dump(predictions_tr.tolist(),
-                          codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
-                          separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(predictions_te.tolist(),
-                          codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'),
-                          separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(attentions_tr,
-                          codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'),
-                          separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(attentions_te,
-                          codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
-                          separators=(',', ':'), sort_keys=True, indent=4)
+                # json.dump(predictions_tr.tolist(),
+                #           codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                #           separators=(',', ':'), sort_keys=True, indent=4)
+                # json.dump(predictions_te.tolist(),
+                #           codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                #           separators=(',', ':'), sort_keys=True, indent=4)
+                # json.dump(attentions_tr,
+                #           codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                #           separators=(',', ':'), sort_keys=True, indent=4)
+                # json.dump(attentions_te,
+                #           codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                #           separators=(',', ':'), sort_keys=True, indent=4)
 
             print("DIRECTORY:", dirname)
 
-            f = open(dirname + '/epoch.txt', 'a')
-            f.write(str(test_metrics) + '\n')
-            f.close()
-
-            f = open(dirname + '/losses.txt', 'a')
-            f.write("EPOCH %d: " % i + print_str + '\n')
-            f.close()
+            # f = open(dirname + '/epoch.txt', 'a')
+            # f.write(str(test_metrics) + '\n')
+            # f.close()
+            #
+            # f = open(dirname + '/losses.txt', 'a')
+            # f.write("EPOCH %d: " % i + print_str + '\n')
+            # f.close()
 
             if br:
                 break
