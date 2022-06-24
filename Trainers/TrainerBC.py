@@ -50,16 +50,16 @@ class Trainer() :
             dirname = self.model.save_values(save_model=save_model)
 
 
-            # if save_model:
-            #     attentions_tr = [el.tolist() for el in attentions_tr]
-            #     attentions_te = [el.tolist() for el in attentions_te]
-            #     print("SAVING PREDICTIONS AND ATTENTIONS")
-            #     json.dump(predictions_tr.tolist(), codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-            #     json.dump(predictions_te.tolist(), codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-            #     json.dump(attentions_tr, codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-            #     json.dump(attentions_te, codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-            #
-            # print("DIRECTORY:", dirname)
+            if save_model:
+                attentions_tr = [el.tolist() for el in attentions_tr]
+                attentions_te = [el.tolist() for el in attentions_te]
+                print("SAVING PREDICTIONS AND ATTENTIONS")
+                json.dump(predictions_tr.tolist(), codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(predictions_te.tolist(), codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_tr, codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_te, codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+
+            print("DIRECTORY:", dirname)
 
             f = open(dirname + '/epoch.txt', 'a')
             f.write(str(test_metrics) + '\n')
@@ -163,12 +163,12 @@ class Trainer() :
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
                                                                               target_attn=train_data.gold_attns)
-
-            wandb.log({
-                "predictions_tr": predictions_tr,
-                "attentions_tr": attentions_tr,
-                "jsd_score_tr": jsd_score_tr,
-            })
+            #
+            # wandb.log({
+            #     "predictions_tr": predictions_tr,
+            #     "attentions_tr": attentions_tr,
+            #     "jsd_score_tr": jsd_score_tr,
+            # })
 
             predictions_tr = np.array(predictions_tr)
             train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
@@ -187,11 +187,11 @@ class Trainer() :
             #
             predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
                                                                               target_attn=test_data.gold_attns)
-            wandb.log({
-                "predictions_te": predictions_te,
-                "attentions_te": attentions_te,
-                "jsd_score_te": jsd_score_te,
-            })
+            # wandb.log({
+            #     "predictions_te": predictions_te,
+            #     "attentions_te": attentions_te,
+            #     "jsd_score_te": jsd_score_te,
+            # })
 
             predictions_te = np.array(predictions_te)
             test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
