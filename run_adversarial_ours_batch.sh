@@ -3,7 +3,7 @@
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="ours-final-624-v3"
+exp_name="ours-final-624-v4"
 
 dataset=(sst imdb hate rotten_tomatoes)
 #golddir=( "/home/yila22/prj/attention/test_outputs/sst/lstm+tanh/Wed_Jun_22_11:01:35_2022/" \
@@ -31,8 +31,8 @@ for lambda_1 in 1; do
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K"
-#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-     $com
+    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+#     $com
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
