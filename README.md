@@ -51,6 +51,11 @@ To add bert encoder based on this code, you might need to do the following:
 2. Add Bert Dataset loading Module.
 3. Add Bert Encoder Module.
 
+# The repository is organized as follows:
+1. ``train.py`` as the main training python module.
+2. ``preprocess.py`` as the preprocessing dataset module for encoder that use word-embedding.
+3. ``attack.py`` as the adversarial pgd attack module.
+
 # Run Additional Experiments based on the reference paper
 
 ## Running Random Seeds Experiments 
