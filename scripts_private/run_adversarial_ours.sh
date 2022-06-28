@@ -2,12 +2,12 @@ cd $(dirname $(dirname $0))
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="find-best-hyperparameters"
+exp_name="find-best-hyperparameters-v1"
 
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
-gpu=(0 1 2 3 4 5 6 7 8 9)
+gpu=(2 3 4 5 6 7 8 9)
 gpunum=${#gpu[@]}
 i=0 # gpu pointer
 j=0
@@ -27,11 +27,14 @@ for lambda_1 in 0 1e-3 1e-2 1e-1 1; do
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K  "
-#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-     $com
+    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+#     $com
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
+    if [ "$j" == "0" ];then
+      sleep 20m
+    fi
   done;
 done;
 done;
