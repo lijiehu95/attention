@@ -161,6 +161,15 @@ def rotten_tomatoes_dataset(args=None):
     set_balanced_pos_weight(dataset)
     return dataset
 
+def auto_dataset(dataset_name,args=None):
+    dataset = Dataset(
+        name=dataset_name,
+        path='preprocess/' + dataset_name + '/vec.p',
+        args=args
+    )
+    set_balanced_pos_weight(dataset)
+    return dataset
+
 datasets = {
     "sst" : SST_dataset,
     "imdb" : IMDB_dataset,
@@ -175,3 +184,10 @@ datasets = {
     "irony":irony_dataset,
     "rotten_tomatoes":rotten_tomatoes_dataset
 }
+
+
+def auto_load_dataset(dataset_name,args):
+    if dataset_name in datasets:
+        return datasets[dataset_name](args)
+    else:
+        return auto_dataset(dataset_name,args)

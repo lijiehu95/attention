@@ -1,14 +1,18 @@
 from datasets import load_dataset,DatasetDict
-for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
+# for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
 
-    if dataname == "hate":
-        load_data = ('tweet_eval', dataname)
-        dataset = load_dataset(*load_data)
-    else:
-        dataset = load_dataset(dataname)
+# for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
+for dataset in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
+                "stance_hillary"]:
+    dataname = dataset
+    # if dataname == "hate":
+    load_data = ('tweet_eval', dataname)
+    dataset = load_dataset(*load_data)
+    # else:
+    #     dataset = load_dataset(dataname)
 
-    if dataname == 'SetFit/sst5':
-        dataname = "sst5"
+    # if dataname == 'SetFit/sst5':
+    #     dataname = "sst5"
 
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]

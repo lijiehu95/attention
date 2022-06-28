@@ -48,7 +48,7 @@ args.command = ' '.join(['python'] + sys.argv)
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
-from attention.Trainers.DatasetBC import datasets
+from attention.Trainers.DatasetBC import datasets,auto_load_dataset
 from attention.ExperimentsBC import train_dataset_on_encoders
 
 import torch
@@ -102,7 +102,8 @@ elif args.attention == 'pre-loaded': # not an adversarial model
 else :
     raise LookupError("Attention not found ...")
 
-dataset = datasets[args.dataset](args)
+# dataset = datasets[args.dataset](args)
+dataset = auto_load_dataset(dataset_name=args.dataset, args=args)
 
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
