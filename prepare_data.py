@@ -2,7 +2,8 @@ from datasets import load_dataset,DatasetDict
 # for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
 
 # for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
-for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
+for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', \
+                "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
                 "stance_hillary"]:
     dataname = dataset
     # if dataname == "hate":
