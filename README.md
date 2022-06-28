@@ -32,7 +32,7 @@ conda activate XXX # Replace XXX with your conda env name
 
 Since we use wandb to log experiments, you are required to register a wandb account , activate that on your computer and revise the argument ``args.wandb_entity``. You can register your account at [wandb.com](https://wandb.com/signup) and read about the quick start guide at [wandb.com](https://docs.wandb.ai/v/zh-hans/quickstart).
 
-# Our Main Experiments
+# Run Our Main Experiments
 ## 1. Baseline model
 First train the baseline models and then the model ckpt and attention score will be saved in the output directory
 ```shell
@@ -45,7 +45,12 @@ Then train our model based on the baseline model using the following command. No
 bash run-adversarial_ours.sh
 ```
 
-# Additional Experiments based on the reference paper
+# To add bert encoder based on this code, you need to do the following:
+1. Align the bert data tokenize format, which you need to add ``[SEQ]`` in the front and end of the text to match existing code.
+2. Add Bert Dataset loading Module.
+3. Add Bert Encoder Module.
+
+# Run Additional Experiments based on the reference paper
 
 ## Running Random Seeds Experiments 
 ```shell
