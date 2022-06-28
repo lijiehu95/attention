@@ -1,3 +1,4 @@
+cd $(dirname $(dirname $0))
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 export CUDA_VISIBLE_DEVICES='0'

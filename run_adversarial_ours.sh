@@ -1,5 +1,4 @@
-
-
+cd $(dirname $(dirname $0))
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
