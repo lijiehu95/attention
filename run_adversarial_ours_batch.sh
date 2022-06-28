@@ -13,7 +13,7 @@ exp_name="ours-final-624-v5"
 #)
 dataset=(emoji sentiment stance_abortion stance_atheism stance_climate stance_feminist \
                 stance_hillary)
-
+gold_label_dir="/home/yila22/prj/attention/test_outputs/"
 gpu=(2 3 4 5 6 7 8 9)
 gpunum=8
 i=0 # gpu pointer
@@ -32,7 +32,7 @@ for lambda_1 in 1; do
    com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_outputs/ \
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
-      --K $K"
+      --K $K --gold_label_dir "
 #    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
      $com
     i=`expr $i + 1`
