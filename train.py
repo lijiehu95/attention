@@ -51,7 +51,7 @@ args.command = ' '.join(['python'] + sys.argv)
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
-from attention.Trainers.DatasetBC import datasets,auto_load_dataset
+from attention.Trainers.DatasetBC import auto_load_dataset
 from attention.ExperimentsBC import train_dataset_on_encoders
 
 import torch
