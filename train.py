@@ -52,7 +52,6 @@ args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
 from attention.Trainers.DatasetBC import auto_load_dataset
-from attention.ExperimentsBC import train_dataset_on_encoders
 
 import torch
 import numpy as np
@@ -119,23 +118,11 @@ dataset = auto_load_dataset(dataset_name=args.dataset, args=args)
 if args.output_dir is not None :
     dataset.output_dir = args.output_dir
 
-
-# start = time.time()
-# train_dataset_on_encoders(dataset, args, exp_name)
-# print("TOTAL ELAPSED TIME: %f HOURS OR %f MINUTES" % (((time.time() - start)/60/60), ((time.time() - start)/60)))
-# _python_exit()
-# sys.exit()
-# wandb.log({
-#     "finish":'True'
-# })
-# import os
-# import signal
-# os.kill(os.getpid(), signal.SIGKILL)
 from attention.configurations import generate_config
 from attention.Trainers.TrainerBC import Trainer, Evaluator
 config = generate_config(dataset, args, exp_name)
 trainer = Trainer(dataset, args, config=config)
-#go ahead and save model
+
 dirname = trainer.model.save_values(save_model=False)
 print("DIRECTORY:", dirname)
 if args.ours:
@@ -162,11 +149,3 @@ wandb.log({
     "final_metric":final_metric
 })
 wandb.finish()
-
-
-# return trainer, evaluator
-# print("here")
-# print("here")
-# print("here")
-# print("here")
-
