@@ -79,15 +79,15 @@ class Trainer() :
         })
 
         # log original performance of defense x preturb
-        original_px_att_diff, original_px_tvd_pred_diff = evaluator.model.preterub_x_testing(
+        baseline_px_jsd_att_diff_te, baseline_px_tvd_pred_diff_te = evaluator.model.preterub_x_testing(
             test_data.X,
             test_data.y,
             test_data.true_pred,
             test_data.gold_attns,X_PGDer=self.X_PGDer)
 
         wandb.log({
-            "original_px_att_diff_te": original_px_att_diff,
-            "original_px_tvd_pred_diff_te": original_px_tvd_pred_diff
+            "baseline_px_jsd_att_diff_te": baseline_px_jsd_att_diff_te,
+            "baseline_px_tvd_pred_diff_te": baseline_px_tvd_pred_diff_te
         })
 
         # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
@@ -253,6 +253,13 @@ class Trainer() :
                 break
 
         self.model.related_score(test_data.X,test_data.y,test_data.true_pred,test_data.gold_attns,train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+
+        wandb.log({
+            "jsd_smaller": baseline_px_jsd_att_diff_te > px_jsd_att_diff_te,
+            "tvd_smaller": baseline_px_tvd_pred_diff_te > px_tvd_pred_diff_te,
+            "jsd_tvd_smaller":baseline_px_jsd_att_diff_te > px_jsd_att_diff_te and baseline_px_tvd_pred_diff_te > px_tvd_pred_diff_te
+        })
+
     #
     # def train_adversarial(self, train_data, test_data, args) :
     #
