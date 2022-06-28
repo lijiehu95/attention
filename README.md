@@ -1,35 +1,22 @@
-# Attention is not not Explanation
+# REAL Attention 
 
-Code for the EMNLP 2019 paper *[Attention is not not Explanation](https://www.aclweb.org/anthology/D19-1002/)* by Wiegreffe & Pinter.
+We've based our repository on the [code](https://github.com/sarahwie/attention) provided by Sarthak Jain & Byron Wallace for their paper *[Attention is not not Explanation](https://arxiv.org/abs/1908.04626)*.
 
-When using this codebase, please cite:
+# Envrioment Setup
+1. Ensure you have installed python environment in your computer. (Anaconda is recommended)
+2. Use the following command to install the dependencies:
 ```
-@inproceedings{wiegreffe-pinter-2019-attention,
-    title = "Attention is not not Explanation",
-    author = "Wiegreffe, Sarah  and
-      Pinter, Yuval",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-    month = nov,
-    year = "2019",
-    address = "Hong Kong, China",
-    publisher = "Association for Computational Linguistics",
-    url = "https://www.aclweb.org/anthology/D19-1002",
-    doi = "10.18653/v1/D19-1002",
-    pages = "11--20"
-}
+pip install -r requirements.txt
+```
+3. Preprocess the dataset using the following command:
 ```
 
-We've based our repository on the [code](https://github.com/successar/AttentionExplanation) provided by Sarthak Jain & Byron Wallace for their paper *[Attention is not Explanation](https://arxiv.org/abs/1902.10186)*.
+```
 
 Dependencies
 --------------
-- New:
 - Python==3.6
 - cuda_11.2
-
-
-Please refer to the installation instructions for the repository provided by [Jain & Wallace](https://github.com/successar/AttentionExplanation). We use the same dependencies.
-Also, make sure to export the meta-directory into which you clone `attention` to your PYTHONPATH in order for the imports to work correctly. For example, if the path to the cloned directory is `/home/users/attention/`, then run `export PYTHONPATH='/home/users'`.
 
 Data Preprocessing
 --------------

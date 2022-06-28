@@ -98,68 +98,68 @@ class Dataset() :
 
 ########################################## Dataset Loaders ################################################################################
 
-def SST_dataset(args=None) :
-    dataset = Dataset(name='sst', path='preprocess/SST/vec_sst.p', min_length=5, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def IMDB_dataset(args=None) :
-    dataset = Dataset(name='imdb', path='preprocess/IMDB/vec_imdb.p', min_length=6, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def News20_dataset(args=None) :
-    dataset = Dataset(name='20News_sports', path='preprocess/20News/vec_20news_sports.p', min_length=6, max_length=500, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def ADR_dataset(args=None) :
-    dataset = Dataset(name='tweet', path='preprocess/Tweets/vec_adr.p', min_length=5, max_length=100, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def Anemia_dataset(args=None) :
-    dataset = Dataset(name='anemia', path='preprocess/MIMIC/vec_anemia.p', max_length=4000, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def Diabetes_dataset(args=None) :
-    dataset = Dataset(name='diabetes', path='preprocess/MIMIC/vec_diabetes.p', min_length=6, max_length=4000, args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def AGNews_dataset(args=None) :
-    dataset = Dataset(name='agnews', path='preprocess/ag_news/vec_agnews.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def emotion_dataset(args=None) :
-    dataset = Dataset(name='emotion', path='preprocess/emotion/vec.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-def hate_dataset(args=None) :
-    dataset = Dataset(name='hate', path='preprocess/hate/vec.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-
-def offensive_dataset(args=None) :
-    dataset = Dataset(name='offensive', path='preprocess/offensive/vec.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-
-def irony_dataset(args=None) :
-    dataset = Dataset(name='irony', path='preprocess/irony/vec.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
-
-
-def rotten_tomatoes_dataset(args=None):
-    dataset = Dataset(name='rotten_tomatoes', path='preprocess/rotten_tomatoes/vec.p', args=args)
-    set_balanced_pos_weight(dataset)
-    return dataset
+# def SST_dataset(args=None) :
+#     dataset = Dataset(name='sst', path='preprocess/SST/vec.p', min_length=5, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def IMDB_dataset(args=None) :
+#     dataset = Dataset(name='imdb', path='preprocess/IMDB/vec.p', min_length=6, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def News20_dataset(args=None) :
+#     dataset = Dataset(name='20News_sports', path='preprocess/20News/vec_20news_sports.p', min_length=6, max_length=500, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def ADR_dataset(args=None) :
+#     dataset = Dataset(name='tweet', path='preprocess/Tweets/vec_adr.p', min_length=5, max_length=100, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def Anemia_dataset(args=None) :
+#     dataset = Dataset(name='anemia', path='preprocess/MIMIC/vec_anemia.p', max_length=4000, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def Diabetes_dataset(args=None) :
+#     dataset = Dataset(name='diabetes', path='preprocess/MIMIC/vec_diabetes.p', min_length=6, max_length=4000, args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def AGNews_dataset(args=None) :
+#     dataset = Dataset(name='agnews', path='preprocess/ag_news/vec_agnews.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def emotion_dataset(args=None) :
+#     dataset = Dataset(name='emotion', path='preprocess/emotion/vec.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+# def hate_dataset(args=None) :
+#     dataset = Dataset(name='hate', path='preprocess/hate/vec.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+#
+# def offensive_dataset(args=None) :
+#     dataset = Dataset(name='offensive', path='preprocess/offensive/vec.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+#
+# def irony_dataset(args=None) :
+#     dataset = Dataset(name='irony', path='preprocess/irony/vec.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
+#
+#
+# def rotten_tomatoes_dataset(args=None):
+#     dataset = Dataset(name='rotten_tomatoes', path='preprocess/rotten_tomatoes/vec.p', args=args)
+#     set_balanced_pos_weight(dataset)
+#     return dataset
 
 def auto_dataset(dataset_name,args=None):
     dataset = Dataset(
@@ -170,24 +170,24 @@ def auto_dataset(dataset_name,args=None):
     set_balanced_pos_weight(dataset)
     return dataset
 
-datasets = {
-    "sst" : SST_dataset,
-    "imdb" : IMDB_dataset,
-    "20News_sports" : News20_dataset,
-    "tweet" : ADR_dataset ,
-    "Anemia" : Anemia_dataset,
-    "Diabetes" : Diabetes_dataset,
-    "AgNews" : AGNews_dataset,
-    "emotion":emotion_dataset,
-    "hate": hate_dataset,
-    "offensive":offensive_dataset,
-    "irony":irony_dataset,
-    "rotten_tomatoes":rotten_tomatoes_dataset
-}
+# datasets = {
+#     "sst" : SST_dataset,
+#     "imdb" : IMDB_dataset,
+#     "20News_sports" : News20_dataset,
+#     "tweet" : ADR_dataset ,
+#     "Anemia" : Anemia_dataset,
+#     "Diabetes" : Diabetes_dataset,
+#     "AgNews" : AGNews_dataset,
+#     "emotion":emotion_dataset,
+#     "hate": hate_dataset,
+#     "offensive":offensive_dataset,
+#     "irony":irony_dataset,
+#     "rotten_tomatoes":rotten_tomatoes_dataset
+# }
 
 
 def auto_load_dataset(dataset_name,args):
-    if dataset_name in datasets:
-        return datasets[dataset_name](args)
-    else:
-        return auto_dataset(dataset_name,args)
+    # if dataset_name in datasets:
+    #     return datasets[dataset_name](args)
+    # else:
+    return auto_dataset(dataset_name,args)

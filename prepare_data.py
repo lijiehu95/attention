@@ -2,17 +2,15 @@ from datasets import load_dataset,DatasetDict
 # for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
 
 # for dataname in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5']:
-for dataset in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
+for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
                 "stance_hillary"]:
     dataname = dataset
     # if dataname == "hate":
-    load_data = ('tweet_eval', dataname)
-    dataset = load_dataset(*load_data)
-    # else:
-    #     dataset = load_dataset(dataname)
-
-    # if dataname == 'SetFit/sst5':
-    #     dataname = "sst5"
+    if dataname in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
+                "stance_hillary", 'hate']:
+        load_data = ('tweet_eval', dataname)
+    else:
+        dataset = load_dataset(dataname)
 
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]
@@ -22,6 +20,7 @@ for dataset in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stan
     df_test['exp_split'] = "test"
     df = df_trian.append(df_test)
     df = df.dropna(axis=0,how='any')
+
     import os
     df_path = f'./preprocess/{dataname}'
     try:
