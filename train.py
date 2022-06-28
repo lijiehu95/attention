@@ -66,6 +66,7 @@ from attention.common_code.common import get_latest_model
 base = "./test_outputs"
 att = '+'.join((args.encoder, 'tanh'))
 
+print(args.baseline)
 if not args.baseline:
     # get the least recent baseline model
     print(f'{os.path.join(base,args.dataset,att)}')
