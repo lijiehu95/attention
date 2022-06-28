@@ -106,13 +106,13 @@ elif args.attention == 'frozen' :
 elif args.attention == 'tanh' :
     args.frozen_attn = False
     args.pre_loaded_attn = False
-elif args.attention == 'pre-loaded': # not an adversarial model
+elif args.attention == 'pre-loaded':
     args.frozen_attn = False
     args.pre_loaded_attn = True
 else :
     raise LookupError("Attention not found ...")
 
-# dataset = datasets[args.dataset](args)
+
 dataset = auto_load_dataset(dataset_name=args.dataset, args=args)
 
 if args.output_dir is not None :
