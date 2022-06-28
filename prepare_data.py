@@ -21,6 +21,8 @@ for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', "sentime
     df = df_trian.append(df_test)
     df = df.dropna(axis=0,how='any')
 
+    if dataname == "SetFit/sst5":
+        dataname = "sst"
     import os
     df_path = f'./preprocess/{dataname}'
     try:
