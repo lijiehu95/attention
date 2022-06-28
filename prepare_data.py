@@ -56,10 +56,6 @@ for dataset in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stan
     assert 'exp_split' in df.columns, "No Experimental splits defined"
 
     texts = list(df[df.exp_split == 'train']['text'])
-    # assert np.nan not in texts
-    # for i in texts:
-    #     if i == np.nan:
-    #         print(i)
     vec.fit(texts)
 
     print("Vocabulary size : ", vec.vocab_size)
