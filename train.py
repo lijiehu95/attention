@@ -71,6 +71,9 @@ if not args.baseline:
     # get the least recent baseline model
     print(f'{os.path.join(base,args.dataset,att)}')
     args.gold_label_dir = get_latest_model(f'{os.path.join(base,args.dataset,att)}')
+    print(
+        args.gold_label_dir
+    )
 
 
 import wandb
