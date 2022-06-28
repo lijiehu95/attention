@@ -45,7 +45,8 @@ Then train our model based on the baseline model using the following command. No
 bash run-adversarial_ours.sh
 ```
 
-# To add bert encoder based on this code, you need to do the following:
+# Tasks breaking for adding bert encoder 
+To add bert encoder based on this code, you might need to do the following:
 1. Align the bert data tokenize format, which you need to add ``[SEQ]`` in the front and end of the text to match existing code.
 2. Add Bert Dataset loading Module.
 3. Add Bert Encoder Module.
