@@ -59,6 +59,6 @@ bash run_frozen_attention.sh
 ```
 
 ## Running BOWs Experiments 
-- To run the Bag of Words model with trained (MLP) attention weights: `./run_bows_baselines.sh [Diabetes, Anemia, AgNews, 20News_sports, imdb, sst]`
-- To run the Bag of Words model with uniform attention weights: `./run_bows_frozen_attn.sh [Diabetes, Anemia, AgNews, 20News_sports, imdb, sst]`
-- To run the Bag of Words model with frozen attention weights from another model: `./run_bows_set_to_pretrained_distribution.sh [Diabetes, Anemia, AgNews, 20News_sports, imdb, sst] [path/to/saved/model/with/attention/weights]`
+- To run the Bag of Words model with trained (MLP) attention weights: `./run_bows_baselines.sh [DATASET]`
+- To run the Bag of Words model with uniform attention weights: `./run_bows_frozen_attn.sh [DATASET]`
+- To run the Bag of Words model with frozen attention weights from another model: `./run_bows_set_to_pretrained_distribution.sh [DATASET] [path/to/saved/model/with/attention/weights]`
