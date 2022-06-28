@@ -7,6 +7,7 @@ import sys
 
 
 parser = argparse.ArgumentParser(description='Run experiments on a dataset')
+parser.add_argument("--baseline", action="store_true", help="Run baseline model training")
 parser.add_argument('--dataset', type=str)
 parser.add_argument("--data_dir", type=str, default=".")
 parser.add_argument("--output_dir", type=str,default="test_outputs/")
@@ -64,7 +65,10 @@ else :
 from attention.common_code.common import get_latest_model
 base = "./test_outputs"
 att = '+'.join((args.encoder, 'tanh'))
-args.gold_label_dir = get_latest_model(f'{os.path.join(base,args.dataset,att)}')
+
+if not args.baseline:
+    # get the least recent baseline model
+    args.gold_label_dir = get_latest_model(f'{os.path.join(base,args.dataset,att)}')
 
 
 import wandb
