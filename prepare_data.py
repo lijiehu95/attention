@@ -8,9 +8,9 @@ for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', "sentime
     # if dataname == "hate":
     if dataname in ['emoji', "sentiment", "stance_abortion", "stance_atheism", "stance_climate", "stance_feminist", \
                 "stance_hillary", 'hate']:
-        load_data = ('tweet_eval', dataname)
+        dataset = load_data('tweet_eval', dataname)
     else:
-        dataset = load_dataset(dataname)
+        dataset = load_data(dataname)
 
     df_trian = dataset['train'].to_pandas()
     df_trian = df_trian[df_trian['label'].apply(lambda x: x in [0,1])]
