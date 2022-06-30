@@ -14,6 +14,7 @@ gpunum=${#gpu[@]}
 task_load=8000
 up_task_time=10s
 
+for seed in 10 20 512 12; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.01; do
@@ -21,8 +22,8 @@ for datasetid in 3 2 0 1 4 5 6 7 8 9 10; do
 #for datasetid in 2 3; do
 #for lambda_1 in 1; do
 #for lambda_2 in 1e-4; do
-for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
-  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+for lambda_1 in 1; do
+  for lambda_2 in 1e-4; do
 # find suitable gpu
 i=0 # we search from the first gpu
 while true; do
@@ -45,15 +46,16 @@ free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo
 export CUDA_VISIBLE_DEVICES=$gpu_id
 echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
 
-    com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_outputs/ \
+    com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_outputs_seed/ \
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
-      --K $K  "
+      --K $K  --seed $seed"
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
 #     $com
     echo "sleep for ${up_task_time} to wait the task loaded"
     sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
   done;
+done;
 done;
 done;
 done;
