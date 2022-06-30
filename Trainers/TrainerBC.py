@@ -6,18 +6,19 @@ import numpy as np
 from attention.preprocess import vectorizer
 import wandb
 
-class Trainer() :
-    def __init__(self, dataset, args, config) :
+
+class Trainer():
+    def __init__(self, dataset, args, config):
         Model = BC.Model
         self.model = Model(config, args, pre_embed=dataset.vec.embeddings)
         self.metrics = calc_metrics_classification
         self.display_metrics = True
         self.PGDer = None
-    
-    def train_standard(self, train_data, test_data, args, save_on_metric='roc_auc') :
+
+    def train_standard(self, train_data, test_data, args, save_on_metric='roc_auc'):
 
         best_metric = 0.0
-        for i in tqdm(range(args.n_iters)) :
+        for i in tqdm(range(args.n_iters)):
 
             _, loss_tr, loss_tr_orig, _, _ = self.model.train(train_data.X, train_data.y)
             predictions_tr, attentions_tr, _ = self.model.evaluate(train_data.X)
@@ -30,7 +31,7 @@ class Trainer() :
             if self.display_metrics:
                 print_metrics(train_metrics, adv=False)
 
-            predictions_te, attentions_te, _ = self.model.evaluate(test_data.X) 
+            predictions_te, attentions_te, _ = self.model.evaluate(test_data.X)
             predictions_te = np.array(predictions_te)
             test_metrics = self.metrics(np.array(test_data.y), predictions_te)
 
@@ -39,25 +40,32 @@ class Trainer() :
                 print_metrics(test_metrics, adv=False)
 
             metric = test_metrics[save_on_metric]
-            if metric > best_metric :
+            if metric > best_metric:
                 best_metric = metric
                 save_model = True
                 print("Model Saved on ", save_on_metric, metric)
-            else :
+            else:
                 save_model = False
                 print("Model not saved on ", save_on_metric, metric)
 
             dirname = self.model.save_values(save_model=save_model)
 
-
             if save_model:
                 attentions_tr = [el.tolist() for el in attentions_tr]
                 attentions_te = [el.tolist() for el in attentions_te]
                 print("SAVING PREDICTIONS AND ATTENTIONS")
-                json.dump(predictions_tr.tolist(), codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(predictions_te.tolist(), codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(attentions_tr, codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
-                json.dump(attentions_te, codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'), separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(predictions_tr.tolist(),
+                          codecs.open(dirname + '/train_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(predictions_te.tolist(),
+                          codecs.open(dirname + '/test_predictions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_tr,
+                          codecs.open(dirname + '/train_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
+                json.dump(attentions_te,
+                          codecs.open(dirname + '/test_attentions_best_epoch.json', 'w', encoding='utf-8'),
+                          separators=(',', ':'), sort_keys=True, indent=4)
 
             print("DIRECTORY:", dirname)
 
@@ -65,72 +73,81 @@ class Trainer() :
             f.write(str(test_metrics) + '\n')
             f.close()
 
-    def train_ours(self, train_data, test_data, args,dataset=None):
+    def train_ours(self, train_data, test_data, args, dataset=None):
         br = False
         n_fail = 0
         best_loss = 10000000000
 
         # for eval the original model
         evaluator = Evaluator(dataset, args.gold_label_dir, args)
-        original_metric,_,_ = evaluator.evaluate(dataset.test_data, save_results=False)
+        original_metric, _, _ = evaluator.evaluate(dataset.test_data, save_results=False)
 
         wandb.log({
             "original_metric": original_metric,
         })
 
         # log original performance of defense x preturb
-        baseline_px_jsd_att_diff_te, baseline_px_tvd_pred_diff_te = evaluator.model.preterub_x_testing(
+        res_baseline = evaluator.model.preterub_x_eval(
             test_data.X,
             test_data.y,
             test_data.true_pred,
-            test_data.gold_attns,X_PGDer=self.X_PGDer)
+            test_data.gold_attns, X_PGDer=self.X_PGDer)
 
-        wandb.log({
-            "baseline_px_jsd_att_diff_te": baseline_px_jsd_att_diff_te,
-            "baseline_px_tvd_pred_diff_te": baseline_px_tvd_pred_diff_te
-        })
+        for k,v in res_baseline.items():
+            wandb.log({
+                "baseline_"+k+"_te": v,
+            })
 
-        # predictions_te, attentions_te, jsd_score_te = self.model.evaluate(test_data.X,
-        #                                                                   target_attn=test_data.gold_attns)
         # wandb.log({
-        #     "original_predictions_te": predictions_te,
-        #     "original_attentions_te": attentions_te,
-        #     "original_jsd_score_te": jsd_score_te,
+        #     "baseline_px_l1_att_diff_te": baseline_px_l1_att_diff_te,
+        #     "baseline_px_l2_att_diff_te": baseline_px_l2_att_diff_te,
+        #     "baseline_px_tvd_pred_diff_te": baseline_px_tvd_pred_diff_te
         # })
+        # wandb.log(res_baseline)
 
-        # predictions_te = np.array(predictions_te)
-        # test_metrics = self.metrics(np.array(test_data.y), predictions_te, np.array(test_data.true_pred),
-        #                             jsd_score_te)
-        #
-        # wandb.log({
-        #     "original_test_metrics":test_metrics
-        # })
         print("training our model")
         for i in tqdm(range(args.n_iters)):
 
-            loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr,true_topk_loss_tr,px_tvd_pred_diff_tr,px_jsd_att_diff_tr = self.model.train_ours(train_data.X, train_data.y,
-                                                                                 train_data.true_pred,
-                                                                                 train_data.gold_attns,PGDer=self.PGDer,preturb_x=True,X_PGDer=self.X_PGDer)
+            # loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr, true_topk_loss_tr, px_tvd_pred_diff_tr,\
+            # px_l1_att_diff_te, px_l2_att_diff_te\
+            res_tr = self.model.train_ours(
+                train_data.X, train_data.y,
+                train_data.true_pred,
+                train_data.gold_attns, PGDer=self.PGDer, preturb_x=True, X_PGDer=self.X_PGDer)
 
-            wandb.log({
-                "px_jsd_att_diff_tr": px_jsd_att_diff_tr,
-                "px_tvd_pred_diff_tr": px_tvd_pred_diff_tr
-            })
+            for k,v in res_tr.items():
+                wandb.log({
+                    "ours_"+k+"_tr": v,
+                })
+            loss_tr = res_tr['loss_weighted']
 
-            wandb.log({
-                "loss_tr":loss_tr,
-                "loss_tr_orig":loss_tr_orig,
-                "tvd_loss_tr":tvd_loss_tr,
-                "topk_loss_tr":topk_loss_tr,
-                "pgd_tvd_loss_tr":pgd_tvd_loss_tr,
-                "true_topk_loss_tr":true_topk_loss_tr
-            })
+            # wandb.log({
+            #     "px_l1_att_diff_te": px_l1_att_diff_te,
+            #     "px_tvd_pred_diff_tr": px_tvd_pred_diff_tr,
+            #     "px_l2_att_diff_te": px_l2_att_diff_te,
+            # })
 
-            loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te,px_tvd_pred_diff_te,px_jsd_att_diff_te = self.model.train_ours(test_data.X,
-                                                                                                test_data.y,
-                                                                                                test_data.true_pred,
-                                                                                                test_data.gold_attns,
-                                                                                                PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+            # wandb.log({
+            #     "loss_tr": loss_tr,
+            #     "loss_tr_orig": loss_tr_orig,
+            #     "tvd_loss_tr": tvd_loss_tr,
+            #     "topk_loss_tr": topk_loss_tr,
+            #     "pgd_tvd_loss_tr": pgd_tvd_loss_tr,
+            #     "true_topk_loss_tr": true_topk_loss_tr
+            # })
+
+            # loss_te, loss_te_orig, tvd_loss_te, topk_loss_te, pgd_tvd_loss_te, true_topk_loss_te, px_tvd_pred_diff_te, px_l1_att_diff_tr,px_l2_att_diff_tr = \
+            res_te = self.model.train_ours(
+                test_data.X,
+                test_data.y,
+                test_data.true_pred,
+                test_data.gold_attns,
+                PGDer=self.PGDer, train=False, preturb_x=True, X_PGDer=self.X_PGDer)
+
+            for k,v in res_te.items():
+                wandb.log({
+                    "ours_"+k+"_te": v,
+                })
 
             # loss_te_px, loss_te_orig_px, tvd_loss_te_px, topk_loss_te_px, pgd_tvd_loss_te_px, true_topk_loss_te_px = self.model.train_ours(
             #     test_data.X,
@@ -139,27 +156,27 @@ class Trainer() :
             #     test_data.gold_attns,
             #     PGDer=self.PGDer, train=False,preturb_x=True,X_PGDer=self.X_PGDer)
 
-            wandb.log({
-                "px_jsd_att_diff_te": px_jsd_att_diff_te,
-                "px_tvd_pred_diff_te": px_tvd_pred_diff_te
-            })
-
-            wandb.log({
-                "loss_te": loss_te,
-                "loss_te_orig": loss_te_orig,
-                "tvd_loss_te": tvd_loss_te,
-                "topk_loss_te": topk_loss_te,
-                "pgd_tvd_loss_te": pgd_tvd_loss_te,
-                "true_topk_loss_te":true_topk_loss_te,
-
-
-                # "loss_te_px": loss_te_px,
-                # "loss_te_orig_px": loss_te_orig_px,
-                # "tvd_loss_te_px": tvd_loss_te_px,
-                # "topk_loss_te_px": topk_loss_te_px,
-                # "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
-                # "true_topk_loss_te_px":true_topk_loss_te_px,
-            })
+            # wandb.log({
+            #     "px_l1_att_diff_tr": px_l1_att_diff_tr,
+            #     "px_l2_att_diff_tr": px_l2_att_diff_tr,
+            #     "px_tvd_pred_diff_te": px_tvd_pred_diff_te
+            # })
+            #
+            # wandb.log({
+            #     "loss_te": loss_te,
+            #     "loss_te_orig": loss_te_orig,
+            #     "tvd_loss_te": tvd_loss_te,
+            #     "topk_loss_te": topk_loss_te,
+            #     "pgd_tvd_loss_te": pgd_tvd_loss_te,
+            #     "true_topk_loss_te": true_topk_loss_te,
+            #
+            #     # "loss_te_px": loss_te_px,
+            #     # "loss_te_orig_px": loss_te_orig_px,
+            #     # "tvd_loss_te_px": tvd_loss_te_px,
+            #     # "topk_loss_te_px": topk_loss_te_px,
+            #     # "pgd_tvd_loss_te_px": pgd_tvd_loss_te_px,
+            #     # "true_topk_loss_te_px":true_topk_loss_te_px,
+            # })
 
             predictions_tr, attentions_tr, jsd_score_tr = self.model.evaluate(train_data.X,
                                                                               target_attn=train_data.gold_attns)
@@ -173,11 +190,11 @@ class Trainer() :
             predictions_tr = np.array(predictions_tr)
             train_metrics = self.metrics(np.array(train_data.y), predictions_tr, np.array(train_data.true_pred),
                                          jsd_score_tr)
-            print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
-            loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
+            # print_str = "FULL (WEIGHTED) LOSS: %f | ORIG (UNWEIGHTED) LOSS: %f | TOPK-LOSS: %f | TVD-OUT: %f | TVD-PGD: %f" % (
+            #     loss_tr, loss_tr_orig, topk_loss_tr, tvd_loss_tr, pgd_tvd_loss_tr)
 
             print(
-                {"train_metrics":train_metrics}
+                {"train_metrics": train_metrics}
             )
             # print(print_str)
             #
@@ -198,7 +215,7 @@ class Trainer() :
                                         jsd_score_te)
 
             wandb.log({
-                "test_metrics_training_time":test_metrics
+                "test_metrics_training_time": test_metrics
             })
             # print("TEST METRICS:")
             # if self.display_metrics:
@@ -245,20 +262,39 @@ class Trainer() :
             f.write(str(test_metrics) + '\n')
             f.close()
 
-            f = open(dirname + '/losses.txt', 'a')
-            f.write("EPOCH %d: " % i + print_str + '\n')
-            f.close()
+            # f = open(dirname + '/losses.txt', 'a')
+            # f.write("EPOCH %d: " % i + print_str + '\n')
+            # f.close()
 
             if br:
                 break
 
-        self.model.related_score(test_data.X,test_data.y,test_data.true_pred,test_data.gold_attns,train=False,preturb_x=True,X_PGDer=self.X_PGDer)
+        self.model.related_score(test_data.X, test_data.y, test_data.true_pred, test_data.gold_attns, train=False,
+                                 preturb_x=True, X_PGDer=self.X_PGDer)
 
-        wandb.log({
-            "jsd_smaller": baseline_px_jsd_att_diff_te > px_jsd_att_diff_te,
-            "tvd_smaller": baseline_px_tvd_pred_diff_te > px_tvd_pred_diff_te,
-            "jsd_tvd_smaller":baseline_px_jsd_att_diff_te > px_jsd_att_diff_te and baseline_px_tvd_pred_diff_te > px_tvd_pred_diff_te
-        })
+        # wandb.log({
+        #     "att l1 decrease": baseline_px_l1_att_diff_te - px_l1_att_diff_te,
+        #     "att l2 decrease": baseline_px_l2_att_diff_te - px_l2_att_diff_te,
+        #     "tvd_decrease": baseline_px_tvd_pred_diff_te - px_tvd_pred_diff_te,
+        #     "l1_tvd_decrease_ratio": (baseline_px_l1_att_diff_te - px_l1_att_diff_te) / baseline_px_l1_att_diff_te + (
+        #                                           baseline_px_tvd_pred_diff_te - px_tvd_pred_diff_te) / baseline_px_tvd_pred_diff_te
+        # })
+        # wandb.log({
+        #     "att l1 decrease":
+        wandb.log(
+            {
+                "att l2 decrease": res_baseline['px_l2_att_diff'] - res_te['px_l2_att_diff'],
+                "tvd_decrease": res_baseline['px_tvd_pred_diff'] - res_te['px_tvd_pred_diff'],
+                "att l1 decrease": res_baseline['px_l1_att_diff'] - res_te['px_l1_att_diff'],
+                "att l1 decrease ratio": (res_baseline['px_l1_att_diff'] - res_te['px_l1_att_diff']) / res_baseline['px_l1_att_diff'],
+                "att l2 decrease ratio": (res_baseline['px_l2_att_diff'] - res_te['px_l2_att_diff']) / res_baseline['px_l2_att_diff'],
+                "tvd_decrease ratio": (res_baseline['px_tvd_pred_diff'] - res_te['px_tvd_pred_diff']) / res_baseline['px_tvd_pred_diff'],
+                "att jsd decrease": res_baseline['px_jsd_att_diff'] - res_te['px_jsd_att_diff'],
+                "att jsd decrease ratio": (res_baseline['px_jsd_att_diff'] - res_te['px_jsd_att_diff']) / res_baseline['px_jsd_att_diff'],
+             }
+        )
+
+
 
     #
     # def train_adversarial(self, train_data, test_data, args) :
@@ -324,20 +360,21 @@ class Trainer() :
     #         if br:
     #             break
 
-class Evaluator() :
-    def __init__(self, dataset, dirname, args) :
+
+class Evaluator():
+    def __init__(self, dataset, dirname, args):
         Model = BC.Model
         self.model = Model.init_from_config(dirname, args)
         self.model.dirname = dirname
         self.metrics = calc_metrics_classification
         self.display_metrics = True
 
-    def evaluate(self, test_data, save_results=False) :
+    def evaluate(self, test_data, save_results=False):
         if self.model.adversarial or self.model.ours:
             predictions, attentions, jsd_score = self.model.evaluate(test_data.X, target_attn=test_data.gold_attns)
             predictions = np.array(predictions)
             test_metrics = self.metrics(np.array(test_data.y), predictions, np.array(test_data.true_pred), jsd_score)
-        else :
+        else:
             predictions, attentions, _ = self.model.evaluate(test_data.X)
             predictions = np.array(predictions)
             test_metrics = self.metrics(test_data.y, predictions)
@@ -349,11 +386,11 @@ class Evaluator() :
         # if self.display_metrics :
         #     print_metrics(test_metrics, adv=self.model.adversarial or self.model.ours)
 
-        if save_results :
+        if save_results:
             f = open(self.model.dirname + '/evaluate.json', 'w')
             json.dump(test_metrics, f)
             f.close()
 
         test_data.yt_hat = predictions
         test_data.attn_hat = attentions
-        return test_metrics,predictions, attentions
+        return test_metrics, predictions, attentions

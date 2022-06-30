@@ -209,7 +209,7 @@ class Model():
         })
 
 
-    def preterub_x_testing(self,
+    def preterub_x_eval(self,
               data_in,
               target_in,
               target_pred,
@@ -232,8 +232,14 @@ class Model():
         batches = list(range(0, N, bsize))
         batches = shuffle(batches)
 
-        px_jsd_att_diff_original = []
-        px_tvd_pred_diff_original = []
+        # px_jsd_att_diff_original = []
+        # px_tvd_pred_diff = []
+        from attention.utlis import AverageMeter
+        px_l1_att_diff = AverageMeter()
+        px_l2_att_diff = AverageMeter()
+        px_tvd_pred_diff = AverageMeter()
+        px_jsd_att_diff = AverageMeter()
+
 
         for n in tqdm(batches):
             batch_doc = data[n:n + bsize]
@@ -277,18 +283,48 @@ class Model():
 
             # diff of att
             new_att = torch.sigmoid(batch_data.attn)
-
+            px_l1_att_diff.update(torch.abs(old_att - new_att).mean().item(), len(batch_doc))
+            px_l2_att_diff.update(torch.pow(old_att - new_att, 2).mean().item(), len(batch_doc))
             # jsd between att
-            px_jsd_att_diff_original.append(js_divergence(
-                old_att, new_att).squeeze(
-                1).cpu().data.numpy().mean())
-
+            # px_jsd_att_diff_original.append(js_divergence(
+            #     old_att, new_att).squeeze(
+            #     1).cpu().data.numpy().mean())
+            # px_l1_att_diff = (old_att - new_att).abs().mean().item()
+            # px_l2_att_diff = (old_att - new_att).pow(2).mean().item()
+            # px_jsd_att_diff =
             new_pred = torch.sigmoid(batch_data.predict)
+            px_tvd_pred_diff.update(batch_tvd(old_pred, new_pred).item(),len(batch_doc))
+            px_jsd_att_diff.update(js_divergence(torch.softmax(old_att,dim=-1), torch.softmax(new_att,dim=-1)).squeeze(1).cpu().data.numpy().mean())
 
-            px_tvd_pred_diff_original.append(batch_tvd(new_pred, old_pred).item())
+            # px_tvd_pred_diff.append(batch_tvd(new_pred, old_pred).item())
 
         import numpy as np
-        return np.mean(px_jsd_att_diff_original), np.mean(px_tvd_pred_diff_original)
+        res = {
+            "px_l1_att_diff":px_l1_att_diff.average(),
+            "px_l2_att_diff":px_l2_att_diff.average(),
+            "px_tvd_pred_diff":px_tvd_pred_diff.average(),
+            "px_jsd_att_diff":px_jsd_att_diff.average(),
+        }
+        # if baseline:
+        #     for k,v in res.items():
+        #         # rename the key of dict res
+        #         res[k+"_baseline"] = v
+        #         # remove the original key
+        #         del res[k]
+        # if trian:
+        #     for k,v in res.items():
+        #         # rename the key of dict res
+        #         res[k+"_tr"] = v
+        #         # remove the original key
+        #         del res[k]
+        # else:
+        #     for k,v in res.items():
+        #         # rename the key of dict res
+        #         res[k+"_te"] = v
+        #         # remove the original key
+        #         del res[k]
+        return res
+
 
 
     def train_ours(self,
@@ -311,12 +347,12 @@ class Model():
         self.decoder.train()
 
         from attention.utlis import AverageMeter
-        loss_total = 0
-        loss_orig_total = 0
+        loss_weighted = 0
+        loss_unweighted = 0
         tvd_loss_total = 0
         topk_loss_total = 0
         pgd_tvd_loss_total = 0
-        true_topk_loss_counter = AverageMeter()
+        true_topk_loss = AverageMeter()
 
         N = len(data)
         bsize = self.bsize
@@ -339,58 +375,62 @@ class Model():
                 batch_target_pred = batch_target_pred.unsqueeze(
                     -1)  # (B, 1)
 
-
-
-            if preturb_x:
-                # get the hidden
-                def target_model(embedd, data, decoder,encoder):
-                    encoder(data,revise_embedding=embedd)
-                    decoder(data=data)
-                    return torch.sigmoid(data.predict)
-
-                def crit(gt, pred):
-                    return batch_tvd(gt,pred)
-
-                # old prediction
-                self.encoder(batch_data)
-                self.decoder(batch_data)
-
-                # old att pred
-                old_pred = torch.sigmoid(batch_data.predict)
-                old_att = batch_data.attn
-                # embedd_sacle_mean = torch.mean(batch_data.embedding)
-                # embedd_sacle_max = torch.max(batch_data.embedding)
-                # embedd_sacle_min = torch.min(batch_data.embedding)
-
-                # wandb.log({
-                #     "embedd_sacle":embedd_sacle_mean,
-                #     "embedd_sacle_max":embedd_sacle_max,
-                #     "embedd_sacle_min":embedd_sacle_min,
-                # })
-
-                # PGD generate the new hidden
-                new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
-                                        , decoder=self.decoder,encoder=self.encoder, batch_target_pred=batch_target_pred,
-                                        target_model=target_model)
-
-                # pgd perturb the hidden
-                self.encoder(batch_data,revise_embedding=new_embedd)
-                self.decoder(data=batch_data)
-
-                # diff of att
-                new_att = torch.sigmoid(batch_data.attn)
-
-                # jsd between att
-                px_jsd_att_diff.append(js_divergence(
-                    old_att, new_att).squeeze(
-                        1).cpu().data.numpy().mean())
-
-                new_pred = torch.sigmoid(batch_data.predict)
-
-                px_tvd_pred_diff.append(batch_tvd(new_pred,old_pred).item())
+            # if preturb_x:
+            #     # get the hidden
+            #     def target_model(embedd, data, decoder,encoder):
+            #         encoder(data,revise_embedding=embedd)
+            #         decoder(data=data)
+            #         return torch.sigmoid(data.predict)
+            #
+            #     def crit(gt, pred):
+            #         return batch_tvd(gt,pred)
+            #
+            #     # old prediction
+            #     self.encoder(batch_data)
+            #     self.decoder(batch_data)
+            #
+            #     # old att pred
+            #     old_pred = torch.sigmoid(batch_data.predict)
+            #     old_att = batch_data.attn
+            #
+            #     # PGD generate the new hidden
+            #     new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
+            #                             , decoder=self.decoder,encoder=self.encoder, batch_target_pred=batch_target_pred,
+            #                             target_model=target_model)
+            #
+            #     # pgd perturb the hidden
+            #     self.encoder(batch_data,revise_embedding=new_embedd)
+            #     self.decoder(data=batch_data)
+            #
+            #     # diff of att
+            #     new_att = torch.sigmoid(batch_data.attn)
+            #
+            #     # jsd between att
+            #     # px_jsd_att_diff.append(js_divergence(
+            #     #     old_att, new_att).squeeze(
+            #     #         1).cpu().data.numpy().mean())
+            #     px_l1_att_diff = (old_att - new_att).abs().mean().item()
+            #     px_l2_att_diff = (old_att - new_att).pow(2).mean().item()
+            #
+            #     new_pred = torch.sigmoid(batch_data.predict)
+            #
+            #     px_tvd_pred_diff.append(batch_tvd(new_pred,old_pred).item())
 
 
             # else:
+
+            res = self.preterub_x_eval(
+              data_in,
+              target_in,
+              target_pred,
+              target_attn_in,X_PGDer=X_PGDer)
+
+            # if train:
+            #     px_l1_att_diff, px_l2_att_diff, px_tvd_pred_diff = res["px_l1_att_diff_tr"], res["px_l2_att_diff_tr"], res["px_tvd_pred_diff_tr"]
+            # else:
+            #     px_l1_att_diff, px_l2_att_diff, px_tvd_pred_diff = res["px_l1_att_diff_te"], res["px_l2_att_diff_te"], res[
+            #     "px_tvd_pred_diff_te"]
+            px_l1_att_diff, px_l2_att_diff, px_tvd_pred_diff,px_jsd_att_diff = res["px_l1_att_diff"], res["px_l2_att_diff"], res["px_tvd_pred_diff"],res["px_jsd_att_diff"]
 
             # to the true att and embedding
             self.encoder(batch_data)
@@ -411,7 +451,7 @@ class Model():
             topk_true_loss = topK_overlap_true_loss(batch_data.target_attn,
                                           batch_data.attn,K=self.K)
 
-            true_topk_loss_counter.update(
+            true_topk_loss.update(
                 topk_true_loss,len(batch_doc)
             )
 
@@ -458,8 +498,8 @@ class Model():
                 if not self.frozen_attn:
                     self.attn_optim.step()
 
-            loss_total += float(loss.data.cpu().item())
-            loss_orig_total += float(loss_orig.data.cpu().item())
+            loss_weighted += float(loss.data.cpu().item())
+            loss_unweighted += float(loss_orig.data.cpu().item())
             tvd_loss_total += float(tvd_loss.data.cpu().item())
             topk_loss_total += float(topk_loss.data.cpu().item())
             pgd_tvd_loss_total += float(
@@ -467,11 +507,25 @@ class Model():
 
 
         import numpy as np
-        assert len(px_jsd_att_diff) !=0 and len(px_tvd_pred_diff)!=0
-        px_tvd_pred_diff = np.mean(px_tvd_pred_diff)
-        px_jsd_att_diff = np.mean(px_jsd_att_diff)
+        # assert len(px_jsd_att_diff) !=0 and len(px_tvd_pred_diff)!=0
+        # px_tvd_pred_diff = np.mean(px_tvd_pred_diff)
+        # px_jsd_att_diff = np.mean(px_jsd_att_diff)
 
-        return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss_counter.average(),px_tvd_pred_diff,px_jsd_att_diff
+        true_topk_loss = true_topk_loss.avgerage()
+
+        # return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss, px_tvd_pred_diff ,px_l1_att_diff ,px_l2_att_diff
+        return {
+            "loss_weighted": loss_weighted,
+            "loss_unweighted": loss_unweighted,
+            "tvd_loss": tvd_loss_total,
+            "topk_loss": topk_loss_total,
+            "pgd_tvd_loss": pgd_tvd_loss_total,
+            "true_topk_loss": true_topk_loss,
+            "px_tvd_pred_diff": px_tvd_pred_diff,
+            "px_l1_att_diff": px_l1_att_diff,
+            "px_l2_att_diff": px_l2_att_diff,
+            "px_jsd_att_diff": px_jsd_att_diff
+        }
 
     def train(self,
               data_in,
@@ -495,7 +549,7 @@ class Model():
         bsize = self.bsize
         N = len(data)
         loss_total = 0
-        loss_orig_total = 0
+        loss_unweighted = 0
         tvd_loss_total = 0
         kl_loss_total = 0
         topk_loss_total = 0
@@ -589,7 +643,7 @@ class Model():
 
             if target_attn_in:
                 if ours:
-                    loss_orig_total += float(loss_orig.data.cpu().item())
+                    loss_unweighted += float(loss_orig.data.cpu().item())
                     tvd_loss_total += float(tvd_loss.data.cpu().item())
                     # kl_loss_total += float(kl_loss.data.cpu().item())
                     topk_loss_total += float(topk_loss.data.cpu().item())
@@ -597,13 +651,13 @@ class Model():
                         att_pgd_pred_tvd.data.cpu().item())
                 else:
 
-                    loss_orig_total += float(loss_orig.data.cpu().item())
+                    loss_unweighted += float(loss_orig.data.cpu().item())
                     tvd_loss_total += float(tvd_loss.data.cpu().item())
                     kl_loss_total += float(kl_loss.data.cpu().item())
         if ours:
-            return loss_total * bsize / N, loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total
+            return loss_total * bsize / N, loss_total, loss_unweighted, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total
         else:
-            return loss_total * bsize / N, loss_total, loss_orig_total, tvd_loss_total, kl_loss_total
+            return loss_total * bsize / N, loss_total, loss_unweighted, tvd_loss_total, kl_loss_total
 
     def evaluate(self, data, target_attn=None):
         self.encoder.train()
