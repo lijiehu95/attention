@@ -1,7 +1,7 @@
 cd $(dirname $(dirname $0))
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="find-best-hyperparameters-v4"
+exp_name="final-all-seed"
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
@@ -14,7 +14,7 @@ gpunum=${#gpu[@]}
 task_load=8000
 up_task_time=15s
 
-for seed in 10 20 512 12; do
+for seed in 10 20 512 1515; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.01; do
