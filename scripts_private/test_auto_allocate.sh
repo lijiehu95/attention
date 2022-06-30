@@ -5,7 +5,7 @@ free_mem=0
 task_load=8000
 while True; do
     gpu_id=${gpu[$i]}
-    free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo [0-9]+)
+    free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
     if [ $free_mem -lt $task_load ]; then
         i=`expr $i + 1`
         i=`expr $i % $gpunum`
