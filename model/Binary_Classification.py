@@ -528,7 +528,7 @@ class Model():
         # px_tvd_pred_diff = np.mean(px_tvd_pred_diff)
         # px_jsd_att_diff = np.mean(px_jsd_att_diff)
 
-        true_topk_loss = true_topk_loss.avgerage()
+        true_topk_loss = true_topk_loss.average()
 
         # return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss, px_tvd_pred_diff ,px_l1_att_diff ,px_l2_att_diff
         return {
