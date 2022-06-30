@@ -12,7 +12,7 @@ K=7
 gpu=(2 3 4 5 6 7 8)
 gpunum=${#gpu[@]}
 task_load=8000
-up_task_time=1m
+up_task_time=10s
 
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
