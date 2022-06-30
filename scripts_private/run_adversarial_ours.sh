@@ -24,7 +24,7 @@ for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
   for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
 # find suitable gpu
 i=0 # we search from the first gpu
-while True; do
+while true; do
     gpu_id=${gpu[$i]}
     free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
     if [ $free_mem -lt $task_load ]; then
