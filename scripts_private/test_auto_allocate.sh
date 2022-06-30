@@ -19,5 +19,5 @@ while True; do
     fi
 done
 export CUDA_VISIBLE_DEVICES=${gpu[$i]}
-echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
+echo "use gpu id is ${gpu[$i]}, free memory is $(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")"
 python hello_world.py
