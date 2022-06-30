@@ -22,8 +22,6 @@ for datasetid in 0 1 3 4 5 6 7 8 9 10; do
 #for lambda_2 in 1e-4; do
 for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
   for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
-
-
 # find suitable gpu
 i=0 # we search from the first gpu
 while True; do
