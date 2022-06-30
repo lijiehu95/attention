@@ -1,4 +1,4 @@
-id_list=(2 3 4 5 6 7 8 9)
+gpu=(2 3 4 5 6 7 8 9)
 gpunum=${#gpu[@]}
 id_idx=0
 free_mem=0
