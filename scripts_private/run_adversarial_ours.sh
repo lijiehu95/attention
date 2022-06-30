@@ -2,12 +2,12 @@ cd $(dirname $(dirname $0))
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="find-best-hyperparameters-v2"
+exp_name="find-best-hyperparameters-v3"
 
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
-gpu=(2 3 4 5 6 7 8 9)
+gpu=(1 2 3 4 5 6 )
 gpunum=${#gpu[@]}
 i=0 # gpu pointer
 j=0
@@ -17,9 +17,11 @@ K=7
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.01; do
-for datasetid in 0 1 2 3 4 ; do
-for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
-  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+for datasetid in 0 1 2 3 4 5 6 7 8 9 10; do
+for lambda_1 in 1; do
+for lambda_2 in 1e-4; do
+#for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+#  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
     i=`expr $i % $gpunum`
     export CUDA_VISIBLE_DEVICES=${gpu[$i]}
     echo "use gpu id is ${gpu[$i]}"
