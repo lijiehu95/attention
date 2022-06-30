@@ -14,10 +14,10 @@ j=0
 n_iters=40
 K=7
 
-for model in lstm; do
-for pgd_radius in 0.001 0.005 0.01;do
-for x_pgd_radius in 0.001 0.005 0.01; do
-for datasetid in 1; do
+for model in simple-rnn lstm; do
+for pgd_radius in 0.01;do
+for x_pgd_radius in 0.01; do
+for datasetid in 0 1 2 3 4 ; do
 for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
   for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
     i=`expr $i % $gpunum`
@@ -27,14 +27,14 @@ for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K  "
-    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-#     $com
+#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+     $com
     i=`expr $i + 1`
     j=`expr $j + 1`
     j=`expr $j % $gpunum`
-    if [ "$j" == "0" ];then
-      sleep 10m
-    fi
+#    if [ "$j" == "0" ];then
+#      sleep 10m
+#    fi
   done;
 done;
 done;
