@@ -18,6 +18,8 @@ while True; do
         break
     fi
 done
-export CUDA_VISIBLE_DEVICES=${gpu[$i]}
-echo "use gpu id is ${gpu[$i]}, free memory is $(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")"
+gpu_id=${gpu[$i]}
+free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
+export CUDA_VISIBLE_DEVICES=$gpu_id
+echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
 python hello_world.py
