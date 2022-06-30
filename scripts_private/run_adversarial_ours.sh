@@ -17,11 +17,12 @@ K=7
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
 for x_pgd_radius in 0.01; do
-for datasetid in 0 1 2 3 4 5 6 7 8 9 10; do
-for lambda_1 in 1; do
-for lambda_2 in 1e-4; do
-#for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
-#  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+#for datasetid in 0 1 2 3 4 5 6 7 8 9 10; do
+for datasetid in 2 3; do
+#for lambda_1 in 1; do
+#for lambda_2 in 1e-4; do
+for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
     i=`expr $i % $gpunum`
     export CUDA_VISIBLE_DEVICES=${gpu[$i]}
     echo "use gpu id is ${gpu[$i]}"
