@@ -294,7 +294,7 @@ class Model():
             # px_jsd_att_diff =
             new_pred = torch.sigmoid(batch_data.predict)
             px_tvd_pred_diff.update(batch_tvd(old_pred, new_pred).item(),len(batch_doc))
-            px_jsd_att_diff.update(js_divergence(torch.softmax(old_att,dim=-1), torch.softmax(new_att,dim=-1)).squeeze(1).cpu().data.numpy().mean())
+            px_jsd_att_diff.update(js_divergence(torch.softmax(old_att,dim=-1), torch.softmax(new_att,dim=-1)).squeeze(1).cpu().data.numpy().mean(), len(batch_doc))
 
             # px_tvd_pred_diff.append(batch_tvd(new_pred, old_pred).item())
 
