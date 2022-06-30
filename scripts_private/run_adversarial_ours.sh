@@ -8,10 +8,11 @@ dataset=(hate rotten_tomatoes  imdb sst emoji  \
 n_iters=40
 K=7
 
-## config
+## gpu usage config
 gpu=(2 3 4 5 6 7 8)
 gpunum=${#gpu[@]}
 task_load=8000
+up_task_time=1m
 
 for model in simple-rnn lstm; do
 for pgd_radius in 0.01;do
@@ -50,7 +51,8 @@ echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
       --K $K  "
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
 #     $com
-    sleep 1m # you need to wait for this task fully loaded so that gpu stat changes!
+    echo "sleep for ${up_task_time} to wait the task loaded"
+    sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
   done;
 done;
 done;
