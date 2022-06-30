@@ -50,6 +50,7 @@ echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
       --K $K  "
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
 #     $com
+    sleep 1m # you need to wait for this task fully loaded so that gpu stat changes!
   done;
 done;
 done;
