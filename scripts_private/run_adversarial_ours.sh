@@ -2,7 +2,7 @@ cd $(dirname $(dirname $0))
 source activate xai
 #export PYTHONPATH=/home/yila22/prj
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="find-best-hyperparameters-v1"
+exp_name="find-best-hyperparameters-v2"
 
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
