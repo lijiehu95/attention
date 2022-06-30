@@ -9,8 +9,9 @@ i=0 # gpu pointer
 
 
 for model in simple-rnn lstm; do
-for dataset in emoji sentiment stance_abortion stance_atheism stance_climate stance_feminist \
-                stance_hillary ; do
+#for dataset in emoji sentiment stance_abortion stance_atheism stance_climate stance_feminist \
+#                stance_hillary ; do
+for dataset in sst imdb; do
   i=`expr $i % $gpunum`
    export CUDA_VISIBLE_DEVICES=${gpu[$i]}
    echo "use gpu id is ${gpu[$i]}"
