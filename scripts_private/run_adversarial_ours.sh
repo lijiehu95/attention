@@ -12,7 +12,7 @@ K=7
 gpu=(2 3 4 5 6 7 8)
 gpunum=${#gpu[@]}
 task_load=8000
-up_task_time=10s
+up_task_time=15s
 
 for seed in 10 20 512 12; do
 for model in simple-rnn lstm; do
