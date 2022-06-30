@@ -269,8 +269,8 @@ class Trainer():
             if br:
                 break
 
-        self.model.related_score(test_data.X, test_data.y, test_data.true_pred, test_data.gold_attns, train=False,
-                                 preturb_x=True, X_PGDer=self.X_PGDer)
+        # self.model.related_score(test_data.X, test_data.y, test_data.true_pred, test_data.gold_attns, train=False,
+        #                          preturb_x=True, X_PGDer=self.X_PGDer)
 
         # wandb.log({
         #     "att l1 decrease": baseline_px_l1_att_diff_te - px_l1_att_diff_te,
