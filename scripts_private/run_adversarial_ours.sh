@@ -1,7 +1,7 @@
 cd $(dirname $(dirname $0))
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="final-all-seed"
+exp_name="final-all-seed-v1"
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
@@ -9,30 +9,33 @@ n_iters=40
 K=7
 
 ## gpu usage config
-gpu=(2 3 4 5 6 7 8)
+gpu=(1 2 3 4 5 6)
 gpunum=${#gpu[@]}
 task_load=8000
+gpuu_threshold=90
 up_task_time=15s
 
 for seed in 10 20 512 1515; do
 for model in simple-rnn lstm; do
-for pgd_radius in 0.01;do
+for pgd_radius in 0.005 0.01 0.02;do
 for x_pgd_radius in 0.01; do
-for datasetid in 3 2 0 1 4 5 6 7 8 9 10; do
+for datasetid in 3 2 0 4 5 6 7 8 9 10; do
 #for datasetid in 2 3; do
 #for lambda_1 in 1; do
 #for lambda_2 in 1e-4; do
-for lambda_1 in 1; do
-  for lambda_2 in 1e-4; do
+for lambda_1 in 0 1e-4 1e-3 1e-2 1e-1 1; do
+  for lambda_2 in 0 1e-4 1e-3 1e-2 1e-1 1; do
 # find suitable gpu
 i=0 # we search from the first gpu
 while true; do
     gpu_id=${gpu[$i]}
+#    nvidia-smi --query-gpu=utilization.gpu  --format=csv -i 2 | grep -Eo "[0-9]+"
+    gpu_u=$(nvidia-smi --query-gpu=utilization.gpu  --format=csv -i $gpu_id | grep -Eo "[0-9]+")
     free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
-    if [ $free_mem -lt $task_load ]; then
+    if [[ $free_mem -lt $task_load && $gpu_u -ge ${gpuu_threshold} ]]; then
         i=`expr $i + 1`
         i=`expr $i % $gpunum`
-        echo "gpu id ${gpu[$i]} is full, free memory isn't less than ${task_load}, skip"
+        echo "gpu id ${gpu[$i]} is full loaded, skip"
         if [ "$i" == "0" ]; then
             sleep 1m
             echo "all the gpus are full, sleep 1m"
@@ -43,8 +46,9 @@ while true; do
 done
 gpu_id=${gpu[$i]}
 free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
+gpu_u=$(nvidia-smi --query-gpu=utilization.gpu  --format=csv -i $gpu_id | grep -Eo "[0-9]+")
 export CUDA_VISIBLE_DEVICES=$gpu_id
-echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}"
+echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}, it utilization is ${gpu_u}%"
 
     com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_outputs_seed/ \
     --encoder $model --ours --n_iters $n_iters \
