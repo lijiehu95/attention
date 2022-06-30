@@ -105,7 +105,7 @@ class Trainer():
         # })
         # wandb.log(res_baseline)
 
-        print("training our model")
+        print("training our model ",args.n_iters, " epochs in total")
         for i in tqdm(range(args.n_iters)):
 
             # loss_tr, loss_tr_orig, tvd_loss_tr, topk_loss_tr, pgd_tvd_loss_tr, true_topk_loss_tr, px_tvd_pred_diff_tr,\
