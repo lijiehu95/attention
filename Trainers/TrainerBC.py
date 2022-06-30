@@ -113,7 +113,7 @@ class Trainer():
             res_tr = self.model.train_ours(
                 train_data.X, train_data.y,
                 train_data.true_pred,
-                train_data.gold_attns, PGDer=self.PGDer, preturb_x=True, X_PGDer=self.X_PGDer)
+                train_data.gold_attns, PGDer=self.PGDer, preturb_x=False, X_PGDer=self.X_PGDer)
 
             for k,v in res_tr.items():
                 wandb.log({
@@ -142,7 +142,7 @@ class Trainer():
                 test_data.y,
                 test_data.true_pred,
                 test_data.gold_attns,
-                PGDer=self.PGDer, train=False, preturb_x=True, X_PGDer=self.X_PGDer)
+                PGDer=self.PGDer, train=False, preturb_x=False, X_PGDer=self.X_PGDer)
 
             for k,v in res_te.items():
                 wandb.log({
@@ -281,6 +281,12 @@ class Trainer():
         # })
         # wandb.log({
         #     "att l1 decrease":
+        res_te = self.model.train_ours(
+            test_data.X,
+            test_data.y,
+            test_data.true_pred,
+            test_data.gold_attns,
+            PGDer=self.PGDer, train=False, preturb_x=True, X_PGDer=self.X_PGDer)
         wandb.log(
             {
                 "att l2 decrease": res_baseline['px_l2_att_diff'] - res_te['px_l2_att_diff'],

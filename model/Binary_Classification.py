@@ -531,18 +531,31 @@ class Model():
         true_topk_loss = true_topk_loss.average()
 
         # return  loss_total, loss_orig_total, tvd_loss_total, topk_loss_total, pgd_tvd_loss_total, true_topk_loss, px_tvd_pred_diff ,px_l1_att_diff ,px_l2_att_diff
-        return {
+        res = {
             "loss_weighted": loss_weighted,
             "loss_unweighted": loss_unweighted,
             "tvd_loss": tvd_loss_total,
             "topk_loss": topk_loss_total,
             "pgd_tvd_loss": pgd_tvd_loss_total,
-            "true_topk_loss": true_topk_loss,
-            "px_l1_att_diff": px_l1_att_diff.average(),
-            "px_l2_att_diff": px_l2_att_diff.average(),
-            "px_tvd_pred_diff": px_tvd_pred_diff.average(),
-            "px_jsd_att_diff": px_jsd_att_diff.average(),
-        }
+            "true_topk_loss": true_topk_loss,}
+        if preturb_x:
+            res["px_tvd_pred_diff"] = px_tvd_pred_diff.average()
+            res["px_jsd_att_diff"] = px_jsd_att_diff.average()
+            res["px_l1_att_diff"] = px_l1_att_diff.average()
+            res["px_l2_att_diff"] = px_l2_att_diff.average()
+        return res
+        # return {
+        #     "loss_weighted": loss_weighted,
+        #     "loss_unweighted": loss_unweighted,
+        #     "tvd_loss": tvd_loss_total,
+        #     "topk_loss": topk_loss_total,
+        #     "pgd_tvd_loss": pgd_tvd_loss_total,
+        #     "true_topk_loss": true_topk_loss,
+        #     "px_l1_att_diff": px_l1_att_diff.average(),
+        #     "px_l2_att_diff": px_l2_att_diff.average(),
+        #     "px_tvd_pred_diff": px_tvd_pred_diff.average(),
+        #     "px_jsd_att_diff": px_jsd_att_diff.average(),
+        # }
 
     def train(self,
               data_in,
