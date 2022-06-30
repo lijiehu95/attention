@@ -7,7 +7,7 @@ exp_name="find-best-hyperparameters-v2"
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
-gpu=(2 3 4 5 6 7 8 9)
+gpu=(2 4 5 6 7 8 9)
 gpunum=${#gpu[@]}
 i=0 # gpu pointer
 j=0
