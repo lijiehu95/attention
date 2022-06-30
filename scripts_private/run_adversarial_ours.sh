@@ -15,8 +15,8 @@ n_iters=40
 K=7
 
 for model in lstm; do
-for pgd_radius in 0.001 0.005 0.01 0.05 0.1;do
-for x_pgd_radius in 0.001 0.005 0.01 0.05 0.1; do
+for pgd_radius in 0.001;do
+for x_pgd_radius in 0.001 ; do
 for datasetid in 1; do
 for lambda_1 in 0 1e-3 1e-2 1e-1 1; do
   for lambda_2 in 0 1e-3 1e-2 1e-1 1; do
