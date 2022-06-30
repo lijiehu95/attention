@@ -287,6 +287,12 @@ class Trainer():
             test_data.true_pred,
             test_data.gold_attns,
             PGDer=self.PGDer, train=False, preturb_x=True, X_PGDer=self.X_PGDer)
+        wandb.log({
+            "our_px_l2_att_diff":res_te['px_l2_att_diff'],
+            "our_px_l1_att_diff": res_te['px_l1_att_diff'],
+            "our_px_tvd_pred_diff": res_te['px_tvd_pred_diff'],
+            "our_px_jsd_att_diff":res_te["px_jsd_att_diff"],
+        })
         wandb.log(
             {
                 "att l2 decrease": res_baseline['px_l2_att_diff'] - res_te['px_l2_att_diff'],
