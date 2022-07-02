@@ -59,9 +59,9 @@ sec=$(( $seconds-${hour}*3600-${min}*60 ))
 HMS=`echo ${hour}:${min}:${sec}`
 #echo "Time have elapsed ${HMS}"
 task_counter=`expr $task_counter + 1`
-TOTAL_TIME_PROX=`expr $EXECUTING_TIME / $task_counter`
-TOTAL_TIME_PROX=`expr $TOTAL_TIME_PROX\* $total_task`
-LEFT_TIME_PROX=`expr $TOTAL_TIME_PROX - $EXECUTING_TIME`
+#TOTAL_TIME_PROX=`expr $EXECUTING_TIME / $task_counter`
+#TOTAL_TIME_PROX=`expr $TOTAL_TIME_PROX\* $total_task`
+#LEFT_TIME_PROX=`expr $TOTAL_TIME_PROX - $EXECUTING_TIME`
 
 #total_hour=$(( ${LEFT_TIME_PROX}/3600 ))
 #total_min=$(( ($LEFT_TIME_PROX-${total_hour}*3600)/60 ))
