@@ -9,7 +9,7 @@ n_iters=40
 K=7
 
 ## gpu usage config
-gpu=(2 4 5)
+gpu=(2 4 5 6)
 gpunum=${#gpu[@]}
 task_load=8000
 gpuu_threshold=90
@@ -19,7 +19,7 @@ for seed in 10 20 512 1515; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.005 0.01 0.02;do
 for x_pgd_radius in 0.01; do
-for datasetid in 3 0 4 5 6 7 8 9 10; do
+for datasetid in 0 4 5 6 7 8 9 10; do
 #for datasetid in 2 3; do
 #for lambda_1 in 1; do
 #for lambda_2 in 1e-4; do
