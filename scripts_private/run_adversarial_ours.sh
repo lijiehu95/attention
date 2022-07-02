@@ -63,12 +63,12 @@ TOTAL_TIME_PROX=`expr $EXECUTING_TIME / $task_counter`
 TOTAL_TIME_PROX=`expr $TOTAL_TIME_PROX\* $total_task`
 LEFT_TIME_PROX=`expr $TOTAL_TIME_PROX - $EXECUTING_TIME`
 
-total_hour=$(( ${LEFT_TIME_PROX}/3600 ))
-total_min=$(( ($LEFT_TIME_PROX-${total_hour}*3600)/60 ))
-total_sec=$(( $LEFT_TIME_PROX-${total_hour}*3600-${total_min}*60 ))
-HMS_PROX=`echo ${total_hour}:${total_min}:${total_sec}`
+#total_hour=$(( ${LEFT_TIME_PROX}/3600 ))
+#total_min=$(( ($LEFT_TIME_PROX-${total_hour}*3600)/60 ))
+#total_sec=$(( $LEFT_TIME_PROX-${total_hour}*3600-${total_min}*60 ))
+#HMS_PROX=`echo ${total_hour}:${total_min}:${total_sec}`
 
-echo "EXECUTING_TIME: $HMS, PROX LEFT TIME $HMS_PROX, FINISH TASKS/TOTAL TASKS: $task_counter/$total_task"
+echo "EXECUTING_TIME: $HMS, FINISH TASKS/TOTAL TASKS: $task_counter/$total_task"
 
 gpu_id=${gpu[$i]}
 free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
