@@ -1,7 +1,7 @@
 cd $(dirname $(dirname $0))
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-exp_name="final-all-seed-v1"
+exp_name="hyper-searching-v1"
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
                 sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
                 stance_hillary)
@@ -15,11 +15,11 @@ task_load=8000
 gpuu_threshold=90
 up_task_time=1m
 
-for seed in 10 20 512 1515; do
+for seed in 10 ; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.005 0.01 0.02;do
 for x_pgd_radius in 0.01; do
-for datasetid in 0 4 5 6 7 8 9 10; do
+for datasetid in 3 0 4 5 6 7 8 9 10; do
 #for datasetid in 2 3; do
 #for lambda_1 in 1; do
 #for lambda_2 in 1e-4; do
@@ -32,7 +32,7 @@ while true; do
 #    nvidia-smi --query-gpu=utilization.gpu  --format=csv -i 2 | grep -Eo "[0-9]+"
     gpu_u=$(nvidia-smi --query-gpu=utilization.gpu  --format=csv -i $gpu_id | grep -Eo "[0-9]+")
     free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
-    if [[ $free_mem -lt $task_load && $gpu_u -ge ${gpuu_threshold} ]]; then
+    if [[ $free_mem -lt $task_load || $gpu_u -ge ${gpuu_threshold} ]]; then
         i=`expr $i + 1`
         i=`expr $i % $gpunum`
         echo "gpu id ${gpu[$i]} is full loaded, skip"
@@ -67,7 +67,7 @@ done;
 done;
 
 
-for seed in 10 20 512 1515; do
+for seed in 10; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.005 0.01 0.02;do
 for x_pgd_radius in 0.01; do
@@ -81,7 +81,7 @@ while true; do
 #    nvidia-smi --query-gpu=utilization.gpu  --format=csv -i 2 | grep -Eo "[0-9]+"
     gpu_u=$(nvidia-smi --query-gpu=utilization.gpu  --format=csv -i $gpu_id | grep -Eo "[0-9]+")
     free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo "[0-9]+")
-    if [[ $free_mem -lt $task_load && $gpu_u -ge ${gpuu_threshold} ]]; then
+    if [[ $free_mem -lt $task_load || $gpu_u -ge ${gpuu_threshold} ]]; then
         i=`expr $i + 1`
         i=`expr $i % $gpunum`
         echo "gpu id ${gpu[$i]} is full loaded, skip"
@@ -98,15 +98,14 @@ free_mem=$(nvidia-smi --query-gpu=memory.free --format=csv -i $gpu_id | grep -Eo
 gpu_u=$(nvidia-smi --query-gpu=utilization.gpu  --format=csv -i $gpu_id | grep -Eo "[0-9]+")
 export CUDA_VISIBLE_DEVICES=$gpu_id
 echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}, it utilization is ${gpu_u}%"
-
     com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_outputs_seed/ \
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K  --seed $seed"
-#    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
-     $com
-    echo "sleep for ${up_task_time} to wait the task loaded"
-    sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
+    nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
+#     $com
+#    echo "sleep for ${up_task_time} to wait the task loaded"
+#    sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
   done;
 done;
 done;
