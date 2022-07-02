@@ -104,8 +104,8 @@ echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}, it utilization is ${
       --K $K  --seed $seed"
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
 #     $com
-#    echo "sleep for ${up_task_time} to wait the task loaded"
-#    sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
+    echo "sleep for ${up_task_time} to wait the task loaded"
+    sleep  ${up_task_time} # you need to wait for this task fully loaded so that gpu stat changes!
   done;
 done;
 done;
