@@ -11,12 +11,12 @@ n_iters=40
 K=7
 
 ## something you need to decide
-gpu=(2 4 5 6)
+gpu=(2 3 4 5 6 7 8 9)
 allow_gpu_memory_threshold=5000
 gpuu_threshold=90
 sleep_time_after_loading_task=20s
 all_full_sleep_time=20s
-total_task=10
+total_task=540
 
 ## something can be auto decided
 task_counter=0
@@ -28,7 +28,7 @@ for seed in 10 ; do
 for model in simple-rnn lstm; do
 for pgd_radius in 0.005 0.01 0.02;do
 for x_pgd_radius in 0.01; do
-for datasetid in 3 0 4 5 6 7 8 9 10; do
+for datasetid in 3 0 4 5 6 7 8 9 10 2; do
 for lambda_1 in 0 1e-4 1; do
   for lambda_2 in 0 1e-4 1; do
 # find suitable gpu
@@ -81,6 +81,7 @@ echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}, it utilization is ${
       --exp_name $exp_name --lambda_1 $lambda_1 --lambda_2 $lambda_2 --pgd_radius $pgd_radius --x_pgd_radius $x_pgd_radius \
       --K $K  --seed $seed"
     echo $com
+    echo ==========================================================================================
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
     echo "sleep for ${sleep_time_after_loading_task} to wait the task loaded"
     sleep  ${sleep_time_after_loading_task} # you need to wait for this task fully loaded so that gpu stat changes!
