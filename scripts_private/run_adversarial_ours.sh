@@ -63,7 +63,7 @@ TOTAL_TIME_PROX=`expr $EXECUTING_TIME / $task_counter`
 TOTAL_TIME_PROX=`expr $TOTAL_TIME_PROX\* $total_task`
 LEFT_TIME_PROX=`expr $TOTAL_TIME_PROX - $EXECUTING_TIME`
 
-total_hour=$(( $LEFT_TIME_PROX/3600 ))
+total_hour=$(( ${LEFT_TIME_PROX}/3600 ))
 total_min=$(( ($LEFT_TIME_PROX-${total_hour}*3600)/60 ))
 total_sec=$(( $LEFT_TIME_PROX-${total_hour}*3600-${total_min}*60 ))
 HMS_PROX=`echo ${total_hour}:${total_min}:${total_sec}`
