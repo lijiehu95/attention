@@ -33,7 +33,8 @@ for model in simple-rnn lstm; do
 #  for lambda_2 in 1e-4 ; do
 #for pgd_radius in 0.005 0.01 0.02;do
 #for x_pgd_radius in 0.01; do
-for datasetid in 3 0 1 4 5 6 7 8 9 10 2; do
+#for datasetid in 3 0 1 4 5 6 7 8 9 10 2; do
+for datasetid in 10 2; do
 #for lambda_1 in 0 1e-4 1; do
 #  for lambda_2 in 0 1e-4 1; do
 # find suitable gpu
