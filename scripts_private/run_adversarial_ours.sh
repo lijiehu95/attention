@@ -2,6 +2,7 @@ cd $(dirname $(dirname $0))
 source activate xai
 export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 
+
 ## experiment hyperp
 exp_name="hyper-searching-0703"
 dataset=(hate rotten_tomatoes  imdb sst emoji  \
