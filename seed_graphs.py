@@ -52,7 +52,9 @@ def main():
         base_dir = get_latest_model(
             f"seed_output/{data_name.lower()}/{model_type}/"
         )
-    
+    else:
+        # continue
+        return
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
 
