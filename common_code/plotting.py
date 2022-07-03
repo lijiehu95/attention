@@ -41,12 +41,12 @@ def save_axis_in_file(fig, ax, dirname, filename):
     renderer = tight_layout.get_renderer(fig)
     inset_tight_bbox = ax.get_tightbbox(renderer)
     extent = inset_tight_bbox.transformed(fig.dpi_scale_trans.inverted())
-    plt.savefig(os.path.join(dirname, filename + '.png'), bbox_inches=extent, dpi=1000)
+    # plt.savefig(os.path.join(dirname, filename + '.png'), bbox_inches=extent, dpi=1000)
 
     renderer = tight_layout.get_renderer(fig)
     inset_tight_bbox = ax.get_tightbbox(renderer)
     extent = inset_tight_bbox.transformed(fig.dpi_scale_trans.inverted())
-    plt.savefig(os.path.join(dirname, filename + '.svg'), bbox_inches=extent)
+    # plt.savefig(os.path.join(dirname, filename + '.svg'), bbox_inches=extent)
 
     if 'sst' not in dirname and 'readmission' not in dirname:
         ax.set_xlabel(" ")

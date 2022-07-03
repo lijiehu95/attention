@@ -133,7 +133,7 @@ def main():
     #     save_axis_in_file(fig, axes[1], dirname, f'{data_name}-{model_type}-adv-scatter')
     # else:
     save_axis_in_file(fig, axes[0], dirname, f'{data_name}-{model_type}-seed-diffs')
-    save_axis_in_file(fig, axes[1], dirname, f'{data_name}-{model_type}-seed-scatter')
+    # save_axis_in_file(fig, axes[1], dirname, f'{data_name}-{model_type}-seed-scatter')
     show_gridspec()
     print('Complete')
     
