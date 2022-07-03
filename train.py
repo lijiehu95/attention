@@ -38,7 +38,7 @@ parser.add_argument('--exp_name', type=str, default="debug")
 parser.add_argument('--K', type=int, default=4)
 parser.add_argument('--topk_prox_metric', type=str, choices=['l1', 'l2',"kl-full", 'jsd-full',"kl-topk", 'jsd-topk'], default='l1')
 
-parser.add_argument("--auto_lambda", action="store_true", help="auto set the lambda")
+parser.add_argument("--auto_hyperparameter", action="store_true", help="auto set the hyperparameters")
 
 parser.add_argument("--wandb_entity", type=str, default="yixin")
 
@@ -48,9 +48,11 @@ args.command = ' '.join(['python'] + sys.argv)
 
 
 from configurations import lambda_config
-if args.auto_lambda:
+if args.auto_hyperparameter:
     args.lambda_1 =lambda_config[args.dataset][args.encoder]['lambda_1']
     args.lambda_2 =lambda_config[args.dataset][args.encoder]['lambda_2']
+    args.x_pgd_radius =lambda_config[args.dataset][args.encoder]['x_pgd_radius']
+    args.pgd_radius =lambda_config[args.dataset][args.encoder]['pgd_radius']
 
 
 # auto set
