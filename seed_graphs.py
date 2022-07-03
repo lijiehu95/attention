@@ -11,7 +11,7 @@ from attention.common_code.common import jsd, get_latest_model
 from attention.common_code.plotting import annotate, \
             plot_violin_by_class, plot_scatter_by_class, \
             init_gridspec, adjust_gridspec, show_gridspec, save_axis_in_file
-from attention.Trainers.DatasetBC import datasets
+from attention.Trainers.DatasetBC import auto_load_dataset
 
 
 
@@ -38,7 +38,8 @@ def main():
     data_name = args.dataset
     model_type = args.model_type
     m, t = model_type.split('+')
-    dataset = datasets[data_name]()
+    # dataset = datasets[data_name]()
+    dataset = auto_load_dataset(data_name)
     # dataset = datasets[data_name]({'encoder':f'{m}', 'attention':f'{t}','data_dir':args.data_dir})
     test_data = dataset.test_data
     
