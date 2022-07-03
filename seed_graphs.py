@@ -55,6 +55,7 @@ def main():
     # else:
     #     # continue
     #     return
+    print(args.dataset, base_dir)
     print(base_dir)
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
