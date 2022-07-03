@@ -4,10 +4,11 @@ export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 
 
 ## experiment hyperp
-exp_name="hyper-searching-0703"
-dataset=(hate rotten_tomatoes  imdb sst emoji  \
-                sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
-                stance_hillary)
+exp_name="hyper-searching-0703-v2"
+#dataset=(hate rotten_tomatoes  imdb sst emoji  \
+#                sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
+#                stance_hillary)
+dataset=(imdb sst hate rotten_tomatoes)
 n_iters=40
 K=7
 
@@ -17,7 +18,7 @@ allow_gpu_memory_threshold=5000
 gpuu_threshold=90
 sleep_time_after_loading_task=20s
 all_full_sleep_time=20s
-total_task=540
+total_task=288
 
 ## something can be auto decided
 task_counter=0
@@ -27,11 +28,11 @@ START_TIME=`date +%s`
 # main running
 for seed in 10 ; do
 for model in simple-rnn lstm; do
-for pgd_radius in 0.01;do
-for x_pgd_radius in 0.01; do
-for datasetid in 1; do
-for lambda_1 in 1; do
-  for lambda_2 in 1e-4 ; do
+for pgd_radius in 0.1 0.05 0.2;do
+for x_pgd_radius in 0.1 0.05 0.2; do
+for datasetid in 0 1 2 3; do
+for lambda_1 in 0 1e-4 1e-2 1; do
+  for lambda_2 in 0 1e-4 1e-2 1; do
 #for pgd_radius in 0.005 0.01 0.02;do
 #for x_pgd_radius in 0.01; do
 #for datasetid in 3 0 4 5 6 7 8 9 10 2; do
