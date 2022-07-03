@@ -11,3 +11,7 @@ preprocess/.vector_cache
 backup
 Not-Consider-Dataset
 #scripts_private
+test_ours_outputs
+test_ours_outputs_seed
+test_ours_seeds
+test_outputs
