@@ -26,11 +26,16 @@ START_TIME=`date +%s`
 # main running
 for seed in 10 ; do
 for model in simple-rnn lstm; do
-for pgd_radius in 0.005 0.01 0.02;do
+for pgd_radius in 0.01;do
 for x_pgd_radius in 0.01; do
-for datasetid in 3 0 4 5 6 7 8 9 10 2; do
-for lambda_1 in 0 1e-4 1; do
-  for lambda_2 in 0 1e-4 1; do
+for datasetid in 1; do
+for lambda_1 in 1; do
+  for lambda_2 in 1e-4 ; do
+#for pgd_radius in 0.005 0.01 0.02;do
+#for x_pgd_radius in 0.01; do
+#for datasetid in 3 0 4 5 6 7 8 9 10 2; do
+#for lambda_1 in 0 1e-4 1; do
+#  for lambda_2 in 0 1e-4 1; do
 # find suitable gpu
 i=0 # we search from the first gpu
 while true; do
@@ -56,7 +61,7 @@ seconds=`expr $END_TIME - $START_TIME`
 hour=$(( $seconds/3600 ))
 min=$(( ($seconds-${hour}*3600)/60 ))
 sec=$(( $seconds-${hour}*3600-${min}*60 ))
-HMS=`echo ${hour}:${min}:${sec}`
+HMS=`echo ${hour}h:${min}m:${sec}s`
 #echo "Time have elapsed ${HMS}"
 task_counter=`expr $task_counter + 1`
 #TOTAL_TIME_PROX=`expr $EXECUTING_TIME / $task_counter`
