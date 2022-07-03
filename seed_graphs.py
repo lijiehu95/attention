@@ -47,7 +47,7 @@ def main():
     # if ADVERSARY_MODE:
     #     base_dir = args.data_full_dir
     # else:
-    base_dir = get_latest_model(f'test_outputs/{data_name.lower()}/{model_type}/')
+    base_dir = get_latest_model(f'test_outputs/{data_name.lower()}/{m}+tanh/')
     
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
