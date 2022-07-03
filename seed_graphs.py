@@ -66,6 +66,7 @@ def main():
     # for sd in glob(f'test_outputs/seresult/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
         print(sd)
         try:
+            json.load(open(os.path.join(sd, 'evaluate.json')))
             att = json.load(open(os.path.join(sd, 'test_attentions_best_epoch.json')))
             pred = json.load(open(os.path.join(sd, 'test_predictions_best_epoch.json')))
             if len(att) != 0 and len(pred) != 0:
