@@ -48,6 +48,10 @@ def main():
     #     base_dir = args.data_full_dir
     # else:
     base_dir = get_latest_model(f'test_outputs/{data_name.lower()}/{m}+tanh/')
+    if args.dataset == "imdb":
+        base_dir = get_latest_model(
+            f"seed_output/{data_name.lower()}/{model_type}/"
+        )
     
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
