@@ -74,7 +74,10 @@ def main():
                 yhat_preds_seeds.append(pred)
         except:
             pass
-
+    if  len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0:
+        print(
+            f'seed_output/{data_name.lower()}/{model_type}/*'
+        )
     assert len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0
 
     yhat_orig = numpify(yhat_orig)
