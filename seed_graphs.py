@@ -47,14 +47,14 @@ def main():
     # if ADVERSARY_MODE:
     #     base_dir = args.data_full_dir
     # else:
-    base_dir = get_latest_model(f'test_outputs/{data_name.lower()}/{m}+tanh/')
-    if args.dataset == "imdb":
-        base_dir = get_latest_model(
-            f"seed_output/{data_name.lower()}/{model_type}/"
-        )
-    else:
-        # continue
-        return
+    base_dir = get_latest_model(f'train_baseline/{data_name.lower()}/{m}+tanh/')
+    # if args.dataset == "imdb":
+    #     base_dir = get_latest_model(
+    #         f"seed_output/{data_name.lower()}/{model_type}/"
+    #     )
+    # else:
+    #     # continue
+    #     return
     yhat_orig = json.load(open(os.path.join(base_dir, 'test_attentions_best_epoch.json')))
     yhat_preds_orig = json.load(open(os.path.join(base_dir, 'test_predictions_best_epoch.json')))
 
@@ -67,7 +67,7 @@ def main():
     #     for i in range(2):
     #         yhat_seeds.append(json.load(open(f'{base_dir}/test_attentions_jw_adversary_{i:02d}.json')))
     #         yhat_preds_seeds.append(json.load(open(f'{base_dir}/test_predictions_jw_adversary_{i:02d}.json')))
-    for sd in glob(f'seed_output/{data_name.lower()}/{model_type}/*'):
+    for sd in glob(f'seed_baseline/{data_name.lower()}/{model_type}/*'):
     # else:
     # for sd in glob(f'test_outputs/seresult/dataset-{data_name.lower()}-seed-*/{data_name.lower()}/{model_type}/*'):
         print(sd)
@@ -80,10 +80,10 @@ def main():
                 yhat_preds_seeds.append(pred)
         except:
             pass
-    if  len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0:
-        print(
-            f'seed_output/{data_name.lower()}/{model_type}/*'
-        )
+    # if  len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0:
+    #     print(
+    #         f'seed_output/{data_name.lower()}/{model_type}/*'
+    #     )
     assert len(yhat_seeds) !=0 and len(yhat_preds_seeds) != 0
 
     yhat_orig = numpify(yhat_orig)
