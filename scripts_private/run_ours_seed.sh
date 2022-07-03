@@ -16,7 +16,7 @@ allow_gpu_memory_threshold=5000
 gpuu_threshold=90
 sleep_time_after_loading_task=20s
 all_full_sleep_time=20s
-total_task=540
+total_task=88
 
 ## something can be auto decided
 task_counter=0
@@ -84,7 +84,7 @@ echo "use gpu id is ${gpu[$i]}, free memory is ${free_mem}, it utilization is ${
     com="python train.py --dataset ${dataset[$datasetid]} --data_dir . --output_dir test_ours_seeds/ \
     --encoder $model --ours --n_iters $n_iters \
       --exp_name $exp_name \
-      --K $K  --seed $seed --$auto_hyperparameter"
+      --K $K  --seed $seed --auto_hyperparameter"
     echo $com
     echo ==========================================================================================
     nohup $com > ./logs/$exp_name-$RANDOM.log 2>&1 &
