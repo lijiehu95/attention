@@ -39,7 +39,7 @@ def main():
     model_type = args.model_type
     m, t = model_type.split('+')
     # dataset = datasets[data_name]()
-    dataset = auto_load_dataset(data_name)
+    dataset = auto_load_dataset(data_name,args=None)
     # dataset = datasets[data_name]({'encoder':f'{m}', 'attention':f'{t}','data_dir':args.data_dir})
     test_data = dataset.test_data
     
