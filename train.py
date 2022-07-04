@@ -157,3 +157,7 @@ wandb.log({
     "final_metric":final_metric
 })
 wandb.finish()
+# os.kill(os.getpid(), signal.SIGINT)
+import os
+import signal
+os.kill(os.getpid(), signal.SIGKILL)
