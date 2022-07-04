@@ -14,7 +14,7 @@ K=7
 
 ## something you need to decide
 gpu=(2 3 4 5 6 7 8 9)
-allow_gpu_memory_threshold=5000
+allow_gpu_memory_threshold=8000
 gpuu_threshold=90
 sleep_time_after_loading_task=20s
 all_full_sleep_time=20s
