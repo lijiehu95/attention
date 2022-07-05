@@ -18,7 +18,7 @@ allow_gpu_memory_threshold=8000
 gpuu_threshold=90
 sleep_time_after_loading_task=20s
 all_full_sleep_time=20s
-total_task=288
+total_task=128
 
 ## something can be auto decided
 task_counter=0
@@ -28,9 +28,9 @@ START_TIME=`date +%s`
 # main running
 for seed in 10 ; do
 for model in simple-rnn lstm; do
-for pgd_radius in 0.1 0.05 0.2;do
-for x_pgd_radius in 0.1 0.05 0.2; do
-for datasetid in 0 1 2 3; do
+for pgd_radius in 0.2 0.3;do
+for x_pgd_radius in 0.2 0.3; do
+for datasetid in 0; do
 for lambda_1 in 0 1e-4 1e-2 1; do
   for lambda_2 in 0 1e-4 1e-2 1; do
 #for pgd_radius in 0.005 0.01 0.02;do
