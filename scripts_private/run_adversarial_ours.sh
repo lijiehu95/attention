@@ -4,7 +4,7 @@ export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
 
 
 ## experiment hyperp
-exp_name="hyper-searching-0703-v2"
+exp_name="hyper-searching-0705-v1"
 #dataset=(hate rotten_tomatoes  imdb sst emoji  \
 #                sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
 #                stance_hillary)
