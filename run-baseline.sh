@@ -1,4 +1,5 @@
 exp_name="baseline"
+export CUDA_VISIBLE_DEVICES=0
 for model in simple-rnn lstm; do
 for dataset in hate rotten_tomatoes  imdb sst;do
 #                emoji sentiment  stance_abortion  stance_atheism  stance_climate  stance_feminist  \
