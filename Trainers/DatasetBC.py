@@ -40,11 +40,9 @@ class BertDataset():
             path = os.path.join(args.data_dir, path)
 
         # load csv data
-        # self.df = pd.read_csv(path, sep='\t')
+        # self.df =
 
-        # use bert tokenizer to tokenize data
-
-        # load training and testing data
+        # use bert tokenizer to tokenize data, load training and testing data
         # X, Xt =
         # y, yt =
 
