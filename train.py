@@ -117,7 +117,7 @@ elif args.attention == 'tanh' :
 elif args.attention == 'pre-loaded':
     args.frozen_attn = False
     args.pre_loaded_attn = True
-else :
+else:
     raise LookupError("Attention not found ...")
 
 

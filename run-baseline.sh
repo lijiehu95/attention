@@ -12,7 +12,7 @@ done;done;
 #cd $(dirname $(dirname $0))
 #source activate xai
 #export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/
-#
+#export PYTHONPATH=${PYTHONPATH}:/home/lijie/project/real_att/
 #
 ### experiment hyperp
 #exp_name="run-baseline"
