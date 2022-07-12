@@ -40,7 +40,7 @@ parser.add_argument('--topk_prox_metric', type=str, choices=['l1', 'l2',"kl-full
 
 parser.add_argument("--auto_hyperparameter", action="store_true", help="auto set the hyperparameters")
 
-parser.add_argument("--wandb_entity", type=str, default="yixin")
+parser.add_argument("--wandb_entity", type=str, default="dl01")
 
 args, extras = parser.parse_known_args()
 args.extras = extras
@@ -86,7 +86,7 @@ if not args.baseline:
 
 
 import wandb
-wandb.init(project="XAI-NLP-NEW", entity=args.wandb_entity,config=args)
+wandb.init(project="XAI-NLP", entity=args.wandb_entity,config=args)
 wandb.log(vars(args))
 
 
