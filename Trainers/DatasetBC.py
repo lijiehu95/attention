@@ -33,6 +33,70 @@ class DataHolder() :
         self.true_pred = true_pred
         self.attributes = ['X', 'y', 'gold_attns', 'true_pred']
 
+class BertDataset():
+    def __init__(self, name, path, min_length=None, max_length=None, args=None):
+        self.name = name
+        if args is not None and hasattr(args, 'data_dir'):
+            path = os.path.join(args.data_dir, path)
+
+        # load csv data
+        # self.df = pd.read_csv(path, sep='\t')
+
+        # use bert tokenizer to tokenize data
+
+        # load training and testing data
+        # X, Xt =
+        # y, yt =
+
+        # ignore the following lines
+        flag = True
+        if args is not None:
+            if args.pre_loaded_attn or args.adversarial or args.ours:
+                # these are lists of lists, with some residual padding
+                y_attn = json.load(open(os.path.join(args.gold_label_dir, 'train_attentions_best_epoch.json'), 'r'))
+                yt_attn = json.load(open(os.path.join(args.gold_label_dir, 'test_attentions_best_epoch.json'), 'r'))
+
+                true_pred = json.load(open(os.path.join(args.gold_label_dir, 'train_predictions_best_epoch.json'), 'r'))
+                true_pred_t = json.load(
+                    open(os.path.join(args.gold_label_dir, 'test_predictions_best_epoch.json'), 'r'))
+                true_pred = [e[0] for e in true_pred]
+                true_pred_t = [e[0] for e in true_pred_t]  # these are lists of num. insts-length
+
+                # trim padding from static attentions
+                new_attns = []
+                for e, a in zip(X, y_attn):
+                    tmp = [0] + [el for el in a if el != 0] + [0]
+                    assert len(tmp) == len(e)
+                    new_attns.append(tmp)
+                y_attn = new_attns
+
+                # do the same for test
+                new_attns = []
+                for e, a in zip(Xt, yt_attn):
+                    tmp = [0] + [el for el in a if el != 0] + [0]
+                    assert len(tmp) == len(e)
+                    new_attns.append(tmp)
+                yt_attn = new_attns
+
+                self.train_data = DataHolder(X, y, y_attn, true_pred)
+                self.test_data = DataHolder(Xt, yt, yt_attn, true_pred_t)
+                flag = False
+        if flag:
+            self.train_data = DataHolder(X, y)
+            self.test_data = DataHolder(Xt, yt)
+
+        if args is not None and hasattr(args, 'hidden_size'):
+            self.hidden_size = args.hidden_size
+
+        self.output_size = 1
+        self.save_on_metric = 'roc_auc'
+        self.keys_to_use = {
+            'roc_auc': 'roc_auc',
+            'pr_auc': 'pr_auc'
+        }
+        self.bsize = 32
+        if args is not None and hasattr(args, 'output_dir'):
+            self.basepath = args.output_dir
 
 class Dataset() :
     def __init__(self, name, path, min_length=None, max_length=None, args=None) :
@@ -165,9 +229,14 @@ class Dataset() :
 #     return dataset
 
 def auto_dataset(dataset_name,args=None):
+    if args.encoder == "bert":
+        dataname = "/data.csv"
+    else:
+        dataname = "/vec.p"
+
     dataset = Dataset(
         name=dataset_name,
-        path='preprocess/' + dataset_name + '/vec.p',
+        path='preprocess/' + dataset_name + dataname,
         args=args
     )
     set_balanced_pos_weight(dataset)

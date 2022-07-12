@@ -34,7 +34,7 @@ for dataset in ['hate',"rotten_tomatoes", 'imdb','SetFit/sst5','emoji', \
     except:
         pass
 
-    df_file = f"./preprocess/{dataname}/{dataname}.csv"
+    df_file = f"./preprocess/{dataname}/data.csv"
     df.to_csv(df_file)
     # import argparse
     # parser = argparse.ArgumentParser(description='Run Preprocessing on dataset')
