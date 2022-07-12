@@ -11,7 +11,7 @@ parser.add_argument("--baseline", action="store_true", help="Run baseline model 
 parser.add_argument('--dataset', type=str)
 parser.add_argument("--data_dir", type=str, default=".")
 parser.add_argument("--output_dir", type=str,default="test_outputs/")
-parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm','simple-rnn'], default="lstm")
+parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm','simple-rnn','bert'], default="lstm")
 parser.add_argument('--attention', type=str, choices=['tanh', 'frozen', 'pre-loaded'], required=False)
 parser.add_argument('--n_iters', type=int, required=False, default=40)
 parser.add_argument('--seed', type=int, default=10)
@@ -59,7 +59,7 @@ if args.auto_hyperparameter:
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
-from attention.Trainers.DatasetBC import auto_load_dataset
+from Trainers.DatasetBC import auto_load_dataset
 
 import torch
 import numpy as np
