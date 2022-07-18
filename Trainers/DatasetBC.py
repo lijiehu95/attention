@@ -40,7 +40,7 @@ class BertDataset():
             path = os.path.join(args.data_dir, path)
 
         # load csv data
-        # self.df =
+        # self.df = pd.read_csv(path, sep='\t')
 
         # use bert tokenizer to tokenize data, load training and testing data
         # X, Xt =
@@ -237,6 +237,7 @@ def auto_dataset(dataset_name,args=None):
         path='preprocess/' + dataset_name + dataname,
         args=args
     )
+
     set_balanced_pos_weight(dataset)
     return dataset
 
