@@ -1,1 +1,0 @@
-Please run all cells in `SNLI.ipynb` notebook

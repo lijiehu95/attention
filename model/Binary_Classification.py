@@ -108,106 +108,106 @@ class Model():
         obj.load_values(dirname)
         return obj
 
-    def related_score(self,
-              data_in,
-              target_in,
-              target_pred,
-              target_attn_in,train=False,preturb_x=True,X_PGDer=None):
-        sorting_idx = get_sorting_index_with_noise_from_lengths(
-            [len(x) for x in data_in], noise_frac=0.1)
-        data = [data_in[i] for i in sorting_idx]
-        target = [target_in[i] for i in sorting_idx]
-
-        self.encoder.train()
-        self.decoder.train()
-
-
-        target_pred = [target_pred[i] for i in sorting_idx]
-        target_attn = [target_attn_in[i] for i in sorting_idx]
-
-        N = len(data)
-        bsize = self.bsize
-        batches = list(range(0, N, bsize))
-        batches = shuffle(batches)
-
-        spearman_score=0
-        spearman_score_trained_att=0
-        num=0
-        kendalltau_score=0
-        kendalltau_score_trained_att=0
-
-        print("related score comp")
-
-        for n in tqdm(batches):
-            batch_doc = data[n:n + bsize]
-
-            batch_target_attn = target_attn[n:n + bsize]
-            batch_data = BatchHolder(batch_doc, batch_target_attn)
-
-            batch_target_pred = target_pred[n:n + bsize]
-            batch_target_pred = torch.Tensor(batch_target_pred).to(device)
-
-            if preturb_x:
-                # get the hidden
-                def target_model(embedd, data, decoder, encoder):
-                    encoder(data, revise_embedding=embedd)
-                    decoder(data=data)
-                    return torch.sigmoid(data.predict)
-
-                def crit(gt, pred):
-                    return batch_tvd(gt,pred)
-
-                # old prediction
-                self.encoder(batch_data)
-                self.decoder(batch_data)
-
-                # PGD generate the new hidden
-                new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
-                                             , decoder=self.decoder, encoder=self.encoder,
-                                             batch_target_pred=batch_target_pred,
-                                             target_model=target_model)
-                # pgd perturb the hidden
-                self.encoder(batch_data, revise_embedding=new_embedd)
-                self.decoder(data=batch_data)
-                new_att = batch_data.attn
-            else:
-                assert False
-
-            # this is the unpreturbed embedding
-            batch_data.keep_grads = True
-            self.encoder(batch_data)
-            self.decoder(batch_data)
-            batch_data.predict.sum().backward()
-
-            grad = batch_data.embedding.grad
-            grad = grad.mean(dim=-1)
-            from torchmetrics import SpearmanCorrCoef
-            from scipy.stats import kendalltau
-            spearman = SpearmanCorrCoef()
-            for i in range(grad.shape[0]):
-                spearman.reset()
-                target = batch_data.target_attn[i]
-                # print(target.shape)
-                pred = grad[i]
-                # print(pred.shape)
-                num+=bsize
-                spearman_score += spearman(pred, new_att[i]).item()
-                spearman_score_trained_att += spearman(pred,target).item()
-                kendalltau_score += kendalltau(pred.detach().cpu().numpy(), new_att[i].detach().cpu().numpy())[0]
-                kendalltau_score_trained_att += kendalltau(pred.detach().cpu().numpy(), target.detach().cpu().numpy())[0]
-
-        kendalltau_score /= num
-        kendalltau_score_trained_att /=num
-        spearman_score /= num
-        spearman_score_trained_att /= num
-
-        wandb.log({
-            "spearman_score":spearman_score,
-            "spearman_score_trained_att":spearman_score_trained_att,
-            "kendalltau_score":kendalltau_score,
-            "kendalltau_score_trained_att":kendalltau_score_trained_att,
-        })
-
+    # def related_score(self,
+    #           data_in,
+    #           target_in,
+    #           target_pred,
+    #           target_attn_in,train=False,preturb_x=True,X_PGDer=None):
+    #     sorting_idx = get_sorting_index_with_noise_from_lengths(
+    #         [len(x) for x in data_in], noise_frac=0.1)
+    #     data = [data_in[i] for i in sorting_idx]
+    #     target = [target_in[i] for i in sorting_idx]
+    #
+    #     self.encoder.train()
+    #     self.decoder.train()
+    #
+    #
+    #     target_pred = [target_pred[i] for i in sorting_idx]
+    #     target_attn = [target_attn_in[i] for i in sorting_idx]
+    #
+    #     N = len(data)
+    #     bsize = self.bsize
+    #     batches = list(range(0, N, bsize))
+    #     batches = shuffle(batches)
+    #
+    #     spearman_score=0
+    #     spearman_score_trained_att=0
+    #     num=0
+    #     kendalltau_score=0
+    #     kendalltau_score_trained_att=0
+    #
+    #     print("related score comp")
+    #
+    #     for n in tqdm(batches):
+    #         batch_doc = data[n:n + bsize]
+    #
+    #         batch_target_attn = target_attn[n:n + bsize]
+    #         batch_data = BatchHolder(batch_doc, batch_target_attn)
+    #
+    #         batch_target_pred = target_pred[n:n + bsize]
+    #         batch_target_pred = torch.Tensor(batch_target_pred).to(device)
+    #
+    #         if preturb_x:
+    #             # get the hidden
+    #             def target_model(embedd, data, decoder, encoder):
+    #                 encoder(data, revise_embedding=embedd)
+    #                 decoder(data=data)
+    #                 return torch.sigmoid(data.predict)
+    #
+    #             def crit(gt, pred):
+    #                 return batch_tvd(gt,pred)
+    #
+    #             # old prediction
+    #             self.encoder(batch_data)
+    #             self.decoder(batch_data)
+    #
+    #             # PGD generate the new hidden
+    #             new_embedd = X_PGDer.perturb(criterion=crit, x=batch_data.embedding, data=batch_data \
+    #                                          , decoder=self.decoder, encoder=self.encoder,
+    #                                          batch_target_pred=batch_target_pred,
+    #                                          target_model=target_model)
+    #             # pgd perturb the hidden
+    #             self.encoder(batch_data, revise_embedding=new_embedd)
+    #             self.decoder(data=batch_data)
+    #             new_att = batch_data.attn
+    #         else:
+    #             assert False
+    #
+    #         # this is the unpreturbed embedding
+    #         batch_data.keep_grads = True
+    #         self.encoder(batch_data)
+    #         self.decoder(batch_data)
+    #         batch_data.predict.sum().backward()
+    #
+    #         grad = batch_data.embedding.grad
+    #         grad = grad.mean(dim=-1)
+    #         from torchmetrics import SpearmanCorrCoef
+    #         from scipy.stats import kendalltau
+    #         spearman = SpearmanCorrCoef()
+    #         for i in range(grad.shape[0]):
+    #             spearman.reset()
+    #             target = batch_data.target_attn[i]
+    #             # print(target.shape)
+    #             pred = grad[i]
+    #             # print(pred.shape)
+    #             num+=bsize
+    #             spearman_score += spearman(pred, new_att[i]).item()
+    #             spearman_score_trained_att += spearman(pred,target).item()
+    #             kendalltau_score += kendalltau(pred.detach().cpu().numpy(), new_att[i].detach().cpu().numpy())[0]
+    #             kendalltau_score_trained_att += kendalltau(pred.detach().cpu().numpy(), target.detach().cpu().numpy())[0]
+    #
+    #     kendalltau_score /= num
+    #     kendalltau_score_trained_att /=num
+    #     spearman_score /= num
+    #     spearman_score_trained_att /= num
+    #
+    #     wandb.log({
+    #         "spearman_score":spearman_score,
+    #         "spearman_score_trained_att":spearman_score_trained_att,
+    #         "kendalltau_score":kendalltau_score,
+    #         "kendalltau_score_trained_att":kendalltau_score_trained_att,
+    #     })
+    #
 
     def preterub_x_eval(self,
               data_in,
@@ -333,10 +333,12 @@ class Model():
               target_pred,
               target_attn_in,
               PGDer,train=True,preturb_x=False,X_PGDer=None):
-        sorting_idx = get_sorting_index_with_noise_from_lengths(
-            [len(x) for x in data_in], noise_frac=0.1)
-        data = [data_in[i] for i in sorting_idx]
-        target = [target_in[i] for i in sorting_idx]
+        # sorting_idx = get_sorting_index_with_noise_from_lengths(
+        #     [len(x) for x in data_in], noise_frac=0.1)
+        # data = [data_in[i] for i in sorting_idx]
+        # target = [target_in[i] for i in sorting_idx]
+        data= data_in
+        target = target_in
 
         # print(target_pred)
 
@@ -565,14 +567,18 @@ class Model():
               train=True,
               ours=False,
               PDGer=None):
-        sorting_idx = get_sorting_index_with_noise_from_lengths(
-            [len(x) for x in data_in], noise_frac=0.1)
-        data = [data_in[i] for i in sorting_idx]
-        target = [target_in[i] for i in sorting_idx]
+        # sorting_idx = get_sorting_index_with_noise_from_lengths(
+        #     [len(x) for x in data_in], noise_frac=0.1)
+        # data = [data_in[i] for i in sorting_idx]
+        # target = [target_in[i] for i in sorting_idx]
+
+        data= data_in
+        target = target_in
 
         if target_pred:
-            target_pred = [target_pred[i] for i in sorting_idx]
-            target_attn = [target_attn_in[i] for i in sorting_idx]
+            # target_pred = [target_pred[i] for i in sorting_idx]
+            # target_attn = [target_attn_in[i] for i in sorting_idx]
+            target_attn = target_attn_in
 
         self.encoder.train()
         self.decoder.train()

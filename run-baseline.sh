@@ -8,7 +8,7 @@ for dataset in hate rotten_tomatoes  imdb sst;do
 python train.py --dataset $dataset --data_dir . --output_dir test_baseline/ --attention tanh \
     --encoder $model --exp_name $exp_name --baseline
 done;done;
-
+# python train.py --dataset sst --data_dir . --output_dir train_baseline/ --attention tanh
 #cd $(dirname $(dirname $0))
 #source activate xai
 #export PYTHONPATH=${PYTHONPATH}:/home/yila22/prj:/mnt/yixin/

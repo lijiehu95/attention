@@ -2,7 +2,8 @@ import os
 import pickle
 import numpy as np
 import json
-from preprocess import vectorizer
+from attention.preprocess import vectorizer
+import pandas as pd
 
 def sortbylength(X, y) :
     len_t = np.argsort([len(x) for x in X])
@@ -40,11 +41,36 @@ class BertDataset():
             path = os.path.join(args.data_dir, path)
 
         # load csv data
-        # self.df = pd.read_csv(path, sep='\t')
+        self.df = df = pd.read_csv(path, sep='\t')
 
         # use bert tokenizer to tokenize data, load training and testing data
-        # X, Xt =
-        # y, yt =
+        df_train = df[df['exp_split'] == "train"][['text', 'label']].reset_index(drop=True)
+        df_test = df[df['exp_split'] == "test"][['text', 'label']].reset_index(drop=True)
+        from datasets import Dataset, DatasetDict
+        newData = DatasetDict(
+            {
+                "train": Dataset.from_pandas(df_train),
+                "test": Dataset.from_pandas(df_test),
+            })
+        from transformers import BertTokenizer
+        tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+
+        def encode(examples):
+            return tokenizer(examples['text'], truncation=True, padding='max_length', add_special_tokens=True)
+
+        newData = newData.map(encode, batched=True)
+        newData = newData.remove_columns(["text"])
+        y, yt = newData["train"]['label'].copy(), newData["test"]['label'].copy()
+        newData.set_format("torch")
+        # self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+        X, Xt = {}, {}
+        X['input_ids'] = newData["train"]['input_ids']
+        X['attention_mask'] = newData["train"]['attention_mask']
+        X['token_type_ids'] = newData["train"]['token_type_ids']
+        Xt['input_ids'] = newData["test"]['input_ids']
+        Xt['attention_mask'] = newData["test"]['attention_mask']
+        Xt['token_type_ids'] = newData["test"]['token_type_ids']
+
 
         # ignore the following lines
         flag = True
@@ -229,14 +255,19 @@ class Dataset() :
 def auto_dataset(dataset_name,args=None):
     if args.encoder == "bert":
         dataname = "/data.csv"
+        dataset = BertDataset(
+            name=dataset_name,
+            path='preprocess/' + dataset_name + dataname,
+            args=args
+        )
+
     else:
         dataname = "/vec.p"
-
-    dataset = Dataset(
-        name=dataset_name,
-        path='preprocess/' + dataset_name + dataname,
-        args=args
-    )
+        dataset = Dataset(
+            name=dataset_name,
+            path='preprocess/' + dataset_name + dataname,
+            args=args
+        )
 
     set_balanced_pos_weight(dataset)
     return dataset

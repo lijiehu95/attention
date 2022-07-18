@@ -1,1 +1,0 @@
-Please run all cells in `Tweet_ADR.ipynb` notebook.
