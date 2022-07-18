@@ -11,7 +11,7 @@ parser.add_argument("--baseline", action="store_true", help="Run baseline model 
 parser.add_argument('--dataset', type=str)
 parser.add_argument("--data_dir", type=str, default=".")
 parser.add_argument("--output_dir", type=str,default="test_outputs/")
-parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm','simple-rnn'], default="lstm")
+parser.add_argument('--encoder', type=str, choices=[ 'average', 'lstm','simple-rnn','bert'], default="lstm")
 parser.add_argument('--attention', type=str, choices=['tanh', 'frozen', 'pre-loaded'], required=False)
 parser.add_argument('--n_iters', type=int, required=False, default=40)
 parser.add_argument('--seed', type=int, default=10)
@@ -40,7 +40,7 @@ parser.add_argument('--topk_prox_metric', type=str, choices=['l1', 'l2',"kl-full
 
 parser.add_argument("--auto_hyperparameter", action="store_true", help="auto set the hyperparameters")
 
-parser.add_argument("--wandb_entity", type=str, default="yixin")
+parser.add_argument("--wandb_entity", type=str, default="dl01")
 
 args, extras = parser.parse_known_args()
 args.extras = extras
@@ -59,7 +59,7 @@ if args.auto_hyperparameter:
 args.pgd_step_size = args.pgd_radius / args.pgd_step * 2
 args.x_pgd_step_size = args.x_pgd_radius / args.x_pgd_step * 2
 
-from attention.Trainers.DatasetBC import auto_load_dataset
+from Trainers.DatasetBC import auto_load_dataset
 
 import torch
 import numpy as np
@@ -86,7 +86,7 @@ if not args.baseline:
 
 
 import wandb
-wandb.init(project="XAI-NLP-NEW", entity=args.wandb_entity,config=args)
+wandb.init(project="XAI-NLP", entity=args.wandb_entity,config=args)
 wandb.log(vars(args))
 
 
@@ -117,7 +117,7 @@ elif args.attention == 'tanh' :
 elif args.attention == 'pre-loaded':
     args.frozen_attn = False
     args.pre_loaded_attn = True
-else :
+else:
     raise LookupError("Attention not found ...")
 
 

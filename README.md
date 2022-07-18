@@ -9,12 +9,14 @@ We've based our repository on the [code](https://github.com/sarahwie/attention) 
 2. Use the following command to install the dependencies:
 ```shell
 pip install -r requirements.txt
+conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+python -m spacy download en
 ```
 
 3. Preprocess the dataset using the following command. Note that our processing method is slighting different from the \
 original implementation in the reference repository.
 ```shell
-python preprocess.py
+python prepare_data.py
 ```
 
 5. Setup the enviroment variable using the following command:

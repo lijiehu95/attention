@@ -121,3 +121,4 @@ zope.interface==5.4.0
 runipy
 wandb
 pytorch_lightning
+datasets
